@@ -25,7 +25,6 @@ package org.mangorage.mangobot.modules.requestpaste;
 import net.dv8tion.jda.api.entities.Message;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
-import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.GistService;
 import org.jetbrains.annotations.Nullable;
@@ -108,8 +107,7 @@ public class PasteRequestModule {
             AtomicInteger count = new AtomicInteger(1);
 
             Gist gist = new Gist();
-            gist.setPublic(true);
-            gist.setUser(new User().setName("MangoBot"));
+            gist.setPublic(false);
             gist.setDescription("Automatically made from MangoBot.");
 
             HashMap<String, GistFile> FILES = new HashMap<>();
@@ -124,9 +122,9 @@ public class PasteRequestModule {
 
             gist.setFiles(FILES);
 
+
             try {
                 var remote = service.createGist(gist);
-
                 message.reply("gist -> %s".formatted(remote.getHtmlUrl())).setSuppressEmbeds(true).mentionRepliedUser(false).queue();
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -10,6 +10,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
+        classpath 'net.researchgate:gradle-release:3.0.2'
     }
 }
 
@@ -23,6 +24,7 @@ def getVersionCode = {
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
+apply plugin: 'net.researchgate.release'
 
 group 'org.mangorage'
 version "${BOT_VERSION}-c" + getVersionCode()
@@ -118,6 +120,40 @@ jar {
 
     manifest {
         attributes 'Main-Class': 'org.mangorage.mangobot.Main'
+    }
+}
+
+release {
+    failOnCommitNeeded = true
+    failOnPublishNeeded = true
+    failOnSnapshotDependencies = true
+    failOnUnversionedFiles = true
+    failOnUpdateNeeded = true
+    revertOnFail = true
+    preCommitText = ''
+    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
+    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
+    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
+    tagTemplate = '${version}-c'
+    versionPropertyFile = 'gradle.properties'
+    versionProperties = []
+    snapshotSuffix = '-SNAPSHOT'
+    buildTasks = []
+    pushReleaseVersionBranch = null
+
+
+    git {
+        requireBranch.set('master')
+        pushToRemote.set('origin')
+        pushToBranchPrefix.set('')
+        commitVersionFileOnly.set(false)
+        signTag.set(false)
+    }
+
+    svn {
+        username.set(null)
+        password.set(null)
+        pinExternals.set(false)   // allows to pin the externals when tagging, requires subversion client >= 1.9.0
     }
 }
 
