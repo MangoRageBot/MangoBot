@@ -137,6 +137,7 @@ release {
     tagTemplate = '${version}'
     versionPropertyFile = 'gradle.properties'
     versionProperties = []
+    version = "test"
     snapshotSuffix = '-SNAPSHOT'
     buildTasks = []
     pushReleaseVersionBranch = null
