@@ -1,5 +1,3 @@
-import java.util.regex.Matcher
-
 buildscript {
     repositories {
         mavenLocal()
@@ -12,7 +10,6 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'net.researchgate:gradle-release:3.0.2'
     }
 }
 
@@ -26,7 +23,6 @@ def getVersionCode = {
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
-apply plugin: 'net.researchgate.release'
 
 group 'org.mangorage'
 version "${BOT_VERSION}-c" + getVersionCode()
@@ -124,50 +120,6 @@ jar {
         attributes 'Main-Class': 'org.mangorage.mangobot.Main'
     }
 }
-
-release {
-    failOnCommitNeeded = true
-    failOnPublishNeeded = true
-    failOnSnapshotDependencies = true
-    failOnUnversionedFiles = true
-    failOnUpdateNeeded = true
-    revertOnFail = true
-    preCommitText = ''
-    preTagCommitMessage = '[Gradle Release Plugin] - pre tag commit: '
-    tagCommitMessage = '[Gradle Release Plugin] - creating tag: '
-    newVersionCommitMessage = '[Gradle Release Plugin] - new version commit: '
-    tagTemplate = '${version}'
-    versionPropertyFile = 'gradle.properties'
-    versionProperties = []
-    snapshotSuffix = '-SNAPSHOT'
-    buildTasks = []
-    ignoredSnapshotDependencies = []
-    versionPatterns = [
-            /(\d+)([^\d]*$)/: { Matcher m, Project p -> m.replaceAll("${(m[0][1] as int) + 1}${m[0][2]}") }
-    ]
-    pushReleaseVersionBranch = null
-    scmAdapters = [
-            net.researchgate.release.GitAdapter,
-            net.researchgate.release.SvnAdapter,
-            net.researchgate.release.HgAdapter,
-            net.researchgate.release.BzrAdapter
-    ]
-
-    git {
-        requireBranch.set('master')
-        pushToRemote.set('origin')
-        pushToBranchPrefix.set('')
-        commitVersionFileOnly.set(false)
-        signTag.set(false)
-    }
-
-    svn {
-        username.set("RealMangoRage")
-        password.set(findProperty("mango.github.username"))
-        //pinExternals.set(false)   // allows to pin the externals when tagging, requires subversion client >= 1.9.0
-    }
-}
-
 
 publishing {
     publications {
