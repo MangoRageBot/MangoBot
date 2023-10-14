@@ -13,7 +13,6 @@ buildscript {
     }
 }
 
-
 def getVersionCode = {
     def proc = 'git rev-list --count master'.execute()
     proc.waitFor()
