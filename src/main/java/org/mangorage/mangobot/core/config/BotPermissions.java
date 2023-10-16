@@ -22,20 +22,33 @@
 
 package org.mangorage.mangobot.core.config;
 
-import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
-import org.mangorage.mangobotapi.core.registry.UserPermission;
+import net.dv8tion.jda.api.Permission;
+import org.mangorage.mangobotapi.core.registry.BasicPermission;
 
-public class ForgePermissions {
-    public static final PermissionRegistry PERMISSIONS = PermissionRegistry.guild("1129059589325852724");
+public class BotPermissions {
+
+    /**
+     * // Admin Role
+     * PERMISSIONS.register(BotPermissions.TRICK_ADMIN, UserPermission.of("1129067881842360381"));
+     * // Moderators Role
+     * PERMISSIONS.register(BotPermissions.TRICK_ADMIN, UserPermission.of("1129070272302022656"));
+     * // Mango Bot Tester Role
+     * PERMISSIONS.register(BotPermissions.TRICK_ADMIN, UserPermission.of("1150880910745538631"));
+     **/
+
+    public static final BasicPermission PLAYING = BasicPermission.create("playing");
+    public static final BasicPermission TRICK_ADMIN = BasicPermission.create("trickadmin");
+    public static final BasicPermission PREFIX_ADMIN = BasicPermission.create("prefix");
+    public static final BasicPermission MOD_MAIL = BasicPermission.create("mod_mail");
 
 
     static {
-        // Admin Role
-        PERMISSIONS.register(GlobalPermissions.TRICK_ADMIN, UserPermission.of("1129067881842360381"));
-        // Moderators Role
-        PERMISSIONS.register(GlobalPermissions.TRICK_ADMIN, UserPermission.of("1129070272302022656"));
-        // Mango Bot Tester Role
-        PERMISSIONS.register(GlobalPermissions.TRICK_ADMIN, UserPermission.of("1150880910745538631"));
+        PLAYING.addPermission(Permission.ADMINISTRATOR);
+        TRICK_ADMIN.addPermission(Permission.ADMINISTRATOR);
+        PREFIX_ADMIN.addPermission(Permission.ADMINISTRATOR);
+        MOD_MAIL.addPermission(Permission.ADMINISTRATOR);
+
+        PREFIX_ADMIN.addRole("1129059589325852724", "1129067881842360381");
     }
 
     public static void init() {

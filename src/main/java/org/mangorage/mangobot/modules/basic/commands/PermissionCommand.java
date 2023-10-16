@@ -20,28 +20,25 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.config;
+package org.mangorage.mangobot.modules.basic.commands;
 
-import net.dv8tion.jda.api.Permission;
-import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
-import org.mangorage.mangobotapi.core.registry.UserPermission;
+import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
+import org.mangorage.mangobotapi.core.commands.Arguments;
+import org.mangorage.mangobotapi.core.commands.CommandResult;
+import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 
-public class GlobalPermissions {
-    public static final PermissionRegistry PERMISSIONS = PermissionRegistry.global();
+public class PermissionCommand implements IBasicCommand {
 
-    public static final UserPermission.Node PLAYING = UserPermission.Node.of("playing");
-    public static final UserPermission.Node TRICK_ADMIN = UserPermission.Node.of("trickadmin");
-    public static final UserPermission.Node PREFIX_ADMIN = UserPermission.Node.of("prefix");
-    public static final UserPermission.Node MOD_MAIL = UserPermission.Node.of("mod_mail");
-
-
-    static {
-        PERMISSIONS.register(PLAYING, Permission.ADMINISTRATOR);
-        PERMISSIONS.register(TRICK_ADMIN, Permission.ADMINISTRATOR);
-        PERMISSIONS.register(PREFIX_ADMIN, Permission.ADMINISTRATOR);
-        PERMISSIONS.register(MOD_MAIL, Permission.ADMINISTRATOR);
+    @NotNull
+    @Override
+    public CommandResult execute(Message message, Arguments args) {
+        return CommandResult.PASS;
     }
 
-    public static void init() {
+
+    @Override
+    public String commandId() {
+        return "permission";
     }
 }

@@ -28,12 +28,11 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
-import org.mangorage.mangobot.core.config.GlobalPermissions;
+import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobot.modules.modmail.ModMailHandler;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 
 public class ModMailCommand implements IBasicCommand {
@@ -55,7 +54,7 @@ public class ModMailCommand implements IBasicCommand {
                 return CommandResult.PASS;
             }
 
-            if (!PermissionRegistry.hasNeededPermission(member, GlobalPermissions.MOD_MAIL))
+            if (!BotPermissions.MOD_MAIL.hasPermission(member))
                 return CommandResult.NO_PERMISSION;
             if (!args.hasArg("categoryID") || args.findArgOrDefault("categoryID", "null").equals("null"))
                 return CommandResult.FAIL;

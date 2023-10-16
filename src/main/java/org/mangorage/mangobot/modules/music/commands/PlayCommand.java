@@ -31,13 +31,12 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.core.config.GlobalPermissions;
+import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobot.modules.music.MusicPlayer;
 import org.mangorage.mangobot.modules.music.MusicUtil;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
 
 public class PlayCommand implements IBasicCommand {
     @NotNull
@@ -55,7 +54,7 @@ public class PlayCommand implements IBasicCommand {
 
         if (member == null) return CommandResult.FAIL;
 
-        if (!PermissionRegistry.hasNeededPermission(member, GlobalPermissions.PLAYING)) {
+        if (!BotPermissions.PLAYING.hasPermission(member)) {
             return CommandResult.NO_PERMISSION;
         }
 

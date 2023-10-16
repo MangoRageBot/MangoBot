@@ -30,10 +30,9 @@ import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandPrefix;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
 
 import static org.mangorage.mangobot.core.Bot.DEFAULT_SETTINGS;
-import static org.mangorage.mangobot.core.config.GlobalPermissions.PREFIX_ADMIN;
+import static org.mangorage.mangobot.core.config.BotPermissions.PREFIX_ADMIN;
 
 public class PrefixCommand implements IBasicCommand {
     @NotNull
@@ -42,16 +41,17 @@ public class PrefixCommand implements IBasicCommand {
         String prefix = args.getOrDefault(0, "");
         Member member = message.getMember();
         Guild guild = message.getGuild();
+        if (member == null) return CommandResult.GUILD_ONLY;
 
-        if (!PermissionRegistry.hasNeededPermission(member, PREFIX_ADMIN))
-            return CommandResult.of("You dont have permission to use this command! Lacking Permission Node '%s'".formatted(PREFIX_ADMIN.id()));
+        if (!PREFIX_ADMIN.hasPermission(member))
+            return CommandResult.of("You dont have permission to use this command! Lacking Permission Node '%s'".formatted(PREFIX_ADMIN.getId()));
 
         if (prefix.equals(CommandPrefix.getPrefix(guild.getId()))) {
             DEFAULT_SETTINGS.apply(message.reply("Already have command prefix set to '%s'".formatted(prefix))).queue();
             return CommandResult.PASS;
         }
 
-        if (prefix.length() > 0) {
+        if (!prefix.isEmpty()) {
             CommandPrefix.configure(guild.getId(), prefix);
             DEFAULT_SETTINGS.apply(message.reply("Changed command prefix to '%s'".formatted(prefix))).queue();
             return CommandResult.PASS;

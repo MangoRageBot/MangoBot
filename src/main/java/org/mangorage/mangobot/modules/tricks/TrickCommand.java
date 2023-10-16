@@ -28,7 +28,7 @@ import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
-import org.mangorage.mangobot.core.config.GlobalPermissions;
+import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
@@ -38,7 +38,6 @@ import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.discord.DButtonInteractionEvent;
 import org.mangorage.mangobotapi.core.registry.GuildCache;
-import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
 import org.mangorage.mangobotapi.core.script.ScriptParser;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 import org.mangorage.mangobotapi.core.util.TaskScheduler;
@@ -122,7 +121,7 @@ public class TrickCommand implements IBasicCommand {
         // !tricks -a wow -content wooop!
 
         if ((type.equals("-a") || type.equals("-add")) && id != null) {
-            if (!PermissionRegistry.hasNeededPermission(member, GlobalPermissions.TRICK_ADMIN))
+            if (!BotPermissions.TRICK_ADMIN.hasPermission(member))
                 return CommandResult.NO_PERMISSION;
 
             if (CONTENT.containsKey(guildID) && CONTENT.get(guildID).containsKey(id)) {
@@ -146,7 +145,7 @@ public class TrickCommand implements IBasicCommand {
             }
             return CommandResult.PASS;
         } else if ((type.equals("-e") || type.equals("-edit")) & id != null) {
-            if (!PermissionRegistry.hasNeededPermission(member, GlobalPermissions.TRICK_ADMIN))
+            if (!BotPermissions.TRICK_ADMIN.hasPermission(member))
                 return CommandResult.NO_PERMISSION;
 
             Data oldData;
@@ -174,7 +173,7 @@ public class TrickCommand implements IBasicCommand {
 
             return CommandResult.PASS;
         } else if ((type.equals("-r") || type.equals("-remove")) && id != null) {
-            if (!PermissionRegistry.hasNeededPermission(member, GlobalPermissions.TRICK_ADMIN))
+            if (!BotPermissions.TRICK_ADMIN.hasPermission(member))
                 return CommandResult.NO_PERMISSION;
 
             if (CONTENT.containsKey(guildID) && CONTENT.get(guildID).containsKey(id)) {
