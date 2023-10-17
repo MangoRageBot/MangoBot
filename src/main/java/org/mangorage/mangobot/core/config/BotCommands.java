@@ -25,6 +25,7 @@ package org.mangorage.mangobot.core.config;
 import org.mangorage.mangobot.core.util.Constants;
 import org.mangorage.mangobot.modules.basic.commands.HelpCommand;
 import org.mangorage.mangobot.modules.basic.commands.InfoCommand;
+import org.mangorage.mangobot.modules.basic.commands.PermissionCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingSlashCommand;
 import org.mangorage.mangobot.modules.basic.commands.PrefixCommand;
@@ -50,6 +51,7 @@ public class BotCommands {
         CommandRegistry.addBasicCommand(new HelpCommand());
         CommandRegistry.addBasicCommand(new InfoCommand());
         CommandRegistry.addBasicCommand(new VersionCommand());
+        CommandRegistry.addBasicCommand(new PermissionCommand());
 
         // Developer commands, speak is public.
         CommandRegistry.addBasicCommand(new SpeakCommand());
