@@ -32,6 +32,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.mangorage.mangobot.core.config.BotCommands;
 import org.mangorage.mangobot.core.config.BotPermissions;
+import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobot.modules.customvc.CustomVC;
 import org.mangorage.mangobot.modules.modmail.ModMailHandler;
 import org.mangorage.mangobot.modules.requestpaste.PasteRequestModule;
@@ -140,7 +141,20 @@ public class Bot {
                 CacheFlag.FORUM_TAGS
         );
 
-        builder.setActivity(Activity.of(Activity.ActivityType.CUSTOM_STATUS, "!mail join to open a ModMail ticket", "https://www.minecraftforge.net/"));
+        VersionCommand.init();
+
+        builder.setActivity(
+                Activity.of(
+                        Activity.ActivityType.PLAYING,
+                        """
+                                    Use !mail join to open a modmail ticket!
+                                    
+                                    MangoBot is on version %s"
+                                """.formatted(VersionCommand.getVersion()),
+                        "https://www.discord.minecraftforge.net/"
+                )
+        );
+
         builder.setStatus(OnlineStatus.ONLINE);
 
         builder.setEnabledIntents(intents);

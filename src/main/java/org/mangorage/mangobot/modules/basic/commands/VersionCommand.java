@@ -46,8 +46,12 @@ public class VersionCommand implements IBasicCommand {
                     .useDefaultFileNamePredicate()
     );
 
-    static {
+    public static void init() {
         VERSION_DATA_HANDLER.loadAll();
+    }
+
+    public static String getVersion() {
+        return VERSION.get().version();
     }
 
 
