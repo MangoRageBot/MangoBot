@@ -95,7 +95,7 @@ public class CustomVC {
 
                 if (category == null) return;
 
-                category.createVoiceChannel("%s".formatted(member.getEffectiveName())).queue(vc -> {
+                category.createVoiceChannel("%s's VC".formatted(member.getEffectiveName())).queue(vc -> {
                     channels.add(vc.getId());
                     member.getGuild().moveVoiceMember(member, vc).queue();
                     INSTANCE_DATA_HANDLER.save(this, guildId);
