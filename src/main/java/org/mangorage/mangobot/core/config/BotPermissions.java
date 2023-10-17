@@ -24,6 +24,7 @@ package org.mangorage.mangobot.core.config;
 
 import net.dv8tion.jda.api.Permission;
 import org.mangorage.mangobotapi.core.registry.BasicPermission;
+import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
 
 public class BotPermissions {
 
@@ -40,13 +41,22 @@ public class BotPermissions {
     public static final BasicPermission TRICK_ADMIN = BasicPermission.create("trickadmin");
     public static final BasicPermission PREFIX_ADMIN = BasicPermission.create("prefix");
     public static final BasicPermission MOD_MAIL = BasicPermission.create("mod_mail");
+    public static final BasicPermission PERMISSION_ADMIN = BasicPermission.create("permission_admin");
 
 
     static {
+        PermissionRegistry.register(PLAYING);
+        PermissionRegistry.register(TRICK_ADMIN);
+        PermissionRegistry.register(PREFIX_ADMIN);
+        PermissionRegistry.register(MOD_MAIL);
+        PermissionRegistry.register(PERMISSION_ADMIN);
+
+
         PLAYING.addPermission(Permission.ADMINISTRATOR);
         TRICK_ADMIN.addPermission(Permission.ADMINISTRATOR);
         PREFIX_ADMIN.addPermission(Permission.ADMINISTRATOR);
         MOD_MAIL.addPermission(Permission.ADMINISTRATOR);
+        PERMISSION_ADMIN.addPermission(Permission.ADMINISTRATOR);
 
         TRICK_ADMIN.addRole("1129059589325852724", "1129067881842360381");
         TRICK_ADMIN.addRole("1129059589325852724", "1129070272302022656");

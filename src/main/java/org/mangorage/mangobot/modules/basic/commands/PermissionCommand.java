@@ -24,15 +24,61 @@ package org.mangorage.mangobot.modules.basic.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
+import org.mangorage.mangobot.core.Bot;
+import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
 
 public class PermissionCommand implements IBasicCommand {
 
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
+        if (!message.isFromGuild()) return CommandResult.GUILD_ONLY;
+        var guild = message.getGuild();
+        var member = message.getMember();
+        if (member == null) return CommandResult.FAIL;
+        if (!BotPermissions.PERMISSION_ADMIN.hasPermission(member)) return CommandResult.NO_PERMISSION;
+        var settings = Bot.DEFAULT_SETTINGS;
+
+        /**
+         *
+         *
+         * !perm addRole permid id
+         * !perm removeRole permid id
+         *
+         * !perm addPerm
+         * !perm removePerm
+         *
+         * !perm list
+         */
+
+        String subcmd = args.get(0);
+        String type = args.get(1);
+        String permId = args.get(2);
+        String id = args.get(3);
+
+        if (subcmd.equals("addRole")) {
+
+        } else if (subcmd.equals("removeRole")) {
+
+        } else if (subcmd.equals("addPerm")) {
+
+        } else if (subcmd.equals("removePerm")) {
+
+        } else if (subcmd.equals("list")) {
+            StringBuilder list = new StringBuilder();
+            list.append("Permissions:").append("\n");
+            PermissionRegistry.getPermissions().forEach((perm) -> {
+                list.append(perm).append("\n");
+            });
+            settings.apply(message.reply(list.toString())).queue();
+        }
+
+
+
         return CommandResult.PASS;
     }
 
