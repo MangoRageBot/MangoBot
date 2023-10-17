@@ -103,9 +103,16 @@ public class CustomVC {
             }
         }
 
+        private boolean hasMembers(AudioChannelUnion audioChannelUnion) {
+            if (audioChannelUnion.getMembers().size() == 1) {
+                return audioChannelUnion.getMembers().get(0).getUser().isBot();
+            }
+            return !audioChannelUnion.getMembers().isEmpty();
+        }
+
         public void leave(AudioChannelUnion audioChannelUnion, Member member) {
             var id = audioChannelUnion.getId();
-            if (channels.contains(id) && audioChannelUnion.getMembers().isEmpty()) { // check if empty!
+            if (channels.contains(id) && !hasMembers(audioChannelUnion)) { // check if empty!
                 audioChannelUnion.delete().queue(after -> {
                     channels.remove(id);
                     INSTANCE_DATA_HANDLER.save(this, guildId);
