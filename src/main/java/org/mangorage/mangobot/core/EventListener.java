@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot.core;
 
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
@@ -41,6 +42,7 @@ import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
 import org.mangorage.mangobotapi.core.events.discord.DMessageUpdateEvent;
 import org.mangorage.mangobotapi.core.events.discord.DReactionEvent;
 import org.mangorage.mangobotapi.core.events.discord.DStringSelectInteractionEvent;
+import org.mangorage.mangobotapi.core.events.discord.DVoiceUpdateEvent;
 import org.mangorage.mangobotapi.core.registry.CommandRegistry;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
@@ -92,5 +94,10 @@ public record EventListener(IEventBus bus) {
     @SubscribeEvent
     public void messageStringSelect(StringSelectInteractionEvent event) {
         bus.post(new DStringSelectInteractionEvent(event));
+    }
+
+    @SubscribeEvent
+    public void voiceUpdate(GuildVoiceUpdateEvent event) {
+        bus.post(new DVoiceUpdateEvent(event));
     }
 }

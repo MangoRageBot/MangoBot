@@ -32,6 +32,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.mangorage.mangobot.core.config.BotCommands;
 import org.mangorage.mangobot.core.config.BotPermissions;
+import org.mangorage.mangobot.modules.customvc.CustomVC;
 import org.mangorage.mangobot.modules.modmail.ModMailHandler;
 import org.mangorage.mangobot.modules.requestpaste.PasteRequestModule;
 import org.mangorage.mangobotapi.MangoBotAPI;
@@ -182,8 +183,8 @@ public class Bot {
         switch (event.phase()) {
             case STARTUP -> {
                 BotCommands.init();
-
                 BotPermissions.init();
+                CustomVC.init();
             }
             case FINISHED -> {
             }

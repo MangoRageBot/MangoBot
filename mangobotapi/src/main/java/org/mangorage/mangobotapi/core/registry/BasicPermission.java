@@ -98,6 +98,19 @@ public class BasicPermission {
         return builder.toString();
     }
 
+    public void reset(String guildId) {
+        var node = NODES.computeIfAbsent(guildId, this::createNode);
+        node.ROLES.clear();
+        node.DISCORD_PERMISSIONS.clear();
+
+        // Set default's back...
+        node.ROLES.addAll(ROLES);
+        node.DISCORD_PERMISSIONS.addAll(DISCORD_PERMISSIONS);
+
+        // Save
+        save();
+    }
+
     private Node createNode(String guildID) {
         return new Node(this, guildID, DISCORD_PERMISSIONS, ROLES);
     }

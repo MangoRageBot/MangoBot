@@ -48,8 +48,6 @@ public class PermissionCommand implements IBasicCommand {
         var settings = Bot.DEFAULT_SETTINGS;
 
         /**
-         *
-         *
          * !perm addRole permid id
          * !perm removeRole permid id
          *
@@ -59,6 +57,7 @@ public class PermissionCommand implements IBasicCommand {
          * !perm list
          * !perm info permid
          * !perm discordperms
+         * !perm reset permid (Resets the Permission stuff for your guild) (WIP)
          */
 
         String subcmd = args.get(0);
@@ -72,7 +71,7 @@ public class PermissionCommand implements IBasicCommand {
             return CommandResult.PASS;
         }
 
-        if (subcmd.equals("addPerm") || subcmd.equals("removePerm")) {
+        if (subcmd.equals("addPerm") || subcmd.equals("removePerm") || subcmd.equals("reset")) {
             try {
                 Permission.valueOf(id);
             } catch (IllegalArgumentException e) {
@@ -120,6 +119,8 @@ public class PermissionCommand implements IBasicCommand {
             });
             settings.apply(message.reply(list.toString())).queue();
             return CommandResult.PASS;
+        } else if (subcmd.equals("reset")) {
+            PermissionRegistry.getPermission(permId).reset(guild.getId());
         }
 
         return CommandResult.PASS;

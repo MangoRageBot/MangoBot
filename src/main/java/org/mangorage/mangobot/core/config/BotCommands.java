@@ -30,6 +30,7 @@ import org.mangorage.mangobot.modules.basic.commands.PingCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingSlashCommand;
 import org.mangorage.mangobot.modules.basic.commands.PrefixCommand;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
+import org.mangorage.mangobot.modules.customvc.CustomVCCommand;
 import org.mangorage.mangobot.modules.developer.KickBotCommand;
 import org.mangorage.mangobot.modules.developer.RestartCommand;
 import org.mangorage.mangobot.modules.developer.SpeakCommand;
@@ -65,6 +66,7 @@ public class BotCommands {
         CommandRegistry.addBasicCommand(new ModMailCommand());
         CommandRegistry.addBasicCommand(new PrefixCommand());
         CommandRegistry.addBasicCommand(new PingCommand());
+        CommandRegistry.addBasicCommand(new CustomVCCommand());
 
 
         if (Constants.USE_MUSIC) {

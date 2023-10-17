@@ -42,6 +42,7 @@ public class BotPermissions {
     public static final BasicPermission PREFIX_ADMIN = BasicPermission.create("prefix");
     public static final BasicPermission MOD_MAIL = BasicPermission.create("mod_mail");
     public static final BasicPermission PERMISSION_ADMIN = BasicPermission.create("permission_admin");
+    public static final BasicPermission CUSTOM_VC_ADMIN = BasicPermission.create("custom_vc_admin");
 
 
     static {
@@ -50,6 +51,7 @@ public class BotPermissions {
         PermissionRegistry.register(PREFIX_ADMIN);
         PermissionRegistry.register(MOD_MAIL);
         PermissionRegistry.register(PERMISSION_ADMIN);
+        PermissionRegistry.register(CUSTOM_VC_ADMIN);
 
 
         PLAYING.addPermission(Permission.ADMINISTRATOR);
@@ -57,6 +59,7 @@ public class BotPermissions {
         PREFIX_ADMIN.addPermission(Permission.ADMINISTRATOR);
         MOD_MAIL.addPermission(Permission.ADMINISTRATOR);
         PERMISSION_ADMIN.addPermission(Permission.ADMINISTRATOR);
+        CUSTOM_VC_ADMIN.addPermission(Permission.ADMINISTRATOR);
 
         TRICK_ADMIN.addRole("1129059589325852724", "1129067881842360381");
         TRICK_ADMIN.addRole("1129059589325852724", "1129070272302022656");
