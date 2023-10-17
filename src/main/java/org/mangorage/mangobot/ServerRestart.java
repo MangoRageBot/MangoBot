@@ -20,15 +20,23 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.util;
+package org.mangorage.mangobot;
 
-import org.mangorage.mangobotapi.core.config.Config;
-import org.mangorage.mangobotapi.core.config.ConfigSetting;
-import org.mangorage.mangobotapi.core.config.ISetting;
+import com.mattmalec.pterodactyl4j.PteroBuilder;
+import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
+import org.mangorage.mangobot.core.util.BotSettings;
 
-public class BotSettings {
-    private final static Config CONFIG = new Config("botresources/", ".env");
-    public static final ISetting<String> BOT_TOKEN = ConfigSetting.create(CONFIG, "BOT_TOKEN", "empty");
-    public static final ISetting<String> PASTE_TOKEN = ConfigSetting.create(CONFIG, "PASTE_TOKEN", "empty");
-    public static final ISetting<String> SERVER_TOKEN = ConfigSetting.create(CONFIG, "SERVER_TOKEN", "empty");
+public class ServerRestart {
+
+    public static void main(String[] args) {
+        System.out.println("Restarting Discord Bot Server...");
+        PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", BotSettings.SERVER_TOKEN.get());
+
+        var server = client.retrieveServerByIdentifier("f32263f3").execute();
+        if (server != null) {
+            server.restart().execute();
+            System.out.println("Restarted Discord Bot Server.");
+        }
+
+    }
 }

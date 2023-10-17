@@ -40,6 +40,9 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
+    maven {
+        url = 'https://repo.mattmalec.com/repository/releases'
+    }
 }
 
 sourceSets {
@@ -62,6 +65,7 @@ dependencies {
     implementation("com.google.code.gson:gson:$GSON_VERSION")
     implementation("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
     implementation("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5") // GITHUB API
+    implementation('com.mattmalec:Pterodactyl4J:2.BETA_140')
 
     // Core Libs
     implementation project(path: ':mangobotapi')
@@ -154,4 +158,12 @@ publishing {
             }
         }
     }
+}
+
+task publishAndRestartServer(type: JavaExec) {
+    dependsOn publish
+    group = "bot tasks"
+    description = "Publish and restart Bot server"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "org.mangorage.mangobot.ServerRestart"
 }
