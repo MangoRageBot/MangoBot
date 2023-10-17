@@ -57,6 +57,8 @@ public class PermissionCommand implements IBasicCommand {
          * !perm removePerm permid id
          *
          * !perm list
+         * !perm info permid
+         * !perm discordperms
          */
 
         String subcmd = args.get(0);
@@ -65,6 +67,19 @@ public class PermissionCommand implements IBasicCommand {
 
         // Do checking!
 
+        if (PermissionRegistry.getPermission(permId) == null) {
+            settings.apply(message.reply("Bot Permission '%s' not found!".formatted(permId))).queue();
+            return CommandResult.PASS;
+        }
+
+        if (subcmd.equals("addPerm") || subcmd.equals("removePerm")) {
+            try {
+                Permission.valueOf(id);
+            } catch (IllegalArgumentException e) {
+                settings.apply(message.reply("Discord Permission '%s' not found!".formatted(id))).queue();
+                return CommandResult.PASS;
+            }
+        }
 
         // Final Logic!
 
