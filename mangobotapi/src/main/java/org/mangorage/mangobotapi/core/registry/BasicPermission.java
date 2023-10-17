@@ -24,6 +24,7 @@ package org.mangorage.mangobotapi.core.registry;
 
 import com.google.gson.annotations.Expose;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.mangorage.mangobotapi.core.data.DataHandler;
@@ -72,6 +73,29 @@ public class BasicPermission {
 
     public String getId() {
         return id;
+    }
+
+    public String getInfo(Guild guild) {
+        StringBuilder builder = new StringBuilder();
+        Node node = NODES.get(guild.getId());
+        if (node == null) return "No Permissions for this guild";
+        builder.append("Permission Info for permissionID: ").append(getId()).append("\n\n");
+
+        if (!node.DISCORD_PERMISSIONS.isEmpty()) {
+            builder.append("Discord Permissions for ").append(guild.getName()).append("\n");
+            node.DISCORD_PERMISSIONS.forEach(
+                    (perm) -> builder.append("Permission: ").append(perm.getName()).append(" -> ").append(perm).append("\n")
+            );
+            builder.append("\n");
+        }
+
+        if (!node.ROLES.isEmpty()) {
+            builder.append("Roles for ").append(guild.getName()).append("\n");
+            node.ROLES.forEach(
+                    (role) -> builder.append("Role: ").append("<@&%s> -> %s".formatted(role, role)).append("\n")
+            );
+        }
+        return builder.toString();
     }
 
     private Node createNode(String guildID) {

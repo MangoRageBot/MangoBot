@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot.modules.basic.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
@@ -29,7 +30,10 @@ import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.BasicPermission;
 import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
+
+import java.util.List;
 
 public class PermissionCommand implements IBasicCommand {
 
@@ -49,35 +53,59 @@ public class PermissionCommand implements IBasicCommand {
          * !perm addRole permid id
          * !perm removeRole permid id
          *
-         * !perm addPerm
-         * !perm removePerm
+         * !perm addPerm permid id
+         * !perm removePerm permid id
          *
          * !perm list
          */
 
         String subcmd = args.get(0);
-        String type = args.get(1);
-        String permId = args.get(2);
-        String id = args.get(3);
+        String permId = args.get(1);
+        String id = args.get(2);
+
+        // Do checking!
+
+
+        // Final Logic!
+
 
         if (subcmd.equals("addRole")) {
-
+            PermissionRegistry.getPermission(permId).addRole(guild.getId(), id);
+            return CommandResult.PASS;
         } else if (subcmd.equals("removeRole")) {
-
+            PermissionRegistry.getPermission(permId).removeRole(guild.getId(), id);
+            return CommandResult.PASS;
         } else if (subcmd.equals("addPerm")) {
-
+            PermissionRegistry.getPermission(permId).addPermission(guild.getId(), Permission.valueOf(id));
+            return CommandResult.PASS;
         } else if (subcmd.equals("removePerm")) {
+            PermissionRegistry.getPermission(permId).removePermission(guild.getId(), Permission.valueOf(id));
+            return CommandResult.PASS;
+        } else if (subcmd.equals("info")) {
+            BasicPermission permission = PermissionRegistry.getPermission(permId);
 
+            settings.apply(message.reply(permission.getInfo(guild))).setAllowedMentions(List.of()).setSuppressedNotifications(true).queue();
+
+            return CommandResult.PASS;
+        } else if (subcmd.equals("discordperms")) {
+            StringBuilder builder = new StringBuilder();
+            builder.append("All Discord Permissions:").append("\n\n");
+
+            for (Permission perm : Permission.values()) {
+                builder.append(perm.getName()).append(" -> ").append(perm).append("\n");
+            }
+
+            settings.apply(message.reply(builder.toString())).queue();
+            return CommandResult.PASS;
         } else if (subcmd.equals("list")) {
             StringBuilder list = new StringBuilder();
-            list.append("Permissions:").append("\n");
+            list.append("Permissions:").append("\n\n");
             PermissionRegistry.getPermissions().forEach((perm) -> {
                 list.append(perm).append("\n");
             });
             settings.apply(message.reply(list.toString())).queue();
+            return CommandResult.PASS;
         }
-
-
 
         return CommandResult.PASS;
     }
