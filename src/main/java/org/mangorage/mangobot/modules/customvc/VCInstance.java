@@ -26,14 +26,14 @@ import com.google.gson.annotations.Expose;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 public class VCInstance {
 
     @Expose
     private final String guildId;
     @Expose
-    private final HashSet<String> channels = new HashSet<>();
+    private final HashMap<String, String> channels = new HashMap<>(); // channelId -> userId
     @Expose
     private String channelId;
 
@@ -52,7 +52,7 @@ public class VCInstance {
             category.createVoiceChannel("%s's VC".formatted(member.getEffectiveName()))
                     .setPosition(audioChannelUnion.getPositionRaw() + 1)
                     .queue(vc -> {
-                        channels.add(vc.getId());
+                        channels.put(vc.getId(), member.getId());
                         member.getGuild().moveVoiceMember(member, vc).queue();
                         CustomVC.INSTANCE_DATA_HANDLER.save(this, guildId);
                     });
@@ -68,7 +68,7 @@ public class VCInstance {
 
     public void leave(AudioChannelUnion audioChannelUnion, Member member) {
         var id = audioChannelUnion.getId();
-        if (channels.contains(id) && !hasMembers(audioChannelUnion)) { // check if empty!
+        if (channels.containsKey(id) && !hasMembers(audioChannelUnion)) { // check if empty!
             audioChannelUnion.delete().queue(after -> {
                 channels.remove(id);
                 CustomVC.INSTANCE_DATA_HANDLER.save(this, guildId);
@@ -83,5 +83,14 @@ public class VCInstance {
 
     protected String getGuildID() {
         return guildId;
+    }
+
+    protected boolean isOwner(AudioChannelUnion voice, Member member) {
+        return channels.containsKey(voice.getId()) && channels.get(voice.getId()).equals(member.getId());
+    }
+
+    protected boolean isOwner(Member member) {
+
+        return false;
     }
 }

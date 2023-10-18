@@ -30,8 +30,10 @@ import org.mangorage.mangobot.modules.customvc.CustomVC;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.util.APIUtil;
 
 public class CustomVCCommand implements IBasicCommand {
+    private static final CommandResult NOT_OWNER = CommandResult.of("Your not owner of this VC!");
 
     @NotNull
     @Override
@@ -41,18 +43,49 @@ public class CustomVCCommand implements IBasicCommand {
         var member = message.getMember();
 
         if (member == null) return CommandResult.FAIL;
-        if (!BotPermissions.CUSTOM_VC_ADMIN.hasPermission(member)) return CommandResult.NO_PERMISSION;
 
         String subcmd = args.get(0);
-        String channelId = args.get(1);
+        String arg = args.get(1);
 
         if (subcmd.equals("configure")) {
-            if (channelId == null) return CommandResult.FAIL;
+            if (!BotPermissions.CUSTOM_VC_ADMIN.hasPermission(member)) return CommandResult.NO_PERMISSION;
+            if (arg == null) return CommandResult.FAIL;
 
-            CustomVC.configure(guild, channelId);
+            CustomVC.configure(guild, arg);
             Bot.DEFAULT_SETTINGS.apply(message.reply("Configured CustomVC for this guild!")).queue();
 
             return CommandResult.PASS;
+        } else if (subcmd.equals("setBitrate")) {
+            if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
+            if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
+
+            try {
+                var bitrate = Integer.parseInt(arg);
+                APIUtil.getLazyAudioChannelManager(member).ifPresent(audioChannelManager -> {
+                    audioChannelManager.setBitrate(bitrate).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Set bitrate to %s".formatted(arg))).queue();
+                });
+            } catch (NumberFormatException e) {
+                return CommandResult.FAIL;
+            }
+        } else if (subcmd.equals("setUserLimit")) {
+            if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
+            if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
+
+            try {
+                var userlimit = Integer.parseInt(arg);
+                if (userlimit < 0 || userlimit > 99) {
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Userlimit must be between 0 (no limit) and 99")).queue();
+                    return CommandResult.PASS;
+                }
+
+                APIUtil.getLazyAudioChannelManager(member).ifPresent(audioChannelManager -> {
+                    audioChannelManager.setUserLimit(userlimit).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Set userlimit to %s".formatted(arg))).queue();
+                });
+            } catch (NumberFormatException e) {
+                return CommandResult.FAIL;
+            }
         }
 
 

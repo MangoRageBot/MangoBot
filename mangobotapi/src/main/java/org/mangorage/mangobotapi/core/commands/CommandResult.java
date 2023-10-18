@@ -40,6 +40,7 @@ public record CommandResult(String string) {
     public static final CommandResult UNDER_MAINTENANCE = of("This is currently under maintenance! Please try again later!");
     public static final CommandResult GUILD_ONLY = of("This is a Guild Only Command!");
     public static final CommandResult DEVELOPERS_ONLY = of("This command is only for the Developers to use!");
+    public static final CommandResult NEED_TO_BE_IN_VC = of("You need to be in a VC to use this command!");
 
     public void accept(Message message) {
         if (string() != null)

@@ -23,6 +23,9 @@
 package org.mangorage.mangobotapi.core.util;
 
 import com.google.gson.Gson;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.managers.channel.middleman.AudioChannelManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class APIUtil {
     public static boolean isValidBotToken(String token) {
@@ -78,5 +82,23 @@ public class APIUtil {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean inVC(Member member) {
+        return member.getVoiceState() != null && member.getVoiceState().inAudioChannel();
+    }
+
+    public static @Nullable AudioChannelManager<?, ?> getAudioChannelManager(Member member) {
+        if (member == null) return null;
+        var state = member.getVoiceState();
+        if (state == null) return null;
+        if (!state.inAudioChannel()) return null;
+        var channel = state.getChannel();
+        if (channel == null) return null;
+        return channel.getManager();
+    }
+
+    public static Optional<AudioChannelManager<?, ?>> getLazyAudioChannelManager(Member member) {
+        return Optional.ofNullable(getAudioChannelManager(member));
     }
 }

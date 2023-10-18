@@ -23,6 +23,7 @@
 package org.mangorage.mangobot.modules.customvc;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.data.DataHandler;
 import org.mangorage.mangobotapi.core.events.discord.DVoiceUpdateEvent;
@@ -67,5 +68,15 @@ public class CustomVC {
     public static void configure(Guild guild, String channelId) {
         var instance = INSTANCES.computeIfAbsent(guild.getId(), VCInstance::new);
         instance.setChannelId(channelId);
+    }
+
+    public static boolean isOwner(Guild guild, Member member) {
+        var instance = INSTANCES.computeIfAbsent(guild.getId(), VCInstance::new);
+        return instance.isOwner(member);
+    }
+
+    public static void setBitrate(Guild guild, Member member, int bitrate) {
+        var instance = INSTANCES.computeIfAbsent(guild.getId(), VCInstance::new);
+        instance.setBitrate(member, bitrate);
     }
 }
