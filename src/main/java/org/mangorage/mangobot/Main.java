@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot;
 
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.util.BotSettings;
 import org.mangorage.mangobotapi.core.util.APIUtil;
@@ -63,6 +64,16 @@ public class Main {
             System.out.println("Manually set the token under botresources/.env");
             System.exit(0);
         }
+        MessageChannelUnion channel;
+        channel.getIterableHistory().takeAsync(50).thenAccept(messages -> {
+            channel.purgeMessages(
+                    messages.stream()
+                            .filter(message1 -> !message1.getAuthor().isBot())
+                            .toList()
+            );
+        }).whenComplete((e, b) -> {
+
+        });
 
 
         final String token;

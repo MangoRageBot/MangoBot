@@ -22,26 +22,22 @@
 
 package org.mangorage.mangobot.modules.customvc;
 
-import com.google.gson.annotations.Expose;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.data.DataHandler;
 import org.mangorage.mangobotapi.core.events.discord.DVoiceUpdateEvent;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class CustomVC {
-    private static final HashMap<String, Instance> INSTANCES = new HashMap<>(); // guildID -> Inst
+    private static final HashMap<String, VCInstance> INSTANCES = new HashMap<>(); // guildID -> Inst
 
-    private static final DataHandler<Instance> INSTANCE_DATA_HANDLER = DataHandler.create(
+    protected static final DataHandler<VCInstance> INSTANCE_DATA_HANDLER = DataHandler.create(
             (inst) -> {
-                INSTANCES.put(inst.guildId, inst);
+                INSTANCES.put(inst.getGuildID(), inst);
             },
-            Instance.class,
-            "data/customvc/",
+            VCInstance.class,
+            "data/customvc/guilds/",
             DataHandler.Properties.create()
                     .useExposeAnnotation()
                     .setFileName("instance.json")
@@ -49,13 +45,13 @@ public class CustomVC {
     );
 
 
-    private static void onJoin(DVoiceUpdateEvent event) {
+    private static void onUpdate(DVoiceUpdateEvent event) {
         var dEvent = event.get();
         var guild = dEvent.getGuild();
         var channelJoined = dEvent.getChannelJoined();
         var channelLeft = dEvent.getChannelLeft();
 
-        var instance = INSTANCES.computeIfAbsent(guild.getId(), Instance::new);
+        var instance = INSTANCES.computeIfAbsent(guild.getId(), VCInstance::new);
         if (channelJoined != null)
             instance.join(channelJoined, dEvent.getMember());
         if (channelLeft != null)
@@ -64,61 +60,12 @@ public class CustomVC {
 
 
     public static void init() {
-        Bot.EVENT_BUS.addListener(DVoiceUpdateEvent.class, CustomVC::onJoin);
+        Bot.EVENT_BUS.addListener(DVoiceUpdateEvent.class, CustomVC::onUpdate);
         INSTANCE_DATA_HANDLER.loadAll();
     }
 
     public static void configure(Guild guild, String channelId) {
-        var instance = INSTANCES.computeIfAbsent(guild.getId(), Instance::new);
-        instance.channelId = channelId;
+        var instance = INSTANCES.computeIfAbsent(guild.getId(), VCInstance::new);
+        instance.setChannelId(channelId);
     }
-
-
-    public static class Instance {
-
-        @Expose
-        private final String guildId;
-        @Expose
-        private final HashSet<String> channels = new HashSet<>();
-        @Expose
-        private String channelId;
-
-
-        private Instance(String guildId) {
-            this.guildId = guildId;
-        }
-
-        public void join(AudioChannelUnion audioChannelUnion, Member member) {
-            var id = audioChannelUnion.getId();
-            if (id.equals(channelId)) {
-                var category = audioChannelUnion.getParentCategory();
-
-                if (category == null) return;
-
-                category.createVoiceChannel("%s's VC".formatted(member.getEffectiveName())).queue(vc -> {
-                    channels.add(vc.getId());
-                    member.getGuild().moveVoiceMember(member, vc).queue();
-                    INSTANCE_DATA_HANDLER.save(this, guildId);
-                });
-            }
-        }
-
-        private boolean hasMembers(AudioChannelUnion audioChannelUnion) {
-            if (audioChannelUnion.getMembers().size() == 1) {
-                return audioChannelUnion.getMembers().get(0).getUser().isBot();
-            }
-            return !audioChannelUnion.getMembers().isEmpty();
-        }
-
-        public void leave(AudioChannelUnion audioChannelUnion, Member member) {
-            var id = audioChannelUnion.getId();
-            if (channels.contains(id) && !hasMembers(audioChannelUnion)) { // check if empty!
-                audioChannelUnion.delete().queue(after -> {
-                    channels.remove(id);
-                    INSTANCE_DATA_HANDLER.save(this, guildId);
-                });
-            }
-        }
-    }
-
 }
