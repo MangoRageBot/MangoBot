@@ -25,6 +25,7 @@ package org.mangorage.mangobot.modules.customvc;
 import com.google.gson.annotations.Expose;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
+import org.mangorage.mangobotapi.core.util.APIUtil;
 
 import java.util.HashMap;
 
@@ -90,7 +91,13 @@ public class VCInstance {
     }
 
     protected boolean isOwner(Member member) {
-
+        if (APIUtil.inVC(member)) {
+            var voice = member.getVoiceState();
+            if (voice == null) return false;
+            var channel = voice.getChannel();
+            if (channel == null) return false;
+            return isOwner(channel, member);
+        }
         return false;
     }
 }
