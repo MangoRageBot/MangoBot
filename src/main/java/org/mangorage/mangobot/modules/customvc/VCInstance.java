@@ -49,11 +49,13 @@ public class VCInstance {
 
             if (category == null) return;
 
-            category.createVoiceChannel("%s's VC".formatted(member.getEffectiveName())).queue(vc -> {
-                channels.add(vc.getId());
-                member.getGuild().moveVoiceMember(member, vc).queue();
-                CustomVC.INSTANCE_DATA_HANDLER.save(this, guildId);
-            });
+            category.createVoiceChannel("%s's VC".formatted(member.getEffectiveName()))
+                    .setPosition(category.getPosition() + 1)
+                    .queue(vc -> {
+                        channels.add(vc.getId());
+                        member.getGuild().moveVoiceMember(member, vc).queue();
+                        CustomVC.INSTANCE_DATA_HANDLER.save(this, guildId);
+                    });
         }
     }
 
