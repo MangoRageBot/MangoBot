@@ -81,7 +81,7 @@ public class CustomVCCommand implements IBasicCommand {
 
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(audioChannelManager -> {
                     audioChannelManager.setBitrate(bitrate).queue();
-                    Bot.DEFAULT_SETTINGS.apply(message.reply("Set bitrate to %s".formatted(arg))).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Set your VC's bitrate to %s".formatted(arg))).queue();
                 });
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
@@ -99,7 +99,7 @@ public class CustomVCCommand implements IBasicCommand {
 
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(audioChannelManager -> {
                     audioChannelManager.setUserLimit(userlimit).queue();
-                    Bot.DEFAULT_SETTINGS.apply(message.reply("Set userlimit to %s".formatted(arg))).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Set your VC's userlimit to %s".formatted(arg))).queue();
                 });
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
@@ -124,7 +124,7 @@ public class CustomVCCommand implements IBasicCommand {
 
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(manager -> {
                     manager.putMemberPermissionOverride(user, ALLOWED, List.of()).queue();
-                    Bot.DEFAULT_SETTINGS.apply(message.reply("Added user %s".formatted(arg))).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Added user %s to your VC".formatted(arg))).queue();
                 });
 
             } catch (NumberFormatException e) {
@@ -139,7 +139,7 @@ public class CustomVCCommand implements IBasicCommand {
 
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(manager -> {
                     manager.putMemberPermissionOverride(user, List.of(), DISALLOWED).queue();
-                    Bot.DEFAULT_SETTINGS.apply(message.reply("Added user %s".formatted(arg))).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Removed user %s from your VC".formatted(arg))).queue();
                 });
 
             } catch (NumberFormatException e) {

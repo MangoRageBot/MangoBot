@@ -62,7 +62,7 @@ public class VCInstance {
 
     private boolean hasMembers(AudioChannelUnion audioChannelUnion) {
         if (audioChannelUnion.getMembers().size() == 1) {
-            return audioChannelUnion.getMembers().get(0).getUser().isBot();
+            return !audioChannelUnion.getMembers().get(0).getUser().isBot();
         }
         return !audioChannelUnion.getMembers().isEmpty();
     }
