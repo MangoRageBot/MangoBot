@@ -58,7 +58,7 @@ public class CustomVCCommand implements IBasicCommand {
         String subcmd = args.get(0);
         String arg = args.get(1);
 
-        if (subcmd.equals("configure")) {
+        if (subcmd.equalsIgnoreCase("configure")) {
             if (!BotPermissions.CUSTOM_VC_ADMIN.hasPermission(member)) return CommandResult.NO_PERMISSION;
             if (arg == null) return CommandResult.FAIL;
 
@@ -66,7 +66,7 @@ public class CustomVCCommand implements IBasicCommand {
             Bot.DEFAULT_SETTINGS.apply(message.reply("Configured CustomVC for this guild!")).queue();
 
             return CommandResult.PASS;
-        } else if (subcmd.equals("setBitrate")) {
+        } else if (subcmd.equalsIgnoreCase("setBitrate")) {
             if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
             if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
 
@@ -86,7 +86,7 @@ public class CustomVCCommand implements IBasicCommand {
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
             }
-        } else if (subcmd.equals("setUserlimit")) {
+        } else if (subcmd.equalsIgnoreCase("setUserlimit")) {
             if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
             if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
 
@@ -104,7 +104,7 @@ public class CustomVCCommand implements IBasicCommand {
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
             }
-        } else if (subcmd.equals("setPrivate")) {
+        } else if (subcmd.equalsIgnoreCase("setPrivate")) {
             if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
             if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
 
@@ -115,7 +115,7 @@ public class CustomVCCommand implements IBasicCommand {
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
             }
-        } else if (subcmd.equals("addUser")) {
+        } else if (subcmd.equalsIgnoreCase("allowUser")) {
             if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
             if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
 
@@ -130,7 +130,7 @@ public class CustomVCCommand implements IBasicCommand {
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
             }
-        } else if (subcmd.equals("removeUser")) {
+        } else if (subcmd.equalsIgnoreCase("denyUser")) {
             if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
             if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
 
@@ -140,6 +140,44 @@ public class CustomVCCommand implements IBasicCommand {
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(manager -> {
                     manager.putMemberPermissionOverride(user, List.of(), DISALLOWED).queue();
                     Bot.DEFAULT_SETTINGS.apply(message.reply("Removed user %s from your VC".formatted(arg))).queue();
+                });
+
+            } catch (NumberFormatException e) {
+                return CommandResult.FAIL;
+            }
+        } else if (subcmd.equalsIgnoreCase("resetUser")) {
+            if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
+            if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
+
+            try {
+                var user = Long.parseLong(arg);
+
+                APIUtil.getLazyAudioChannelManager(member).ifPresent(manager -> {
+                    manager.putMemberPermissionOverride(user, List.of(), List.of()).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Removed Overrides for user %s for your VC".formatted(arg))).queue();
+                });
+
+            } catch (NumberFormatException e) {
+                return CommandResult.FAIL;
+            }
+        } else if (subcmd.equalsIgnoreCase("kickUser")) {
+            if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
+            if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
+
+            try {
+                var user = Long.parseLong(arg);
+
+                APIUtil.getLazyVoiceChannel(member).ifPresent(voiceChannel -> {
+                    var memberToKick = voiceChannel.getGuild().getMemberById(user);
+                    if (memberToKick == null) return;
+                    var result = voiceChannel.getMembers().stream().filter(m -> m.getIdLong() == user).findFirst();
+                    if (result.isPresent()) {
+                        var m = result.get();
+                        guild.kickVoiceMember(m).queue();
+                        Bot.DEFAULT_SETTINGS.apply(message.reply("Kicked user %s from your VC".formatted(m.getEffectiveName()))).queue();
+                    } else {
+                        Bot.DEFAULT_SETTINGS.apply(message.reply("Could not find user in your VC")).queue();
+                    }
                 });
 
             } catch (NumberFormatException e) {
