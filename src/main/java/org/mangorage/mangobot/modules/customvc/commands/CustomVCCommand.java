@@ -61,6 +61,13 @@ public class CustomVCCommand implements IBasicCommand {
 
             try {
                 var bitrate = Integer.parseInt(arg);
+
+                if (bitrate < 8000 || bitrate > 128000) {
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Bitrate must be between 8000 and 128000")).queue();
+                    return CommandResult.PASS;
+                }
+
+
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(audioChannelManager -> {
                     audioChannelManager.setBitrate(bitrate).queue();
                     Bot.DEFAULT_SETTINGS.apply(message.reply("Set bitrate to %s".formatted(arg))).queue();
@@ -68,7 +75,7 @@ public class CustomVCCommand implements IBasicCommand {
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
             }
-        } else if (subcmd.equals("setUserLimit")) {
+        } else if (subcmd.equals("setUserlimit")) {
             if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
             if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
 
