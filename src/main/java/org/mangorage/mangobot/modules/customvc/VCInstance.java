@@ -50,7 +50,7 @@ public class VCInstance {
             if (category == null) return;
 
             category.createVoiceChannel("%s's VC".formatted(member.getEffectiveName()))
-                    .setPosition(category.getPosition() + 1)
+                    .setPosition(audioChannelUnion.getPosition() + 1)
                     .queue(vc -> {
                         channels.add(vc.getId());
                         member.getGuild().moveVoiceMember(member, vc).queue();
