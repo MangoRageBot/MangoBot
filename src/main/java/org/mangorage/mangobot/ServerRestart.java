@@ -34,8 +34,13 @@ public class ServerRestart {
 
         var server = client.retrieveServerByIdentifier("f32263f3").execute();
         if (server != null) {
-            server.restart().execute();
-            System.out.println("Restarted Discord Bot Server.");
+            if (server.isSuspended()) {
+                System.out.println("Server is suspended, unsuspending...");
+                server.start().execute();
+            } else {
+                server.restart().execute();
+                System.out.println("Restarted Discord Bot Server.");
+            }
         }
 
     }
