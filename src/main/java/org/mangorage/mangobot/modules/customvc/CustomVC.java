@@ -74,9 +74,4 @@ public class CustomVC {
         var instance = INSTANCES.computeIfAbsent(guild.getId(), VCInstance::new);
         return instance.isOwner(member);
     }
-
-    public static void setBitrate(Guild guild, Member member, int bitrate) {
-        var instance = INSTANCES.computeIfAbsent(guild.getId(), VCInstance::new);
-        instance.setBitrate(member, bitrate);
-    }
 }
