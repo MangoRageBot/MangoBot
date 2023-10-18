@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot.modules.customvc.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
@@ -32,8 +33,18 @@ import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.util.APIUtil;
 
+import java.util.List;
+
 public class CustomVCCommand implements IBasicCommand {
     private static final CommandResult NOT_OWNER = CommandResult.of("Your not owner of this VC!");
+    private static final List<Permission> ALLOWED = List.of(
+            Permission.VOICE_CONNECT,
+            Permission.VOICE_SPEAK
+    );
+    private static final List<Permission> DISALLOWED = List.of(
+            Permission.VOICE_CONNECT,
+            Permission.VOICE_SPEAK
+    );
 
     @NotNull
     @Override
@@ -90,6 +101,47 @@ public class CustomVCCommand implements IBasicCommand {
                     audioChannelManager.setUserLimit(userlimit).queue();
                     Bot.DEFAULT_SETTINGS.apply(message.reply("Set userlimit to %s".formatted(arg))).queue();
                 });
+            } catch (NumberFormatException e) {
+                return CommandResult.FAIL;
+            }
+        } else if (subcmd.equals("setPrivate")) {
+            if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
+            if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
+
+            try {
+                var privateVC = Boolean.parseBoolean(arg);
+
+                Bot.DEFAULT_SETTINGS.apply(message.reply("Set private to %s (WIP Still, doesnt work)".formatted(arg))).queue();
+            } catch (NumberFormatException e) {
+                return CommandResult.FAIL;
+            }
+        } else if (subcmd.equals("addUser")) {
+            if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
+            if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
+
+            try {
+                var user = Long.parseLong(arg);
+
+                APIUtil.getLazyAudioChannelManager(member).ifPresent(manager -> {
+                    manager.putMemberPermissionOverride(user, ALLOWED, List.of()).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Added user %s".formatted(arg))).queue();
+                });
+
+            } catch (NumberFormatException e) {
+                return CommandResult.FAIL;
+            }
+        } else if (subcmd.equals("removeUser")) {
+            if (!APIUtil.inVC(member)) return CommandResult.NEED_TO_BE_IN_VC;
+            if (!CustomVC.isOwner(guild, member)) return NOT_OWNER;
+
+            try {
+                var user = Long.parseLong(arg);
+
+                APIUtil.getLazyAudioChannelManager(member).ifPresent(manager -> {
+                    manager.putMemberPermissionOverride(user, List.of(), DISALLOWED).queue();
+                    Bot.DEFAULT_SETTINGS.apply(message.reply("Added user %s".formatted(arg))).queue();
+                });
+
             } catch (NumberFormatException e) {
                 return CommandResult.FAIL;
             }

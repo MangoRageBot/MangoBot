@@ -24,6 +24,7 @@ package org.mangorage.mangobotapi.core.util;
 
 import com.google.gson.Gson;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.managers.channel.middleman.AudioChannelManager;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,14 +89,22 @@ public class APIUtil {
         return member.getVoiceState() != null && member.getVoiceState().inAudioChannel();
     }
 
-    public static @Nullable AudioChannelManager<?, ?> getAudioChannelManager(Member member) {
+    public static @Nullable AudioChannelUnion getVoiceChannel(Member member) {
         if (member == null) return null;
         var state = member.getVoiceState();
         if (state == null) return null;
         if (!state.inAudioChannel()) return null;
-        var channel = state.getChannel();
-        if (channel == null) return null;
-        return channel.getManager();
+        return state.getChannel();
+    }
+
+    public static Optional<AudioChannelUnion> getLazyVoiceChannel(Member member) {
+        return Optional.ofNullable(getVoiceChannel(member));
+    }
+
+    public static @Nullable AudioChannelManager<?, ?> getAudioChannelManager(Member member) {
+        var vc = getVoiceChannel(member);
+        if (vc == null) return null;
+        return vc.getManager();
     }
 
     public static Optional<AudioChannelManager<?, ?>> getLazyAudioChannelManager(Member member) {
