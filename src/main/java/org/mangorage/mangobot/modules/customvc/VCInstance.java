@@ -50,7 +50,19 @@ public class VCInstance {
 
             if (category == null) return;
 
-            category.createVoiceChannel("%s's VC".formatted(member.getEffectiveName()))
+            var VC = CustomVC.getConfiguration(member.getUser());
+            if (VC == null) return;
+            if (VC.getName().isBlank())
+                VC.setName("%s's VC".formatted(member.getEffectiveName()));
+
+            var channel = category.createVoiceChannel(VC.getName());
+
+            if (VC.getBitrate() > 0)
+                channel = channel.setBitrate(VC.getBitrate());
+
+
+            channel
+                    .setUserlimit(VC.getUserLimit())
                     .setPosition(audioChannelUnion.getPositionRaw() + 1)
                     .reason("Custom VC")
                     .queue(vc -> {

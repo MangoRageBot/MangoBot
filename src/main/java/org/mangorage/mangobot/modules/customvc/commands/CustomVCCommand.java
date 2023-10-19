@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobot.modules.customvc.CustomVC;
+import org.mangorage.mangobot.modules.customvc.VCConfiguration;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
@@ -84,6 +85,8 @@ public class CustomVCCommand implements IBasicCommand {
 
 
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(audioChannelManager -> {
+                    VCConfiguration VC = CustomVC.getConfiguration(member.getUser());
+                    VC.setBitrate(bitrate);
                     audioChannelManager.setBitrate(bitrate).queue();
                     Bot.DEFAULT_SETTINGS.apply(message.reply("Set your VC's bitrate to %s".formatted(arg))).queue();
                 });
@@ -103,6 +106,8 @@ public class CustomVCCommand implements IBasicCommand {
 
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(audioChannelManager -> {
                     audioChannelManager.setUserLimit(userlimit).queue();
+                    VCConfiguration VC = CustomVC.getConfiguration(member.getUser());
+                    VC.setUserLimit(userlimit);
                     Bot.DEFAULT_SETTINGS.apply(message.reply("Set your VC's userlimit to %s".formatted(arg))).queue();
                 });
             } catch (NumberFormatException e) {
@@ -202,6 +207,8 @@ public class CustomVCCommand implements IBasicCommand {
 
                 APIUtil.getLazyAudioChannelManager(member).ifPresent(manager -> {
                     manager.setName(name).queue();
+                    VCConfiguration VC = CustomVC.getConfiguration(member.getUser());
+                    VC.setName(name);
                     Bot.DEFAULT_SETTINGS.apply(message.reply("Set your VC's name to %s".formatted(name))).queue();
                 });
 

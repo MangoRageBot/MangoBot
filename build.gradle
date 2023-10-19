@@ -56,7 +56,7 @@ sourceSets {
     }
 }
 
-print(getVersionCode() + " version")
+println("Current Bot Version: ${version}")
 
 dependencies {
     // Libs for Bot

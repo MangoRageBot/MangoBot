@@ -24,6 +24,7 @@ package org.mangorage.mangobot.modules.customvc;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.data.DataHandler;
 import org.mangorage.mangobotapi.core.events.discord.DVoiceUpdateEvent;
@@ -32,6 +33,7 @@ import java.util.HashMap;
 
 public class CustomVC {
     private static final HashMap<String, VCInstance> INSTANCES = new HashMap<>(); // guildID -> Inst
+    private static final HashMap<String, VCConfiguration> CONFIGURATIONS = new HashMap<>(); // userID -> conf
 
     protected static final DataHandler<VCInstance> INSTANCE_DATA_HANDLER = DataHandler.create(
             (inst) -> {
@@ -44,6 +46,22 @@ public class CustomVC {
                     .setFileName("instance.json")
                     .useDefaultFileNamePredicate()
     );
+
+    protected static final DataHandler<VCConfiguration> CONFIGURATION_DATA_HANDLER = DataHandler.create(
+            (vcConfiguration) -> {
+                CONFIGURATIONS.put(vcConfiguration.getUserID(), vcConfiguration);
+            },
+            VCConfiguration.class,
+            "data/customvc/users/",
+            DataHandler.Properties.create()
+                    .useExposeAnnotation()
+                    .setFileName("settings.json")
+                    .useDefaultFileNamePredicate()
+    );
+
+    public static VCConfiguration getConfiguration(User user) {
+        return CONFIGURATIONS.computeIfAbsent(user.getId(), VCConfiguration::create);
+    }
 
 
     private static void onUpdate(DVoiceUpdateEvent event) {
@@ -63,6 +81,7 @@ public class CustomVC {
     public static void init() {
         Bot.EVENT_BUS.addListener(DVoiceUpdateEvent.class, CustomVC::onUpdate);
         INSTANCE_DATA_HANDLER.loadAll();
+        CONFIGURATION_DATA_HANDLER.loadAll();
     }
 
     public static void configure(Guild guild, String channelId) {
