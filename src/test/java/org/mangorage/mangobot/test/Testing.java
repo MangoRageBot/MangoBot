@@ -23,7 +23,4 @@
 package org.mangorage.mangobot.test;
 
 public class Testing {
-    public static void main(String[] args) {
-        Test.println("TESTING SOMETHING");
-    }
 }

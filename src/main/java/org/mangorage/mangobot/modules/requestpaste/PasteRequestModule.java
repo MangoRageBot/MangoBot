@@ -28,10 +28,10 @@ import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.GistService;
 import org.jetbrains.annotations.Nullable;
+import org.mangorage.mangobot.basicutils.TaskScheduler;
+import org.mangorage.mangobot.basicutils.misc.LazyReference;
 import org.mangorage.mangobot.core.util.BotSettings;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
-import org.mangorage.mangobotapi.core.util.LazyReference;
-import org.mangorage.mangobotapi.core.util.TaskScheduler;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
 import java.io.BufferedReader;

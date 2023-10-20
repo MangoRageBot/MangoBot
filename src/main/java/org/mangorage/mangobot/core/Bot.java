@@ -30,6 +30,8 @@ import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.mangobot.basicutils.misc.LockableReference;
 import org.mangorage.mangobot.core.config.BotCommands;
 import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
@@ -42,7 +44,6 @@ import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
-import org.mangorage.mangobotapi.core.util.misc.LockableReference;
 import org.mangorage.mboteventbus.EventBus;
 
 import java.util.EnumSet;
@@ -98,14 +99,14 @@ public class Bot {
 
             APIHook.shutdown();
 
-            System.out.println("Terminating Bot! Closing Program!");
+            LogHelper.println("Terminating Bot! Closing Program!");
         }
     }
 
     private final JDA BOT;
 
     public Bot(String botToken, Consumer<Bot> finalizer) {
-        System.out.println(STARTUP_MESSAGE);
+        LogHelper.println(STARTUP_MESSAGE);
 
         // ****** Builder Start *********
 
@@ -178,8 +179,8 @@ public class Bot {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
-            System.out.println("Built the Bot. Proceeding to load everything");
-            System.out.println("Bot Started");
+            LogHelper.println("Built the Bot. Proceeding to load everything");
+            LogHelper.println("Bot Started");
             MangoBotAPI.getInstance().startup((bus) -> {
                 EVENT_BUS.addListener(StartupEvent.class, this::onStartup);
                 EVENT_BUS.addListener(ShutdownEvent.class, this::onShutdown);

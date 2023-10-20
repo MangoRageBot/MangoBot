@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot;
 
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.util.BotSettings;
 import org.mangorage.mangobotapi.core.util.APIUtil;
@@ -37,7 +38,6 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        PrintWrapper.initWrapper();
 
 
         var currentToken = BotSettings.BOT_TOKEN.get();
@@ -54,16 +54,16 @@ public class Main {
     private static void requestBotToken(boolean wasInvalid) {
         String message = "Enter your Bot Token to get started...";
         if (wasInvalid) {
-            System.out.println("Current Bot Token detected as invalid...");
-            System.out.println("Please re-enter your Discord Bot's Token:");
+            LogHelper.println("Current Bot Token detected as invalid...");
+            LogHelper.println("Please re-enter your Discord Bot's Token:");
             message = "Re-Enter your Bot Token";
         } else {
-            System.out.println("Please enter your Discord Bot's Token:");
+            LogHelper.println("Please enter your Discord Bot's Token:");
         }
 
         if (GraphicsEnvironment.isHeadless()) {
             BotSettings.BOT_TOKEN.set("empty");
-            System.out.println("Manually set the token under botresources/.env");
+            LogHelper.println("Manually set the token under botresources/.env");
             System.exit(0);
         }
 
@@ -93,7 +93,7 @@ public class Main {
 
         if (APIUtil.isValidBotToken(token)) {
             BotSettings.BOT_TOKEN.set(token);
-            System.out.println("Configured the Bot Token. Proceeding to init Bot.");
+            LogHelper.println("Configured the Bot Token. Proceeding to init Bot.");
         } else {
             requestBotToken(true);
         }

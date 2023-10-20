@@ -22,6 +22,8 @@
 
 package org.mangorage.mangobot.launcher;
 
+import org.mangorage.mangobot.basicutils.LogHelper;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -49,6 +51,6 @@ public class Monitor extends Thread {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Process has ended!");
+        LogHelper.println("Process has ended!");
     }
 }

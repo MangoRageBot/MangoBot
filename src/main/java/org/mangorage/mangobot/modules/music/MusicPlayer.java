@@ -34,6 +34,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
+import org.mangorage.mangobot.basicutils.LogHelper;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
@@ -110,7 +111,7 @@ public class MusicPlayer extends AudioEventAdapter implements AudioSendHandler {
             @Override
             public void loadFailed(FriendlyException exception) {
                 eventConsumer.accept(new AudioTrackEvent(null, AudioTrackEvent.Info.FAILED));
-                System.out.println(exception.getMessage());
+                LogHelper.println(exception.getMessage());
             }
         });
     }
@@ -165,7 +166,7 @@ public class MusicPlayer extends AudioEventAdapter implements AudioSendHandler {
     }
 
     public void onTrackException(AudioPlayer player, AudioTrack track, FriendlyException exception) {
-        System.out.println(exception.getMessage());
+        LogHelper.println(exception.getMessage());
     }
 
 

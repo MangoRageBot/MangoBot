@@ -70,6 +70,7 @@ dependencies {
     // Core Libs
     implementation project(path: ':mangobotapi')
     implementation project(path: ':mboteventbus')
+    implementation project(path: ':mangoutils')
 
     runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:$LOG4J_VERSION")
 
@@ -77,6 +78,7 @@ dependencies {
     // Shadow
     shadow project(path: ':mangobotapi')
     shadow project(path: ':mboteventbus')
+    shadow project(path: ':mangoutils')
 
 
     shadow("net.dv8tion:JDA:$JDA_VERSION")

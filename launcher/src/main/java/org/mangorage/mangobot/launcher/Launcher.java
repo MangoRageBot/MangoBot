@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot.launcher;
 
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.launcher.data.Maven;
 import org.mangorage.mangobot.launcher.data.Version;
 import org.mangorage.mangobot.launcher.utils.Util;
@@ -36,12 +37,12 @@ public class Launcher {
     );
 
     public static void main(String[] args) {
-        System.out.println("Checking for Updates...");
+        LogHelper.println("Checking for Updates...");
 
         File dest = new File("bot/mangobot.jar");
         File parent = dest.getParentFile();
         if (!parent.exists() && !parent.mkdirs()) {
-            System.out.println("Unable to create directories for bot jar...");
+            LogHelper.println("Unable to create directories for bot jar...");
             return;
         }
 
@@ -50,18 +51,18 @@ public class Launcher {
             String version = Maven.parseLatestVersion(metadata);
 
             if (version != null) {
-                System.out.println("Found latest Version: " + version);
+                LogHelper.println("Found latest Version: " + version);
                 // Handle check for updates...
                 Version currentVersion = Util.getVersion();
                 if (currentVersion == null) {
-                    System.out.println("No current version found, downloading latest version...");
+                    LogHelper.println("No current version found, downloading latest version...");
                     MAVEN.downloadTo(version, dest);
                     Util.saveVersion(version);
                 } else {
                     if (currentVersion.version().equals(version)) {
-                        System.out.println("No updates found, starting bot...");
+                        LogHelper.println("No updates found, starting bot...");
                     } else {
-                        System.out.println("Found new version, downloading...");
+                        LogHelper.println("Found new version, downloading...");
                         MAVEN.downloadTo(version, dest);
                         Util.saveVersion(version);
                     }
@@ -73,12 +74,12 @@ public class Launcher {
         if (version != null) {
             //startBot(version.version());
         } else {
-            System.out.println("Unable to find Bot jar...");
+            LogHelper.println("Unable to find Bot jar...");
         }
     }
 
     public static void startBot(String version) {
-        System.out.println("Starting bot now... Version: %s".formatted(version));
+        LogHelper.println("Starting bot now... Version: %s".formatted(version));
 
         ProcessBuilder pb = new ProcessBuilder("java", "-jar", "mangobot.jar");
         pb.directory(new File("bot/"));

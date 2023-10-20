@@ -27,6 +27,10 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
+import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.mangobot.basicutils.TaskScheduler;
+import org.mangorage.mangobot.basicutils.misc.PagedList;
+import org.mangorage.mangobot.basicutils.misc.RunnableTask;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
@@ -40,9 +44,6 @@ import org.mangorage.mangobotapi.core.events.discord.DButtonInteractionEvent;
 import org.mangorage.mangobotapi.core.registry.GuildCache;
 import org.mangorage.mangobotapi.core.script.ScriptParser;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
-import org.mangorage.mangobotapi.core.util.TaskScheduler;
-import org.mangorage.mangobotapi.core.util.misc.PagedList;
-import org.mangorage.mangobotapi.core.util.misc.RunnableTask;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -73,7 +74,7 @@ public class TrickCommand implements IBasicCommand {
             (data) -> {
                 if (data.settings == null)
                     data = data.withSettings(new TrickConfig(true));
-                System.out.println("Loaded Trick: '%s' for guild '%s'".formatted(data.trickID(), GuildCache.getGuildName(data.guildID)));
+                LogHelper.println("Loaded Trick: '%s' for guild '%s'".formatted(data.trickID(), GuildCache.getGuildName(data.guildID)));
                 CONTENT.computeIfAbsent(data.guildID(), (k) -> new HashMap<>()).put(data.trickID(), data);
             },
             Data.class,
@@ -83,7 +84,7 @@ public class TrickCommand implements IBasicCommand {
     );
 
     public void onSaveEvent(SaveEvent event) {
-        System.out.println("Saving Tricks Data!");
+        LogHelper.println("Saving Tricks Data!");
 
         CONTENT.forEach((guildID, data) -> {
             data.forEach((trickid, trick) -> {
@@ -93,9 +94,9 @@ public class TrickCommand implements IBasicCommand {
     }
 
     public void onLoadEvent(LoadEvent event) {
-        System.out.println("Loading Tricks Data!");
+        LogHelper.println("Loading Tricks Data!");
         TRICK_DATA_HANDLER.loadAll();
-        System.out.println("Finished loading Tricks Data!");
+        LogHelper.println("Finished loading Tricks Data!");
     }
 
     public TrickCommand() {
@@ -295,7 +296,7 @@ public class TrickCommand implements IBasicCommand {
     }
 
     private void executeScript(Message message, String[] args, String script) {
-        System.out.println(script);
+        LogHelper.println(script);
         String[] strArr = script.split("\\n");
 
         if (strArr[0].startsWith("```")) {
@@ -308,7 +309,7 @@ public class TrickCommand implements IBasicCommand {
             scriptHandled.add(strArr[i]);
         }
 
-        System.out.println("cool -> %s".formatted(scriptHandled.toString()));
+        LogHelper.println("cool -> %s".formatted(scriptHandled.toString()));
 
         ScriptEngine engine = ScriptParser.get();
 

@@ -20,26 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.config;
+package org.mangorage.mangobot.basicutils.config;
 
-public class Transformer<T, X> {
-    public static <T, X> Transformer<T, X> create(ITransformer<T, X> transformer, ITransformer<X, T> transformerReversed) {
-        return new Transformer<>(transformer, transformerReversed);
-    }
+public class Transformers {
+    public static final Transformer<String, String> STRING = Transformer.create(v -> v, v -> v);
+    public static final Transformer<Boolean, String> BOOLEAN = Transformer.create(
+            v -> {
+                if (v.equalsIgnoreCase("false"))
+                    return false;
+                if (v.equalsIgnoreCase("true"))
+                    return true;
+                return null;
+            }, Object::toString);
 
-    private final ITransformer<T, X> transformer;
-    private final ITransformer<X, T> transformerReversed;
+    public static final Transformer<Integer, String> INTEGER = Transformer.create(
+            v -> {
+                try {
+                    return Integer.parseInt(v);
+                } catch (NumberFormatException ignored) {
+                }
 
-    private Transformer(ITransformer<T, X> transformer, ITransformer<X, T> transformerReversed) {
-        this.transformer = transformer;
-        this.transformerReversed = transformerReversed;
-    }
-
-    public ITransformer<T, X> getTransformer() {
-        return transformer;
-    }
-
-    public ITransformer<X, T> getTransformerReversed() {
-        return transformerReversed;
-    }
+                return null;
+            }, Object::toString);
 }

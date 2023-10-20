@@ -23,6 +23,7 @@
 package org.mangorage.mboteventbus.base;
 
 
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mboteventbus.annotations.SubscribeEvent;
 import org.mangorage.mboteventbus.impl.IEvent;
 
@@ -58,7 +59,7 @@ public final class EventScanner {
             int modfiers = method.getModifiers();
             if (se != null) {
                 if (!Modifier.isStatic(modfiers) && requireStatic) {
-                    LOGGER.warning("Unable to register %s. Register as Object and not Class to fix. Or make it a static func".formatted(method.getName()));
+                    LogHelper.println("Unable to register %s. Register as Object and not Class to fix. Or make it a static func".formatted(method.getName()));
                     continue;
                 }
                 if (!Modifier.isPublic(modfiers)) {

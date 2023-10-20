@@ -22,13 +22,10 @@
 
 package org.mangorage.mangobotapi.core.script;
 
-import java.io.PrintStream;
 import java.util.HashMap;
 
 public class Global {
     private final HashMap<String, Object> VARIABLES = new HashMap<>();
-
-    public PrintStream out = System.out;
 
     public void set(String ID, Object object) {
         VARIABLES.put(ID, object);

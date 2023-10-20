@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.launcher.data.FTPSettings;
 import org.mangorage.mangobot.launcher.utils.Util;
 
@@ -33,6 +34,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+
+@Deprecated
 public class FTPUtil {
     private static final Gson GSON = new GsonBuilder().create();
     private static final String DATA_FOLDER = "/data";
@@ -70,7 +73,7 @@ public class FTPUtil {
                 }
                 FileOutputStream stream = new FileOutputStream(localDirectory + ftpFile.getName());
                 client.retrieveFile(remoteDirectory + "/" + ftpFile.getName(), stream);
-                System.out.println("Downloaded " + ftpFile.getName());
+                LogHelper.println("Downloaded " + ftpFile.getName());
             }
         }
     }

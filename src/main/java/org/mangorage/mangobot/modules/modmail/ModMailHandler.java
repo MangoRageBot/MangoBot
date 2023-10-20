@@ -30,6 +30,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.data.DataHandler;
 import org.mangorage.mangobotapi.core.events.LoadEvent;
@@ -215,18 +216,18 @@ public class ModMailHandler {
     }
 
     public static void onLoad(LoadEvent event) {
-        System.out.println("Loading ModMailHandler Data Stage 1...");
+        LogHelper.println("Loading ModMailHandler Data Stage 1...");
 
         GUILD_SETTINGS_HANDLER.loadAll(); // Loads everything...
 
-        System.out.println("Loading ModMailHandler Data Stage 1 -> Completed");
+        LogHelper.println("Loading ModMailHandler Data Stage 1 -> Completed");
 
 
-        System.out.println("Loading ModMailHandler Data Stage 2...");
+        LogHelper.println("Loading ModMailHandler Data Stage 2...");
 
         MODMAIl_INSTANCE_HANDLER.loadAll();
 
-        System.out.println("Loading ModMailHandler Data Stage 2 -> Completed");
+        LogHelper.println("Loading ModMailHandler Data Stage 2 -> Completed");
     }
 
     @SubscribeEvent

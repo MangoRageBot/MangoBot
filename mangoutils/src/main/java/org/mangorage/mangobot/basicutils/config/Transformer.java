@@ -20,10 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.config;
+package org.mangorage.mangobot.basicutils.config;
 
-public interface ISetting<X> {
-    void set(X value);
+public class Transformer<T, X> {
+    public static <T, X> Transformer<T, X> create(ITransformer<T, X> transformer, ITransformer<X, T> transformerReversed) {
+        return new Transformer<>(transformer, transformerReversed);
+    }
 
-    X get();
+    private final ITransformer<T, X> transformer;
+    private final ITransformer<X, T> transformerReversed;
+
+    private Transformer(ITransformer<T, X> transformer, ITransformer<X, T> transformerReversed) {
+        this.transformer = transformer;
+        this.transformerReversed = transformerReversed;
+    }
+
+    public ITransformer<T, X> getTransformer() {
+        return transformer;
+    }
+
+    public ITransformer<X, T> getTransformerReversed() {
+        return transformerReversed;
+    }
 }

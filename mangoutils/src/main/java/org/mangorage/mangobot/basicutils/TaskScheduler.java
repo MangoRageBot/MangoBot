@@ -20,34 +20,15 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.launcher.utils;
+package org.mangorage.mangobot.basicutils;
 
-public class ThreadCaller {
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
-    public static String getThreadTag() {
-        return "[Thread -> %s]".formatted(Thread.currentThread().getName());
-    }
+public class TaskScheduler {
+    private final static ScheduledExecutorService executor = Executors.newScheduledThreadPool(100_000);
 
-    public static void println(String string) {
-        System.out.println("%s %s".formatted(getThreadTag(), string));
-    }
-
-    public static void printf(String main, Object... args) {
-        String result = main;
-        if (args.length > 0)
-            result = main.formatted(args);
-
-        System.out.println("%s %s".formatted(getThreadTag(), result));
-    }
-
-    public static void execute(Runnable runnable) {
-        execute(runnable, null);
-    }
-
-    public static void execute(Runnable runnable, String ThreadID) {
-        Thread thread = new Thread(runnable);
-        if (ThreadID != null)
-            thread.setName(ThreadID);
-        thread.start();
+    public static ScheduledExecutorService getExecutor() {
+        return executor;
     }
 }

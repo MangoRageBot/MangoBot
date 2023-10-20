@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.config;
+package org.mangorage.mangobot.basicutils.config;
 
 @FunctionalInterface
 public interface ITransformer<T, X> {

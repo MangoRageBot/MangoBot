@@ -24,22 +24,23 @@ package org.mangorage.mangobot;
 
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.core.util.BotSettings;
 
 public class ServerRestart {
 
     public static void main(String[] args) {
-        System.out.println("Restarting Discord Bot Server...");
+        LogHelper.println("Restarting Discord Bot Server...");
         PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", BotSettings.SERVER_TOKEN.get());
 
         var server = client.retrieveServerByIdentifier("f32263f3").execute();
         if (server != null) {
             if (server.isSuspended()) {
-                System.out.println("Server is suspended, unsuspending...");
+                LogHelper.println("Server is suspended, unsuspending...");
                 server.start().execute();
             } else {
                 server.restart().execute();
-                System.out.println("Restarted Discord Bot Server.");
+                LogHelper.println("Restarted Discord Bot Server.");
             }
         }
 

@@ -22,6 +22,7 @@
 
 package org.mangorage.mboteventbus;
 
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mboteventbus.base.Event;
 import org.mangorage.mboteventbus.base.EventBuilder;
 import org.mangorage.mboteventbus.base.EventHolder;
@@ -126,7 +127,7 @@ public class EventBus implements IEventBus {
 
         if (!EVENT_LISTENERS.containsKey(event.getClass())) {
             if (verbose)
-                System.out.println("Attemped to post %s to the event bus however there are no listeners, skipping!".formatted(event.getClass()));
+                LogHelper.println("Attemped to post %s to the event bus however there are no listeners, skipping!".formatted(event.getClass()));
         } else {
             ((EventHolder<T>) EVENT_LISTENERS.get(event.getClass())).post(event);
         }
@@ -137,14 +138,14 @@ public class EventBus implements IEventBus {
     public void startup() {
         if (!shutdown)
             throw new IllegalStateException("Already started the EventBus");
-        System.out.println("EventBus will now recieve posts/addListeners");
+        LogHelper.println("EventBus will now recieve posts/addListeners");
         this.shutdown = false;
     }
 
     public void shutdown() {
         if (shutdown)
             throw new IllegalStateException("Already shutdown the EventBus");
-        System.out.println("EventBus will now no longer recieve posts/addListeners");
+        LogHelper.println("EventBus will now no longer recieve posts/addListeners");
         this.shutdown = true;
     }
 }

@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.util.misc;
+package org.mangorage.mangobot.basicutils.misc;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

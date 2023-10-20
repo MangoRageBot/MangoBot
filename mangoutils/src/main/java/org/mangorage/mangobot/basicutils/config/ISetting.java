@@ -20,16 +20,10 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.util;
+package org.mangorage.mangobot.basicutils.config;
 
-public class Lockable {
-    private boolean locked = false;
+public interface ISetting<X> {
+    void set(X value);
 
-    public void lock() {
-        this.locked = true;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
+    X get();
 }

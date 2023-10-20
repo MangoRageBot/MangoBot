@@ -33,6 +33,7 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.session.SessionDisconnectEvent;
 import net.dv8tion.jda.api.events.session.SessionResumeEvent;
 import net.dv8tion.jda.api.hooks.SubscribeEvent;
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.core.util.Util;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.events.SlashCommandEvent;
@@ -63,12 +64,12 @@ public record EventListener(IEventBus bus) {
 
     @SubscribeEvent
     public void sessionResumeEvent(SessionResumeEvent event) {
-        System.out.println("Bot resumed Session...");
+        LogHelper.println("Bot resumed Session...");
     }
 
     @SubscribeEvent
     public void sessionDisconnectEvent(SessionDisconnectEvent event) {
-        System.out.println("Bot disconnected from Session...");
+        LogHelper.println("Bot disconnected from Session...");
     }
 
     @SubscribeEvent

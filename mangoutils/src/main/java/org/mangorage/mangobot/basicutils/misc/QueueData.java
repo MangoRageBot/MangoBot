@@ -20,15 +20,28 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.util;
+package org.mangorage.mangobot.basicutils.misc;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import org.mangorage.mangobot.basicutils.LogHelper;
 
-public class TaskScheduler {
-    private final static ScheduledExecutorService executor = Executors.newScheduledThreadPool(100_000);
+public class QueueData<T> {
+    private int position = 0;
+    private T data;
 
-    public static ScheduledExecutorService getExecutor() {
-        return executor;
+    public QueueData(T data) {
+        this.data = data;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void updatePosition(int position) {
+        this.position = position;
+        LogHelper.println("%s was updated to index %s!".formatted(data, this.position));
+    }
+
+    public int getPosition() {
+        return position;
     }
 }

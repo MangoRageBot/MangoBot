@@ -24,37 +24,13 @@ package org.mangorage.mangobot.test;
 
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Test {
-    public static String getCallingClass() {
-        var l = Thread.currentThread().getStackTrace();
-        return l[l.length - 1].getClassName();
-    }
-
-    public static void println(String content) {
-        System.out.println("[%s] [%s:27] [%s/INFO]: %s".formatted(OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), getCallingClass(), Thread.currentThread().getName(), content));
-    }
-
-    public static void test() {
-        var l = Thread.currentThread().getStackTrace();
-
-        System.out.println(l[l.length - 1].getClassName());
-    }
-
-    public static class Testing {
-        public static void main(String[] args) {
-            test();
-        }
-    }
-
-
     public static void main(String[] args) {
         var fileName = "test.txt";
         var ext = ".txt";
         var fileNameNoExt = fileName.substring(0, fileName.length() - ext.length());
-        System.out.println(fileNameNoExt);
+        LogHelper.println(fileNameNoExt);
 
         int pointsPerDay = 200;
         int pointsPerDollar = 100 / 5;
@@ -66,13 +42,13 @@ public class Test {
         int potentialTotalIncome = potentialEarnedPoints / pointsPerDollar;
         int totalIncome = earnedPoints / pointsPerDollar;
 
-        System.out.println("Estimated Income: %s".formatted(potentialTotalIncome));
-        System.out.println("Earned Income: %s".formatted(totalIncome));
+        LogHelper.println("Estimated Income: %s".formatted(potentialTotalIncome));
+        LogHelper.println("Earned Income: %s".formatted(totalIncome));
 
 
         LocalDateTime a = LocalDateTime.now();
 
-        System.out.println(a);
+        LogHelper.println(a);
     }
 
 }

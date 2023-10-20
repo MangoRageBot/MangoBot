@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.config;
+package org.mangorage.mangobot.basicutils.config;
 
 public class ConfigSetting<T> implements ISetting<T> {
     public static ConfigSetting<String> create(Config config, String ID, String defaultValue) {

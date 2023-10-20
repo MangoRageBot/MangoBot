@@ -20,28 +20,21 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.config;
+package org.mangorage.mangobot.basicutils.misc;
 
-import static org.mangorage.mangobotapi.core.config.Transformer.create;
+import java.util.function.Supplier;
 
-public class Transformers {
-    public static final Transformer<String, String> STRING = create(v -> v, v -> v);
-    public static final Transformer<Boolean, String> BOOLEAN = create(
-            v -> {
-                if (v.equalsIgnoreCase("false"))
-                    return false;
-                if (v.equalsIgnoreCase("true"))
-                    return true;
-                return null;
-            }, Object::toString);
+public class LockableReference<T> extends Lockable implements Supplier<T> {
+    private T object;
 
-    public static final Transformer<Integer, String> INTEGER = create(
-            v -> {
-                try {
-                    return Integer.parseInt(v);
-                } catch (NumberFormatException ignored) {
-                }
+    public void set(T object) {
+        if (isLocked())
+            throw new IllegalStateException("Attempted to set value on a locked reference");
+        this.object = object;
+    }
 
-                return null;
-            }, Object::toString);
+    @Override
+    public T get() {
+        return object;
+    }
 }
