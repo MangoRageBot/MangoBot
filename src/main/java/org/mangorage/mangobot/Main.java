@@ -37,6 +37,9 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        PrintWrapper.initWrapper();
+
+
         var currentToken = BotSettings.BOT_TOKEN.get();
         if (currentToken.equalsIgnoreCase("empty"))
             requestBotToken(false);

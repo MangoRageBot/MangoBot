@@ -24,8 +24,31 @@ package org.mangorage.mangobot.test;
 
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Test {
+    public static String getCallingClass() {
+        var l = Thread.currentThread().getStackTrace();
+        return l[l.length - 1].getClassName();
+    }
+
+    public static void println(String content) {
+        System.out.println("[%s] [%s:27] [%s/INFO]: %s".formatted(OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), getCallingClass(), Thread.currentThread().getName(), content));
+    }
+
+    public static void test() {
+        var l = Thread.currentThread().getStackTrace();
+
+        System.out.println(l[l.length - 1].getClassName());
+    }
+
+    public static class Testing {
+        public static void main(String[] args) {
+            test();
+        }
+    }
+
 
     public static void main(String[] args) {
         var fileName = "test.txt";
