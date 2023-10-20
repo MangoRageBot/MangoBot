@@ -59,20 +59,21 @@ public final class EventScanner {
             int modfiers = method.getModifiers();
             if (se != null) {
                 if (!Modifier.isStatic(modfiers) && requireStatic) {
-                    LogHelper.println("Unable to register %s. Register as Object and not Class to fix. Or make it a static func".formatted(method.getName()));
+                    LogHelper.error("Unable to register %s. Register as Object and not Class to fix. Or make it a static func".formatted(method.getName()));
                     continue;
                 }
                 if (!Modifier.isPublic(modfiers)) {
-                    LOGGER.warning("Unable to register %s. Cant register private listeners");
+                    LogHelper.warn("Unable to register %s. Cant register private listeners");
                     continue;
                 }
                 if (method.getParameterCount() == 0 || method.getParameterCount() > 1) {
-                    LOGGER.warning("Unable to register %s. Invalid listener".formatted(method.getName()));
+                    LogHelper.warn("Unable to register %s. Invalid listener".formatted(method.getName()));
                     continue;
                 }
 
                 Parameter parameter = method.getParameters()[0];
-                LOGGER.info("""
+                LogHelper.info("""
+                                                
                         Registering Listener:
                         Object/Class: %s
                         Method: %s
@@ -82,12 +83,12 @@ public final class EventScanner {
                         method.getName(),
                         parameter.getType().getName()
                 ));
+
                 if (IEvent.class.isAssignableFrom(parameter.getType())) {
                     BUILDERS.add(new EventBuilder<>(parameter.getType(), e -> {
                         try {
                             method.invoke(object, e);
                         } catch (Exception ignored) {
-                            ignored.printStackTrace();
                         }
                     }));
                 }

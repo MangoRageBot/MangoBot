@@ -99,14 +99,14 @@ public class Bot {
 
             APIHook.shutdown();
 
-            LogHelper.println("Terminating Bot! Closing Program!");
+            LogHelper.info("Terminating Bot! Closing Program!");
         }
     }
 
     private final JDA BOT;
 
     public Bot(String botToken, Consumer<Bot> finalizer) {
-        LogHelper.println(STARTUP_MESSAGE);
+        LogHelper.info(STARTUP_MESSAGE);
 
         // ****** Builder Start *********
 
@@ -179,8 +179,8 @@ public class Bot {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         } finally {
-            LogHelper.println("Built the Bot. Proceeding to load everything");
-            LogHelper.println("Bot Started");
+            LogHelper.info("Built the Bot. Proceeding to load everything");
+            LogHelper.info("Bot Started");
             MangoBotAPI.getInstance().startup((bus) -> {
                 EVENT_BUS.addListener(StartupEvent.class, this::onStartup);
                 EVENT_BUS.addListener(ShutdownEvent.class, this::onShutdown);

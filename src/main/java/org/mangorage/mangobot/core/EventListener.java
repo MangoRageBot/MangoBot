@@ -64,12 +64,12 @@ public record EventListener(IEventBus bus) {
 
     @SubscribeEvent
     public void sessionResumeEvent(SessionResumeEvent event) {
-        LogHelper.println("Bot resumed Session...");
+        LogHelper.info("Bot resumed Session...");
     }
 
     @SubscribeEvent
     public void sessionDisconnectEvent(SessionDisconnectEvent event) {
-        LogHelper.println("Bot disconnected from Session...");
+        LogHelper.info("Bot disconnected from Session...");
     }
 
     @SubscribeEvent

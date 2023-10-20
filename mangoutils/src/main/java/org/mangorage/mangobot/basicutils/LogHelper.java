@@ -82,11 +82,6 @@ public final class LogHelper {
         return logContent;
     }
 
-    @Deprecated
-    public static void println(String content) {
-        System.out.println(log(format("INFO", getCallingClass(), content)));
-    }
-
     public static void info(String content) {
         System.out.println(log(format("INFO", getCallingClass(), content)));
     }

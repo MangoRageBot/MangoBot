@@ -38,7 +38,7 @@ public class QueueData<T> {
 
     public void updatePosition(int position) {
         this.position = position;
-        LogHelper.println("%s was updated to index %s!".formatted(data, this.position));
+        LogHelper.info("%s was updated to index %s!".formatted(data, this.position));
     }
 
     public int getPosition() {

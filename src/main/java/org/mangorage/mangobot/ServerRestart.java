@@ -30,17 +30,17 @@ import org.mangorage.mangobot.core.util.BotSettings;
 public class ServerRestart {
 
     public static void main(String[] args) {
-        LogHelper.println("Restarting Discord Bot Server...");
+        LogHelper.info("Restarting Discord Bot Server...");
         PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", BotSettings.SERVER_TOKEN.get());
 
         var server = client.retrieveServerByIdentifier("f32263f3").execute();
         if (server != null) {
             if (server.isSuspended()) {
-                LogHelper.println("Server is suspended, unsuspending...");
+                LogHelper.info("Server is suspended, unsuspending...");
                 server.start().execute();
             } else {
                 server.restart().execute();
-                LogHelper.println("Restarted Discord Bot Server.");
+                LogHelper.info("Restarted Discord Bot Server.");
             }
         }
 

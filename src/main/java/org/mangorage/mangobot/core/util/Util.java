@@ -102,7 +102,7 @@ public class Util {
     }
 
     public static boolean copy(Path from, BasicFileAttributes a, Path target) {
-        LogHelper.println("Copy " + (a.isDirectory() ? "DIR " : "FILE") + " => " + target);
+        LogHelper.info("Copy " + (a.isDirectory() ? "DIR " : "FILE") + " => " + target);
         try {
             if (a.isDirectory())
                 Files.createDirectories(target);

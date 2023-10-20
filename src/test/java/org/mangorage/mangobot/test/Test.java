@@ -30,7 +30,7 @@ public class Test {
         var fileName = "test.txt";
         var ext = ".txt";
         var fileNameNoExt = fileName.substring(0, fileName.length() - ext.length());
-        LogHelper.println(fileNameNoExt);
+        LogHelper.info(fileNameNoExt);
 
         int pointsPerDay = 200;
         int pointsPerDollar = 100 / 5;
@@ -42,13 +42,13 @@ public class Test {
         int potentialTotalIncome = potentialEarnedPoints / pointsPerDollar;
         int totalIncome = earnedPoints / pointsPerDollar;
 
-        LogHelper.println("Estimated Income: %s".formatted(potentialTotalIncome));
-        LogHelper.println("Earned Income: %s".formatted(totalIncome));
+        LogHelper.info("Estimated Income: %s".formatted(potentialTotalIncome));
+        LogHelper.info("Earned Income: %s".formatted(totalIncome));
 
 
         LocalDateTime a = LocalDateTime.now();
 
-        LogHelper.println(a);
+        LogHelper.info(a);
     }
 
 }

@@ -74,7 +74,7 @@ public class TrickCommand implements IBasicCommand {
             (data) -> {
                 if (data.settings == null)
                     data = data.withSettings(new TrickConfig(true));
-                LogHelper.println("Loaded Trick: '%s' for guild '%s'".formatted(data.trickID(), GuildCache.getGuildName(data.guildID)));
+                LogHelper.info("Loaded Trick: '%s' for guild '%s'".formatted(data.trickID(), GuildCache.getGuildName(data.guildID)));
                 CONTENT.computeIfAbsent(data.guildID(), (k) -> new HashMap<>()).put(data.trickID(), data);
             },
             Data.class,
@@ -84,7 +84,7 @@ public class TrickCommand implements IBasicCommand {
     );
 
     public void onSaveEvent(SaveEvent event) {
-        LogHelper.println("Saving Tricks Data!");
+        LogHelper.info("Saving Tricks Data!");
 
         CONTENT.forEach((guildID, data) -> {
             data.forEach((trickid, trick) -> {
@@ -94,9 +94,9 @@ public class TrickCommand implements IBasicCommand {
     }
 
     public void onLoadEvent(LoadEvent event) {
-        LogHelper.println("Loading Tricks Data!");
+        LogHelper.info("Loading Tricks Data!");
         TRICK_DATA_HANDLER.loadAll();
-        LogHelper.println("Finished loading Tricks Data!");
+        LogHelper.info("Finished loading Tricks Data!");
     }
 
     public TrickCommand() {
@@ -296,7 +296,7 @@ public class TrickCommand implements IBasicCommand {
     }
 
     private void executeScript(Message message, String[] args, String script) {
-        LogHelper.println(script);
+        LogHelper.info(script);
         String[] strArr = script.split("\\n");
 
         if (strArr[0].startsWith("```")) {
@@ -309,7 +309,7 @@ public class TrickCommand implements IBasicCommand {
             scriptHandled.add(strArr[i]);
         }
 
-        LogHelper.println("cool -> %s".formatted(scriptHandled.toString()));
+        LogHelper.info("cool -> %s".formatted(scriptHandled.toString()));
 
         ScriptEngine engine = ScriptParser.get();
 

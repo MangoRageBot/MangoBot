@@ -73,7 +73,7 @@ public class FTPUtil {
                 }
                 FileOutputStream stream = new FileOutputStream(localDirectory + ftpFile.getName());
                 client.retrieveFile(remoteDirectory + "/" + ftpFile.getName(), stream);
-                LogHelper.println("Downloaded " + ftpFile.getName());
+                LogHelper.info("Downloaded " + ftpFile.getName());
             }
         }
     }

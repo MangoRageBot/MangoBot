@@ -216,18 +216,18 @@ public class ModMailHandler {
     }
 
     public static void onLoad(LoadEvent event) {
-        LogHelper.println("Loading ModMailHandler Data Stage 1...");
+        LogHelper.info("Loading ModMailHandler Data Stage 1...");
 
         GUILD_SETTINGS_HANDLER.loadAll(); // Loads everything...
 
-        LogHelper.println("Loading ModMailHandler Data Stage 1 -> Completed");
+        LogHelper.info("Loading ModMailHandler Data Stage 1 -> Completed");
 
 
-        LogHelper.println("Loading ModMailHandler Data Stage 2...");
+        LogHelper.info("Loading ModMailHandler Data Stage 2...");
 
         MODMAIl_INSTANCE_HANDLER.loadAll();
 
-        LogHelper.println("Loading ModMailHandler Data Stage 2 -> Completed");
+        LogHelper.info("Loading ModMailHandler Data Stage 2 -> Completed");
     }
 
     @SubscribeEvent

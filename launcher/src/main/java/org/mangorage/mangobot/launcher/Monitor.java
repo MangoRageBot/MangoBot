@@ -51,6 +51,6 @@ public class Monitor extends Thread {
                 throw new RuntimeException(e);
             }
         }
-        LogHelper.println("Process has ended!");
+        LogHelper.info("Process has ended!");
     }
 }
