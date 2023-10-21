@@ -23,10 +23,23 @@
 package org.mangorage.mangobot.test;
 
 
-import java.time.LocalDateTime;
+import org.mangorage.mangobot.basicutils.LogHelper;
 
 public class Test {
+
+
+    public static void openMenu() {
+
+    }
+
+    public static void openMenu(String menuName) {
+
+    }
+
+
+
     public static void main(String[] args) {
+
         var fileName = "test.txt";
         var ext = ".txt";
         var fileNameNoExt = fileName.substring(0, fileName.length() - ext.length());
@@ -46,9 +59,7 @@ public class Test {
         LogHelper.info("Earned Income: %s".formatted(totalIncome));
 
 
-        LocalDateTime a = LocalDateTime.now();
 
-        LogHelper.info(a);
     }
 
 }

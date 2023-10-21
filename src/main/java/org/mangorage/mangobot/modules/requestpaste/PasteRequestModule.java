@@ -55,6 +55,11 @@ public class PasteRequestModule {
             "cfg"
     );
 
+    private static final List<String> GUILDS = List.of(
+            "1129059589325852724",
+            "834300742864601088"
+    );
+
     public static void register(IEventBus bus) {
         bus.addListener(DMessageRecievedEvent.class, PasteRequestModule::onMessage);
     }
@@ -94,7 +99,7 @@ public class PasteRequestModule {
             var dEvent = event.get();
 
             if (!dEvent.isFromGuild()) return;
-            if (!dEvent.getGuild().getId().equals("1129059589325852724")) return;
+            if (!GUILDS.contains(dEvent.getGuild().getId())) return;
 
             var message = dEvent.getMessage();
             var attachments = message.getAttachments().stream().filter(attachment -> validExtension(attachment.getFileExtension())).toList();
