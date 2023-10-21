@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 public class TaskScheduler {
-    private final static ScheduledExecutorService executor = Executors.newScheduledThreadPool(100_000);
+    private final static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public static ScheduledExecutorService getExecutor() {
         return executor;

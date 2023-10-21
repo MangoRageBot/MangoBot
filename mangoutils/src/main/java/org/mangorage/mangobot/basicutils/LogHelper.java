@@ -27,9 +27,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Logger;
 
 public final class LogHelper {
-
+    private static final Logger LOGGER = Logger.getLogger(LogHelper.class.getName());
     private static final File LATEST_LOG;
 
     static {
@@ -76,6 +77,7 @@ public final class LogHelper {
                     Files.exists(LATEST_LOG.toPath()) ? java.nio.file.StandardOpenOption.APPEND : java.nio.file.StandardOpenOption.CREATE
             );
         } catch (IOException e) {
+            ;
             throw new RuntimeException(e);
         }
 
@@ -83,26 +85,26 @@ public final class LogHelper {
     }
 
     public static void info(String content) {
-        System.out.println(log(format("INFO", getCallingClass(), content)));
+        //System.out.println(log(format("INFO", getCallingClass(), content)));
     }
 
     public static void error(String content) {
-        System.err.println(log(format("ERROR", getCallingClass(), content)));
+        //System.err.println(log(format("ERROR", getCallingClass(), content)));
     }
 
     public static void debug(String content) {
-        System.out.println(log(format("DEBUG", getCallingClass(), content)));
+        //System.out.println(log(format("DEBUG", getCallingClass(), content)));
     }
 
     public static void warn(String content) {
-        System.out.println(log(format("WARN", getCallingClass(), content)));
+        //System.out.println(log(format("WARN", getCallingClass(), content)));
     }
 
     public static void fatal(String content) {
-        System.err.println(log(format("FATAL", getCallingClass(), content)));
+        //System.err.println(log(format("FATAL", getCallingClass(), content)));
     }
 
     public static void trace(String content) {
-        System.out.println(log(format("TRACE", getCallingClass(), content)));
+        //System.out.println(log(format("TRACE", getCallingClass(), content)));
     }
 }
