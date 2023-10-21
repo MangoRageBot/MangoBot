@@ -26,17 +26,20 @@ import net.dv8tion.jda.api.entities.Message;
 import org.mangorage.mangobotapi.MangoBotAPI;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 
+import java.util.HashMap;
+
 
 public record CommandResult(String string) {
-    public static final MessageSettings DEFAULT_SETTINGS = MangoBotAPI.getInstance().getDefaultMessageSettings();
+    private static final MessageSettings DEFAULT_SETTINGS = MangoBotAPI.getInstance().getDefaultMessageSettings();
+    private static final HashMap<String, CommandResult> CACHE = new HashMap<>();
 
-    public static CommandResult of(String string) {
-        return new CommandResult(string);
+    public static CommandResult of(String content) {
+        return CACHE.computeIfAbsent(content, CommandResult::new);
     }
 
     public static final CommandResult PASS = of(null);
-    public static final CommandResult FAIL = of("An error occured while executing this command");
-    public static final CommandResult NO_PERMISSION = of("You dont have permission to use this command!");
+    public static final CommandResult FAIL = of("An error occurred while executing this command");
+    public static final CommandResult NO_PERMISSION = of("You don't have permission to use this command!");
     public static final CommandResult UNDER_MAINTENANCE = of("This is currently under maintenance! Please try again later!");
     public static final CommandResult GUILD_ONLY = of("This is a Guild Only Command!");
     public static final CommandResult DEVELOPERS_ONLY = of("This command is only for the Developers to use!");
