@@ -85,26 +85,26 @@ public final class LogHelper {
     }
 
     public static void info(String content) {
-        //System.out.println(log(format("INFO", getCallingClass(), content)));
+        System.out.println(log(format("INFO", getCallingClass(), content)));
     }
 
     public static void error(String content) {
-        //System.err.println(log(format("ERROR", getCallingClass(), content)));
+        System.err.println(log(format("ERROR", getCallingClass(), content)));
     }
 
     public static void debug(String content) {
-        //System.out.println(log(format("DEBUG", getCallingClass(), content)));
+        System.out.println(log(format("DEBUG", getCallingClass(), content)));
     }
 
     public static void warn(String content) {
-        //System.out.println(log(format("WARN", getCallingClass(), content)));
+        System.out.println(log(format("WARN", getCallingClass(), content)));
     }
 
     public static void fatal(String content) {
-        //System.err.println(log(format("FATAL", getCallingClass(), content)));
+        System.err.println(log(format("FATAL", getCallingClass(), content)));
     }
 
     public static void trace(String content) {
-        //System.out.println(log(format("TRACE", getCallingClass(), content)));
+        System.out.println(log(format("TRACE", getCallingClass(), content)));
     }
 }
