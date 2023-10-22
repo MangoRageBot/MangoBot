@@ -25,36 +25,57 @@ package org.mangorage.mangobot.basicutils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Logger;
 
 public final class LogHelper {
-    private static final Logger LOGGER = Logger.getLogger(LogHelper.class.getName());
-    private static final File LATEST_LOG;
 
-    static {
-        File dir = new File("logs/");
-        if (!dir.exists())
-            dir.mkdir();
+    private static class LogFileHandler {
+        private static LogFileHandler create(Path path) {
+            return new LogFileHandler(path);
+        }
 
-        File latest_old = new File("logs/latest.log");
+        private final Path FILE_PATH;
 
-        if (latest_old.exists() && !latest_old.renameTo(new File("logs/old_%s.log".formatted(OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"))))))
-            LogHelper.warn("Unable to rename latest.log to old_<date>.log");
+        private LogFileHandler(Path path) {
+            this.FILE_PATH = path;
+            File file = FILE_PATH.toFile();
 
-        var a = 1;
-        File latest_new = new File("logs/latest.log");
-        if (!latest_new.exists()) {
             try {
-                latest_new.createNewFile();
+                if (file.exists()) {
+                    if (file.isDirectory()) {
+                        throw new RuntimeException("File is a directory!");
+                    }
+                    Files.copy(file.toPath(), new File("logs/old_%s.log".formatted(OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss")))).toPath());
+
+                    if (!file.delete() || !FILE_PATH.toFile().createNewFile()) {
+                        throw new RuntimeException("Unable to create new file!");
+                    }
+                } else {
+                    if (!file.createNewFile())
+                        throw new RuntimeException("Unable to create new file!");
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        LATEST_LOG = latest_new;
+        protected void log(String content) {
+            try {
+                Files.writeString(
+                        FILE_PATH,
+                        content + "\n",
+                        Files.exists(FILE_PATH) ? java.nio.file.StandardOpenOption.APPEND : java.nio.file.StandardOpenOption.CREATE
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
+
+
+    private static final LogFileHandler HANDLER = LogFileHandler.create(Path.of("logs/latest.log"));
 
     private static String getCallingClass() {
         var l = Thread.currentThread().getStackTrace();
@@ -65,22 +86,9 @@ public final class LogHelper {
         return "[%s] [%s] [%s/%s]: %s".formatted(OffsetDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), calledFrom, Thread.currentThread().getName(), type, content);
     }
 
-    //TODO: Remove this method, do better!
-    @Deprecated
     private static String log(String logContent) {
         // Handle logs
-
-        try {
-            Files.writeString(
-                    LATEST_LOG.toPath(),
-                    logContent + "\n",
-                    Files.exists(LATEST_LOG.toPath()) ? java.nio.file.StandardOpenOption.APPEND : java.nio.file.StandardOpenOption.CREATE
-            );
-        } catch (IOException e) {
-            ;
-            throw new RuntimeException(e);
-        }
-
+        HANDLER.log(logContent);
         return logContent;
     }
 
@@ -97,7 +105,7 @@ public final class LogHelper {
     }
 
     public static void warn(String content) {
-        System.out.println(log(format("WARN", getCallingClass(), content)));
+        System.out.println(log(format("WARN", getCallingClass(), "%s: %s".formatted("WARN", content))));
     }
 
     public static void fatal(String content) {
