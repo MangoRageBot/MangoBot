@@ -28,23 +28,17 @@ import org.mangorage.mangobot.basicutils.TaskScheduler;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AnticrossPost {
-    public record Messages(String content, String originalChannelId, AtomicInteger count) {
+    public record Messages(String content, String userId, String originalChannelId, AtomicInteger count) {
     }
 
-    private static final ConcurrentHashMap<String, HashMap<String, AtomicInteger>> MESSAGES = new ConcurrentHashMap<>();
+    // guildId -> UserId -> Message -> Messages
+    private static final ConcurrentHashMap<String, Messages> MESSAGES = new ConcurrentHashMap<>();
 
-
-    private static HashMap<String, AtomicInteger> create(String message) {
-        return new HashMap<>() {{
-            put(message, new AtomicInteger(1));
-        }};
-    }
 
     public static void logMessage(Message message) {
         if (!message.isFromGuild()) return;
@@ -53,8 +47,18 @@ public class AnticrossPost {
         Guild guild = message.getGuild();
         String guildId = guild.getId();
 
-        if (MESSAGES.computeIfAbsent(guildId, id -> create(msg)).get(msg).incrementAndGet() > 3) {
-            message.reply("Please do not crosspost...").queueAfter(10, TimeUnit.SECONDS, m -> m.delete().queue());
+        MESSAGES.computeIfAbsent("%s-%s-%s".formatted(guildId, message.getAuthor().getId(), msg), g -> new Messages(msg, message.getAuthor().getId(), message.getChannel().getId(), new AtomicInteger(1)));
+
+        Messages MSGS = MESSAGES.get("%s-%s-%s".formatted(guildId, message.getAuthor().getId(), msg));
+
+        if (MSGS.originalChannelId().equals(message.getChannel().getId())) return;
+
+        if (MSGS.count.get() >= 3) {
+            message.reply("Please dont crosspost...").queue(m -> {
+                m.delete().queueAfter(10, TimeUnit.SECONDS);
+            });
+        } else {
+            MSGS.count.incrementAndGet();
         }
     }
 
