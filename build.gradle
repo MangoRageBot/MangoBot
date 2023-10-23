@@ -89,7 +89,6 @@ dependencies {
 
 }
 
-
 tasks.register('runBot', JavaExec) {
     group "bot tasks"
     description "Runs the bot"
@@ -118,8 +117,8 @@ shadowJar {
     exclude "natives/linux-armhf/**"
     exclude "natives/linux-musl-aarch64/**"
     exclude "natives/linux-musl-x86-64/**"
-    //exclude "natives/linux-x86/**"
-    exclude "natives/linux-x86-64/**"
+    exclude "natives/linux-x86/**"
+    //exclude "natives/linux-x86-64/**"
     exclude "natives/win-x86/**"
     exclude "natives/win-x86-64/**"
     exclude "natives/linux-aarch64/**"
