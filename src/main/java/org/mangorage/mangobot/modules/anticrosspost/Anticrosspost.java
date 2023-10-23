@@ -28,12 +28,15 @@ import org.mangorage.mangobot.basicutils.TaskScheduler;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class AnticrossPost {
-    public record Messages(String content, String userId, String originalChannelId, AtomicInteger count) {
+public class Anticrosspost {
+    public record Messages(String content, String userId, String originalChannelId, HashSet<String> channelsPosted,
+                           CopyOnWriteArrayList<Message> messages) {
     }
 
     // guildId -> UserId -> Message -> Messages
@@ -47,23 +50,38 @@ public class AnticrossPost {
         Guild guild = message.getGuild();
         String guildId = guild.getId();
 
-        MESSAGES.computeIfAbsent("%s-%s-%s".formatted(guildId, message.getAuthor().getId(), msg), g -> new Messages(msg, message.getAuthor().getId(), message.getChannel().getId(), new AtomicInteger(1)));
+
+        MESSAGES.computeIfAbsent(
+                "%s-%s-%s".formatted(guildId, message.getAuthor().getId(), msg),
+                g -> new Messages(
+                        msg,
+                        message.getAuthor().getId(),
+                        message.getChannel().getId(),
+                        new HashSet<>(List.of(message.getChannel().getId())),
+                        new CopyOnWriteArrayList<>(List.of(message))
+                )
+        );
 
         Messages MSGS = MESSAGES.get("%s-%s-%s".formatted(guildId, message.getAuthor().getId(), msg));
 
         if (MSGS.originalChannelId().equals(message.getChannel().getId())) return;
 
-        if (MSGS.count.get() >= 3) {
+        MSGS.channelsPosted.add(message.getChannel().getId());
+        MSGS.messages.add(message);
+
+        if (MSGS.channelsPosted.size() >= 3) {
             message.reply("Please dont crosspost...").queue(m -> {
                 m.delete().queueAfter(10, TimeUnit.SECONDS);
             });
-        } else {
-            MSGS.count.incrementAndGet();
+            MSGS.messages.forEach(m -> {
+                MSGS.messages.remove(m); // Remove it as its been deleted...
+                m.delete().queueAfter(10, TimeUnit.SECONDS);
+            });
         }
     }
 
     public static void register(IEventBus bus) {
         bus.addListener(DMessageRecievedEvent.class, e -> logMessage(e.get().getMessage()));
-        TaskScheduler.getExecutor().schedule(MESSAGES::clear, 10, TimeUnit.MINUTES);
+        TaskScheduler.getExecutor().scheduleWithFixedDelay(MESSAGES::clear, 10, 10, TimeUnit.MINUTES);
     }
 }
