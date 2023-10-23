@@ -34,6 +34,7 @@ import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.basicutils.misc.LockableReference;
 import org.mangorage.mangobot.core.config.BotCommands;
 import org.mangorage.mangobot.core.config.BotPermissions;
+import org.mangorage.mangobot.modules.anticrosspost.AnticrossPost;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobot.modules.customvc.CustomVC;
 import org.mangorage.mangobot.modules.modmail.ModMailHandler;
@@ -188,6 +189,7 @@ public class Bot {
 
                 ModMailHandler.register(bus);
                 PasteRequestModule.register(bus);
+                AnticrossPost.register(bus);
             });
         }
 

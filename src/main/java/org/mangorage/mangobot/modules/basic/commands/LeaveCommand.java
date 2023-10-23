@@ -24,35 +24,25 @@ package org.mangorage.mangobot.modules.basic.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.modules.music.MusicUtil;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.util.APIUtil;
 
 import java.util.List;
 
-public class JoinCommand implements IBasicCommand {
+public class LeaveCommand implements IBasicCommand {
     private static final List<String> USERS = List.of("194596094200643584");
-
 
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
-
-        APIUtil.getLazyVoiceChannel(message.getMember()).ifPresent(a -> {
-            MusicUtil.connectToAudioChannelNoMusic(a.asVoiceChannel());
-        });
-
+        message.getGuild().kickVoiceMember(message.getGuild().getSelfMember()).queue();
         return CommandResult.PASS;
     }
 
-    /**
-     * @return
-     */
     @Override
     public String commandId() {
-        return "join";
+        return "leave";
     }
 
     /**
