@@ -33,10 +33,11 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Anticrosspost {
     public record Messages(String content, String userId, String originalChannelId, HashSet<String> channelsPosted,
-                           CopyOnWriteArrayList<Message> messages) {
+                           CopyOnWriteArrayList<Message> messages, AtomicBoolean deleted, AtomicBoolean accessing) {
     }
 
     // guildId -> UserId -> Message -> Messages
@@ -59,7 +60,9 @@ public class Anticrosspost {
                         message.getAuthor().getId(),
                         message.getChannel().getId(),
                         new HashSet<>(List.of(message.getChannel().getId())),
-                        new CopyOnWriteArrayList<>(List.of(message))
+                        new CopyOnWriteArrayList<>(List.of(message)),
+                        new AtomicBoolean(false),
+                        new AtomicBoolean(false)
                 )
         );
 
@@ -68,22 +71,32 @@ public class Anticrosspost {
         MSGS.channelsPosted.add(message.getChannel().getId());
         MSGS.messages.add(message);
 
+        if (MSGS.accessing.get()) return;
+
+        MSGS.accessing().set(true);
         if (MSGS.channelsPosted.size() >= 3) {
 
             message.reply("Please dont crosspost...").queue(m -> {
+                message.delete().queue();
+                MSGS.messages().remove(message);
                 m.delete().queueAfter(10, TimeUnit.SECONDS);
             });
 
-            MSGS.messages.forEach(m -> {
-                m.delete().queue();
-            });
+            if (!MSGS.deleted().get()) {
 
-            MSGS.messages.clear();
+                MSGS.messages.forEach(m -> {
+                    m.delete().queue();
+                });
+
+                MSGS.messages.clear();
+                MSGS.deleted().set(true);
+            }
         }
+        MSGS.accessing.set(false);
     }
 
     public static void register(IEventBus bus) {
         bus.addListener(DMessageRecievedEvent.class, e -> logMessage(e.get().getMessage()));
-        TaskScheduler.getExecutor().scheduleWithFixedDelay(MESSAGES::clear, 5, 5, TimeUnit.SECONDS);
+        TaskScheduler.getExecutor().scheduleWithFixedDelay(MESSAGES::clear, 20, 20, TimeUnit.SECONDS);
     }
 }
