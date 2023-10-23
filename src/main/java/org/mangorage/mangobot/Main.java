@@ -39,6 +39,16 @@ public class Main {
 
     public static void main(String[] args) {
 
+        //Operating system name
+        LogHelper.info("Your OS name -> " + System.getProperty("os.name"));
+
+        //Operating system version
+        LogHelper.info("Your OS version -> " + System.getProperty("os.version"));
+
+        //Operating system architecture
+        LogHelper.info("Your OS Architecture -> " + System.getProperty("os.arch"));
+
+
 
         var currentToken = BotSettings.BOT_TOKEN.get();
         if (currentToken.equalsIgnoreCase("empty"))
