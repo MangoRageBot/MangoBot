@@ -125,7 +125,6 @@ shadowJar {
     exclude "natives/linux-aarch64/**"
     exclude "natives/win32-x86/**"
     exclude "natives/win32-x86-64/**"
-    exclude "com/fasterxml/**"
 }
 
 test {
