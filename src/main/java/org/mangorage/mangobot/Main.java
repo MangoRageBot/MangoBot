@@ -22,6 +22,9 @@
 
 package org.mangorage.mangobot;
 
+import com.sedmelluq.discord.lavaplayer.natives.ConnectorNativeLibLoader;
+import com.sedmelluq.lava.common.natives.architecture.DefaultArchitectureTypes;
+import com.sedmelluq.lava.common.natives.architecture.DefaultOperatingSystemTypes;
 import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.util.BotSettings;
@@ -48,6 +51,14 @@ public class Main {
         //Operating system architecture
         LogHelper.info("Your OS Architecture -> " + System.getProperty("os.arch"));
 
+
+        ConnectorNativeLibLoader.loadConnectorLibrary();
+
+        var a = DefaultArchitectureTypes.detect().identifier();
+        LogHelper.info("TEST -> %s".formatted(a));
+
+        var b = DefaultOperatingSystemTypes.detect();
+        LogHelper.info("TEST -> %s".formatted(b.identifier()));
 
 
         var currentToken = BotSettings.BOT_TOKEN.get();
