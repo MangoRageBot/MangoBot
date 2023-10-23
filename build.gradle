@@ -82,7 +82,18 @@ dependencies {
 
 
     shadow("net.dv8tion:JDA:$JDA_VERSION")
-    shadow("dev.arbjerg:lavaplayer:$LAVA_VERSION")
+    shadow("dev.arbjerg:lavaplayer:$LAVA_VERSION") {
+        exclude "darwin"
+        exclude "linux-aarch32"
+        exclude "linux-arm"
+        exclude "linux-armhf"
+        exclude "linux-musl-aarch64"
+        exclude "linux-musl-x86-64"
+        //exclude "linux-x86"
+        exclude "linux-x86-64"
+        exclude "win-x86"
+        exclude "win-x86-64"
+    }
     shadow("com.google.code.gson:gson:$GSON_VERSION")
     shadow("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
     shadow("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5")
