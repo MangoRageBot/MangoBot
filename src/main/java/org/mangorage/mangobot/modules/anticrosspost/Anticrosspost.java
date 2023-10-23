@@ -69,13 +69,16 @@ public class Anticrosspost {
         MSGS.messages.add(message);
 
         if (MSGS.channelsPosted.size() >= 3) {
+
             message.reply("Please dont crosspost...").queue(m -> {
                 m.delete().queueAfter(10, TimeUnit.SECONDS);
             });
+
             MSGS.messages.forEach(m -> {
-                MSGS.messages.remove(m); // Remove it as its been deleted...
                 m.delete().queue();
             });
+
+            MSGS.messages.clear();
         }
     }
 
