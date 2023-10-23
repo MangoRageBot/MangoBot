@@ -69,7 +69,6 @@ public class MusicUtil {
             audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
             audioManager.setConnectTimeout(30_000);
 
-            MusicPlayer.getInstance(guild.getId()).setVolume(5); // Default volume so nobody gets there ears torn out by sound.
             audioManager.openAudioConnection(channel);
         } catch (Exception e) {
             LogHelper.error("Failed to connect to voice channel: " + e.getMessage());
