@@ -74,6 +74,7 @@ public class MusicUtil {
         } catch (Exception e) {
             LogHelper.error("Failed to connect to voice channel: " + e.getMessage());
         }
+    }
 
     public static void leaveVoiceChannel(Guild guild) {
         guild.getAudioManager().closeAudioConnection();
