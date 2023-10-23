@@ -82,18 +82,7 @@ dependencies {
 
 
     shadow("net.dv8tion:JDA:$JDA_VERSION")
-    shadow("dev.arbjerg:lavaplayer:$LAVA_VERSION") {
-        exclude module: "darwin"
-        exclude module: "linux-aarch32"
-        exclude module: "linux-arm"
-        exclude module: "linux-armhf"
-        exclude module: "linux-musl-aarch64"
-        exclude module: "linux-musl-x86-64"
-        //exclude "linux-x86"
-        exclude module: "linux-x86-64"
-        exclude module: "win-x86"
-        exclude module: "win-x86-64"
-    }
+    shadow("dev.arbjerg:lavaplayer:$LAVA_VERSION")
     shadow("com.google.code.gson:gson:$GSON_VERSION")
     shadow("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
     shadow("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5")
@@ -122,6 +111,22 @@ tasks.register('runTestBot', JavaExec) {
 shadowJar {
     group "bot tasks"
     description "Builds the bot jar"
+
+    exclude "natives/darwin/**"
+    exclude "natives/linux-aarch32/**"
+    exclude "natives/linux-arm/**"
+    exclude "natives/linux-armhf/**"
+    exclude "natives/linux-musl-aarch64/**"
+    exclude "natives/linux-musl-x86-64/**"
+    //exclude "natives/linux-x86/**"
+    exclude "natives/linux-x86-64/**"
+    exclude "natives/win-x86/**"
+    exclude "natives/win-x86-64/**"
+    exclude "natives/linux-aarch64/**"
+    exclude "natives/win32-x86/**"
+    exclude "natives/win32-x86-64/**"
+    exclude "kotlin/**"
+    exclude "org/apache/**"
 }
 
 test {
