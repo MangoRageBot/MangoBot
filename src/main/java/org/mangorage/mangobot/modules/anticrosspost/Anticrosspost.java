@@ -65,8 +65,6 @@ public class Anticrosspost {
 
         Messages MSGS = MESSAGES.get("%s-%s-%s".formatted(guildId, message.getAuthor().getId(), msg));
 
-        if (MSGS.originalChannelId().equals(message.getChannel().getId())) return;
-
         MSGS.channelsPosted.add(message.getChannel().getId());
         MSGS.messages.add(message);
 
@@ -83,6 +81,6 @@ public class Anticrosspost {
 
     public static void register(IEventBus bus) {
         bus.addListener(DMessageRecievedEvent.class, e -> logMessage(e.get().getMessage()));
-        TaskScheduler.getExecutor().scheduleWithFixedDelay(MESSAGES::clear, 10, 10, TimeUnit.MINUTES);
+        TaskScheduler.getExecutor().scheduleWithFixedDelay(MESSAGES::clear, 5, 5, TimeUnit.SECONDS);
     }
 }
