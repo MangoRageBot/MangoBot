@@ -126,7 +126,7 @@ shadowJar {
     exclude "natives/win32-x86/**"
     exclude "natives/win32-x86-64/**"
     exclude "kotlin/**"
-    exclude "org/apache/**"
+    exclude "org/apache/commons/**"
 }
 
 test {
