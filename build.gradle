@@ -113,7 +113,7 @@ shadowJar {
 
     exclude "natives/darwin/**"
     exclude "natives/linux-aarch32/**"
-    exclude "natives/linux-arm/**"
+    //exclude "natives/linux-arm/**"
     exclude "natives/linux-armhf/**"
     exclude "natives/linux-musl-aarch64/**"
     exclude "natives/linux-musl-x86-64/**"
