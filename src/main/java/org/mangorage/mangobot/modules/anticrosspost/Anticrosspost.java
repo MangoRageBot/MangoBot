@@ -45,6 +45,7 @@ public class Anticrosspost {
 
     public static void logMessage(Message message) {
         if (!message.isFromGuild()) return;
+        if (message.getAuthor().isBot()) return;
 
         String msg = message.getContentRaw().toLowerCase();
         Guild guild = message.getGuild();
@@ -75,7 +76,7 @@ public class Anticrosspost {
             });
             MSGS.messages.forEach(m -> {
                 MSGS.messages.remove(m); // Remove it as its been deleted...
-                m.delete().queueAfter(10, TimeUnit.SECONDS);
+                m.delete().queue();
             });
         }
     }
