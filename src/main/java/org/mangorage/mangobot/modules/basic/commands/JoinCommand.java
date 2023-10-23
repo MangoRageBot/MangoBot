@@ -41,7 +41,7 @@ public class JoinCommand implements IBasicCommand {
     public CommandResult execute(Message message, Arguments args) {
 
         APIUtil.getLazyVoiceChannel(message.getMember()).ifPresent(a -> {
-            MusicUtil.connectToAudioChannel(a.asVoiceChannel());
+            MusicUtil.connectToAudioChannelNoMusic(a.asVoiceChannel());
         });
 
         return CommandResult.PASS;
