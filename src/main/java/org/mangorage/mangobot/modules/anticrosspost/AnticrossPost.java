@@ -53,7 +53,7 @@ public class AnticrossPost {
         Guild guild = message.getGuild();
         String guildId = guild.getId();
 
-        if (MESSAGES.computeIfAbsent(guildId, id -> create(msg)).get(msg).incrementAndGet() > 5) {
+        if (MESSAGES.computeIfAbsent(guildId, id -> create(msg)).get(msg).incrementAndGet() > 3) {
             message.reply("Please do not crosspost...").queueAfter(10, TimeUnit.SECONDS, m -> m.delete().queue());
         }
     }
