@@ -25,6 +25,7 @@ package org.mangorage.mangobot.core.config;
 import org.mangorage.mangobot.core.util.Constants;
 import org.mangorage.mangobot.modules.basic.commands.HelpCommand;
 import org.mangorage.mangobot.modules.basic.commands.InfoCommand;
+import org.mangorage.mangobot.modules.basic.commands.JoinCommand;
 import org.mangorage.mangobot.modules.basic.commands.PermissionCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingSlashCommand;
@@ -67,6 +68,8 @@ public class BotCommands {
         CommandRegistry.addBasicCommand(new PrefixCommand());
         CommandRegistry.addBasicCommand(new PingCommand());
         CommandRegistry.addBasicCommand(new CustomVCCommand());
+
+        CommandRegistry.addBasicCommand(new JoinCommand());
 
 
         if (Constants.USE_MUSIC) {
