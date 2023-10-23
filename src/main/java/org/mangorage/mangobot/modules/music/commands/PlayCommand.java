@@ -31,6 +31,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.jetbrains.annotations.NotNull;
+import org.mangorage.mangobot.basicutils.LogHelper;
 import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobot.modules.music.MusicPlayer;
 import org.mangorage.mangobot.modules.music.MusicUtil;
@@ -66,25 +67,29 @@ public class PlayCommand implements IBasicCommand {
         if (voiceState.inAudioChannel()) {
             if (!URL.isEmpty()) {
                 if (!player.isPlaying()) {
-                    player.load(String.join(" ", args), e -> {
-                        switch (e.getReason()) {
-                            case SUCCESS -> {
-                                MusicUtil.connectToAudioChannel(voiceState.getChannel().asVoiceChannel());
-                                player.add(e.getTrack());
-                                player.play();
-                                MessageEmbed embed = new EmbedBuilder()
-                                        .setTitle(e.getTrack().getInfo().title, e.getTrack().getInfo().uri)
-                                        .build();
-                                channel.sendMessage("Playing: ").addEmbeds(embed).queue();
+                    try {
+                        player.load(String.join(" ", args), e -> {
+                            switch (e.getReason()) {
+                                case SUCCESS -> {
+                                    MusicUtil.connectToAudioChannel(voiceState.getChannel().asVoiceChannel());
+                                    player.add(e.getTrack());
+                                    player.play();
+                                    MessageEmbed embed = new EmbedBuilder()
+                                            .setTitle(e.getTrack().getInfo().title, e.getTrack().getInfo().uri)
+                                            .build();
+                                    channel.sendMessage("Playing: ").addEmbeds(embed).queue();
+                                }
+                                case FAILED -> {
+                                    channel.sendMessage("Failed").queue();
+                                }
+                                case NO_MATCHES -> {
+                                    channel.sendMessage("No matches was found!").queue();
+                                }
                             }
-                            case FAILED -> {
-                                channel.sendMessage("Failed").queue();
-                            }
-                            case NO_MATCHES -> {
-                                channel.sendMessage("No matches was found!").queue();
-                            }
-                        }
-                    });
+                        });
+                    } catch (Exception e) {
+                        LogHelper.error(e.getMessage());
+                    }
                 } else
                     channel.sendMessage("Already playing!").queue();
             } else {
