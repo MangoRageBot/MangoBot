@@ -35,22 +35,27 @@ import net.dv8tion.jda.api.audio.SpeakingMode;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
+import org.mangorage.mangobot.basicutils.LogHelper;
 
 public class MusicUtil {
     public static void connectToAudioChannel(VoiceChannel channel) {
-        Guild guild = channel.getGuild();
-        AudioManager audioManager = guild.getAudioManager();
+        try {
+            Guild guild = channel.getGuild();
+            AudioManager audioManager = guild.getAudioManager();
 
-        audioManager.setSendingHandler(MusicPlayer.getInstance(guild.getId()));
+            audioManager.setSendingHandler(MusicPlayer.getInstance(guild.getId()));
 
-        audioManager.setSelfDeafened(true);
-        audioManager.setSelfMuted(false);
-        audioManager.setAutoReconnect(true);
-        audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
-        audioManager.setConnectTimeout(30_000);
+            audioManager.setSelfDeafened(true);
+            audioManager.setSelfMuted(false);
+            audioManager.setAutoReconnect(true);
+            audioManager.setSpeakingMode(SpeakingMode.SOUNDSHARE);
+            audioManager.setConnectTimeout(30_000);
 
-        MusicPlayer.getInstance(guild.getId()).setVolume(5); // Default volume so nobody gets there ears torn out by sound.
-        audioManager.openAudioConnection(channel);
+            MusicPlayer.getInstance(guild.getId()).setVolume(5); // Default volume so nobody gets there ears torn out by sound.
+            audioManager.openAudioConnection(channel);
+        } catch (Exception e) {
+            LogHelper.error("Failed to connect to voice channel: " + e.getMessage());
+        }
     }
 
     public static void leaveVoiceChannel(Guild guild) {
