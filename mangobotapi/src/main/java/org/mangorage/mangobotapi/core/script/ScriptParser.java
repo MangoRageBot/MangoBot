@@ -23,17 +23,13 @@
 package org.mangorage.mangobotapi.core.script;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 public class ScriptParser {
-    private static final ScriptEngineManager manager = new ScriptEngineManager();
-    private static final ScriptEngine engine = manager.getEngineByName("rhino");
 
     public static ScriptEngine get() {
-        return engine;
+        return null;
     }
 
     public static void init() {
-        engine.put("GLOBAL", new Global());
     }
 }
