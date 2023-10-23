@@ -66,6 +66,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
     implementation("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5") // GITHUB API
     implementation('com.mattmalec:Pterodactyl4J:2.BETA_140')
+    implementation('org.slf4j:slf4j-simple:2.0.9')
 
     // Core Libs
     implementation project(path: ':mangobotapi')
@@ -86,6 +87,7 @@ dependencies {
     shadow("com.google.code.gson:gson:$GSON_VERSION")
     shadow("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
     shadow("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5")
+    shadow('org.slf4j:slf4j-simple:2.0.9')
 
 }
 
