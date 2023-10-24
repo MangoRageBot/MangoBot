@@ -32,6 +32,11 @@ java {
     }
 }
 
+configurations {
+    api.extendsFrom internalimplementation
+}
+
+
 repositories {
     mavenCentral()
     maven {
@@ -59,6 +64,10 @@ sourceSets {
 println("Current Bot Version: ${version}")
 
 dependencies {
+
+    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:$LOG4J_VERSION")
+
+
     // Libs for Bot
     implementation("net.dv8tion:JDA:$JDA_VERSION") // JDA
     implementation("dev.arbjerg:lavaplayer:$LAVA_VERSION") // LavaPlayer to stream audio from YT/FILES to Discord
@@ -73,22 +82,9 @@ dependencies {
     implementation project(path: ':mboteventbus')
     implementation project(path: ':mangoutils')
 
-    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:$LOG4J_VERSION")
-
-
-    // Shadow
-    shadow project(path: ':mangobotapi')
-    shadow project(path: ':mboteventbus')
-    shadow project(path: ':mangoutils')
-
-
-    shadow("net.dv8tion:JDA:$JDA_VERSION")
-    shadow("dev.arbjerg:lavaplayer:$LAVA_VERSION")
-    shadow("com.google.code.gson:gson:$GSON_VERSION")
-    shadow("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
-    shadow("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5")
-    shadow('org.slf4j:slf4j-simple:2.0.9')
-
+    internalimplementation project(path: ':mangobotapi')
+    internalimplementation project(path: ':mboteventbus')
+    internalimplementation project(path: ':mangoutils')
 }
 
 tasks.register('runBot', JavaExec) {
@@ -109,32 +105,17 @@ tasks.register('runTestBot', JavaExec) {
     mainClass = 'org.mangorage.mangobottest.Main'
 }
 
-shadowJar {
-    group "bot tasks"
-    description "Builds the bot jar"
-
-    exclude "natives/darwin/**"
-    exclude "natives/linux-aarch32/**"
-    exclude "natives/linux-arm/**"
-    exclude "natives/linux-armhf/**"
-    exclude "natives/linux-musl-aarch64/**"
-    exclude "natives/linux-musl-x86-64/**"
-    exclude "natives/linux-x86/**"
-    //exclude "natives/linux-x86-64/**"
-    exclude "natives/win-x86/**"
-    exclude "natives/win-x86-64/**"
-    exclude "natives/linux-aarch64/**"
-    exclude "natives/win32-x86/**"
-    exclude "natives/win32-x86-64/**"
-}
-
-test {
-    useJUnitPlatform()
-}
-
-
 jar {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    dependsOn configurations.internalimplementation
+
+    from {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        configurations.internalimplementation.collect {
+            zipTree(it)
+        }
+    } {
+        exclude "META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA"
+    }
 
     manifest {
         attributes 'Main-Class': 'org.mangorage.mangobot.Main'

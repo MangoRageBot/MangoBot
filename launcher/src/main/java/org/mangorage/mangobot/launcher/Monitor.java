@@ -22,7 +22,7 @@
 
 package org.mangorage.mangobot.launcher;
 
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 
 import java.io.IOException;
 import java.io.PrintStream;

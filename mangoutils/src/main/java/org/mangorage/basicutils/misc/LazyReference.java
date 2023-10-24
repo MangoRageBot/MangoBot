@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils.misc;
+package org.mangorage.basicutils.misc;
 
 import java.util.function.Supplier;
 

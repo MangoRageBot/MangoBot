@@ -30,7 +30,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.data.DataHandler;
 import org.mangorage.mangobotapi.core.events.LoadEvent;

@@ -20,26 +20,28 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils.config;
+package org.mangorage.basicutils.misc;
 
-public class Transformers {
-    public static final Transformer<String, String> STRING = Transformer.create(v -> v, v -> v);
-    public static final Transformer<Boolean, String> BOOLEAN = Transformer.create(
-            v -> {
-                if (v.equalsIgnoreCase("false"))
-                    return false;
-                if (v.equalsIgnoreCase("true"))
-                    return true;
-                return null;
-            }, Object::toString);
+import org.mangorage.basicutils.LogHelper;
 
-    public static final Transformer<Integer, String> INTEGER = Transformer.create(
-            v -> {
-                try {
-                    return Integer.parseInt(v);
-                } catch (NumberFormatException ignored) {
-                }
+public class QueueData<T> {
+    private int position = 0;
+    private T data;
 
-                return null;
-            }, Object::toString);
+    public QueueData(T data) {
+        this.data = data;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void updatePosition(int position) {
+        this.position = position;
+        LogHelper.info("%s was updated to index %s!".formatted(data, this.position));
+    }
+
+    public int getPosition() {
+        return position;
+    }
 }

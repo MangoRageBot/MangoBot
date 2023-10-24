@@ -35,7 +35,7 @@ import net.dv8tion.jda.api.audio.SpeakingMode;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.managers.AudioManager;
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 
 public class MusicUtil {
     public static void connectToAudioChannel(VoiceChannel channel) {

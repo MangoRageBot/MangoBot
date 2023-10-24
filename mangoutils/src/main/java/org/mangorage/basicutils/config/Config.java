@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils.config;
+package org.mangorage.basicutils.config;
 
 import java.io.IOException;
 import java.net.URI;

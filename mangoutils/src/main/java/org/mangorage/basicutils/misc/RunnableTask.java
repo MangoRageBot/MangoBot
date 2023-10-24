@@ -20,16 +20,34 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils.misc;
+package org.mangorage.basicutils.misc;
 
-public class Lockable {
-    private boolean locked = false;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-    public void lock() {
-        this.locked = true;
+public class RunnableTask<T> implements Runnable, Supplier<T> {
+
+    private final T data;
+    private final Consumer<RunnableTask<T>> runnableConsumer;
+
+    public RunnableTask(T data, Consumer<RunnableTask<T>> runnable) {
+        this.data = data;
+        this.runnableConsumer = runnable;
     }
 
-    public boolean isLocked() {
-        return locked;
+    /**
+     *
+     */
+    @Override
+    public void run() {
+        this.runnableConsumer.accept(this);
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public T get() {
+        return data;
     }
 }

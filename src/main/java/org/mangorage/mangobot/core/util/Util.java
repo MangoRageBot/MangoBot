@@ -29,7 +29,7 @@ import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.TimeUtil;
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.MangoBotAPI;
 import org.mangorage.mangobotapi.core.commands.Arguments;

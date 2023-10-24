@@ -24,7 +24,7 @@ package org.mangorage.mangobot.modules.anticrosspost;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import org.mangorage.mangobot.basicutils.TaskScheduler;
+import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
 import org.mangorage.mboteventbus.impl.IEventBus;
 

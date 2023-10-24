@@ -39,10 +39,10 @@ import java.net.URL;
  * @param groupId    (io.github.realmangorage)
  * @param artifactId (mangobot)
  */
-public record Maven(String repository, String groupId, String artifactId) {
+public record Maven(String repository, String groupId, String artifactId, String version, String jar) {
 
     public void downloadTo(String version, File dest) {
-        String URL = "%s/%s/%s/%s/%s-%s-all.jar".formatted(repository, groupId.replace(".", "/"), artifactId, version, artifactId, version);
+        String URL = "%s/%s/%s/%s/%s-%s%s".formatted(repository, groupId.replace(".", "/"), artifactId, version, artifactId, version, jar);
         try {
             FileUtils.copyURLToFile(new URL(URL), dest);
         } catch (IOException e) {

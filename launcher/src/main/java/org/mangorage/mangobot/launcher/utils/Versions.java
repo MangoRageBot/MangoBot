@@ -20,15 +20,11 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils;
+package org.mangorage.mangobot.launcher.utils;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-public class TaskScheduler {
-    private final static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-
-    public static ScheduledExecutorService getExecutor() {
-        return executor;
-    }
+public class Versions {
+    public static final String JDA_VERSION = "5.0.0-beta.15";
+    public static final String GSON_VERSION = "2.10.1";
+    public static final String LOG4J_VERSION = "2.20.0";
+    public static final String LAVA_VERSION = "2.0.2";
 }

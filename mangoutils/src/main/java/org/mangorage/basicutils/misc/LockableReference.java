@@ -20,46 +20,21 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.test;
+package org.mangorage.basicutils.misc;
 
+import java.util.function.Supplier;
 
-import org.mangorage.basicutils.LogHelper;
+public class LockableReference<T> extends Lockable implements Supplier<T> {
+    private T object;
 
-public class Test {
-
-
-    public static void openMenu() {
-
+    public void set(T object) {
+        if (isLocked())
+            throw new IllegalStateException("Attempted to set value on a locked reference");
+        this.object = object;
     }
 
-    public static void openMenu(String menuName) {
-
+    @Override
+    public T get() {
+        return object;
     }
-
-
-
-    public static void main(String[] args) {
-
-        var fileName = "test.txt";
-        var ext = ".txt";
-        var fileNameNoExt = fileName.substring(0, fileName.length() - ext.length());
-        LogHelper.info(fileNameNoExt);
-
-        int pointsPerDay = 200;
-        int pointsPerDollar = 100 / 5;
-        int days = 30;
-
-        int potentialEarnedPoints = pointsPerDay * days;
-        int earnedPoints = 529;
-
-        int potentialTotalIncome = potentialEarnedPoints / pointsPerDollar;
-        int totalIncome = earnedPoints / pointsPerDollar;
-
-        LogHelper.info("Estimated Income: %s".formatted(potentialTotalIncome));
-        LogHelper.info("Earned Income: %s".formatted(totalIncome));
-
-
-
-    }
-
 }

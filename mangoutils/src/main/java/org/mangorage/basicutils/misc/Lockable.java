@@ -20,11 +20,16 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils.annotations;
+package org.mangorage.basicutils.misc;
 
+public class Lockable {
+    private boolean locked = false;
 
-public @interface InsteadUse {
-    String reason();
+    public void lock() {
+        this.locked = true;
+    }
 
-    Class<?> use() default Void.class;
+    public boolean isLocked() {
+        return locked;
+    }
 }

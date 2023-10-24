@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils;
+package org.mangorage.basicutils;
 
 import java.io.File;
 import java.io.IOException;

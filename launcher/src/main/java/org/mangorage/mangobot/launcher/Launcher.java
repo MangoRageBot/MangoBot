@@ -22,24 +22,231 @@
 
 package org.mangorage.mangobot.launcher;
 
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobot.launcher.data.Maven;
 import org.mangorage.mangobot.launcher.data.Version;
 import org.mangorage.mangobot.launcher.utils.Util;
+import org.mangorage.mangobot.launcher.utils.Versions;
 
 import java.io.File;
+import java.util.List;
 
 public class Launcher {
+
+    public static final List<Maven> DEPENDENCIES = List.of(
+            new Maven(
+                    "https://repo.maven.apache.org/maven2",
+                    "net.dv8tion",
+                    "JDA",
+                    Versions.JDA_VERSION, // default Version
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo.maven.apache.org/maven2",
+                    "dev.arbjerg",
+                    "lavaplayer",
+                    Versions.LAVA_VERSION,
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo.maven.apache.org/maven2",
+                    "com.google.code.gson",
+                    "gson",
+                    Versions.GSON_VERSION,
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo.maven.apache.org/maven2",
+                    "org.apache.logging.log4j",
+                    "log4j-core",
+                    Versions.LOG4J_VERSION,
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo.maven.apache.org/maven2",
+                    "org.eclipse.mylyn.github",
+                    "org.eclipse.egit.github.core",
+                    "2.1.5",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo.maven.apache.org/maven2",
+                    "org.slf4j",
+                    "slf4j-simple",
+                    "2.0.9",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo.maven.apache.org/maven2",
+                    "dev.arbjerg",
+                    "lava-common",
+                    Versions.LAVA_VERSION,
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "dev.arbjerg",
+                    "lavaplayer-natives",
+                    Versions.LAVA_VERSION,
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.slf4j",
+                    "slf4j-api",
+                    "1.7.36",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.apache.logging.log4j",
+                    "log4j-api",
+                    Versions.LOG4J_VERSION,
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "commons-io",
+                    "commons-io",
+                    "2.14.0",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "net.sf.trove4j",
+                    "trove4j",
+                    "3.0.3",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.apache.commons",
+                    "commons-collections4",
+                    "4.4",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "com.squareup.okhttp3",
+                    "okhttp",
+                    "4.10.0",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.jetbrains.kotlin",
+                    "kotlin-stdlib",
+                    "1.6.20",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "com.squareup.okio",
+                    "okio-jvm",
+                    "3.0.0",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "com.neovisionaries",
+                    "nv-websocket-client",
+                    "2.14",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "com.fasterxml.jackson.core",
+                    "jackson-core",
+                    "2.15.2",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "com.fasterxml.jackson.core",
+                    "jackson-databind",
+                    "2.15.2",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "com.fasterxml.jackson.core",
+                    "jackson-annotations",
+                    "2.15.2",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.apache.httpcomponents",
+                    "httpclient",
+                    "4.5.14",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.apache.httpcomponents",
+                    "httpcore",
+                    "4.4.16",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.mozilla",
+                    "rhino",
+                    "1.7.14",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.mozilla",
+                    "rhino-engine",
+                    "1.7.14",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.slf4j",
+                    "slf4j-simple",
+                    "2.0.9",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.apache.logging.log4j",
+                    "log4j-slf4j-impl",
+                    Versions.LOG4J_VERSION,
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "commons-logging",
+                    "commons-logging",
+                    "1.2",
+                    ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.json",
+                    "json",
+                    "20230618",
+                    ".jar"
+            )
+
+    );
+
     public static final Maven MAVEN = new Maven(
             "https://s01.oss.sonatype.org/content/repositories/releases",
             "io.github.realmangorage",
-            "mangobot"
+            "mangobot",
+            "none", // default Version
+            "-all.jar"
     );
 
     public static void main(String[] args) {
         LogHelper.info("Checking for Updates...");
 
-        File dest = new File("bot/mangobot.jar");
+        File dest = new File("libs/mangobot.jar");
+        if (!dest.exists())
+            downloadDependencies(); // Download the deps...
         File parent = dest.getParentFile();
         if (!parent.exists() && !parent.mkdirs()) {
             LogHelper.info("Unable to create directories for bot jar...");
@@ -78,13 +285,15 @@ public class Launcher {
         }
     }
 
-    public static void startBot(String version) {
-        LogHelper.info("Starting bot now... Version: %s".formatted(version));
 
-        ProcessBuilder pb = new ProcessBuilder("java", "-jar", "mangobot.jar");
-        pb.directory(new File("bot/"));
-        pb.redirectOutput(new File("botdata/bot.log"));
-        new Monitor(pb);
+    public static void downloadDependencies() {
+        File dir = new File("libs/");
+        if (!dir.exists() && !dir.mkdirs()) {
+            LogHelper.info("Unable to create directories for dependencies...");
+            return;
+        }
+        DEPENDENCIES.forEach(e -> {
+            e.downloadTo(e.version(), new File("libs/%s-%s.jar".formatted(e.artifactId(), e.version())));
+        });
     }
-
 }

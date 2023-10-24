@@ -23,9 +23,9 @@
 package org.mangorage.mangobot.core.util;
 
 
-import org.mangorage.mangobot.basicutils.config.Config;
-import org.mangorage.mangobot.basicutils.config.ConfigSetting;
-import org.mangorage.mangobot.basicutils.config.ISetting;
+import org.mangorage.basicutils.config.Config;
+import org.mangorage.basicutils.config.ConfigSetting;
+import org.mangorage.basicutils.config.ISetting;
 
 public class BotSettings {
     private final static Config CONFIG = new Config("botresources/", ".env");

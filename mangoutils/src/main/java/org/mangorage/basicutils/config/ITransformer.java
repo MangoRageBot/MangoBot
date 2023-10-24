@@ -20,28 +20,9 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils.misc;
+package org.mangorage.basicutils.config;
 
-import org.mangorage.mangobot.basicutils.LogHelper;
-
-public class QueueData<T> {
-    private int position = 0;
-    private T data;
-
-    public QueueData(T data) {
-        this.data = data;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void updatePosition(int position) {
-        this.position = position;
-        LogHelper.info("%s was updated to index %s!".formatted(data, this.position));
-    }
-
-    public int getPosition() {
-        return position;
-    }
+@FunctionalInterface
+public interface ITransformer<T, X> {
+    T transform(X value);
 }

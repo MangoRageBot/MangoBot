@@ -25,7 +25,7 @@ package org.mangorage.mangobot;
 import com.sedmelluq.discord.lavaplayer.natives.ConnectorNativeLibLoader;
 import com.sedmelluq.lava.common.natives.architecture.DefaultArchitectureTypes;
 import com.sedmelluq.lava.common.natives.architecture.DefaultOperatingSystemTypes;
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.util.BotSettings;
 import org.mangorage.mangobotapi.core.util.APIUtil;

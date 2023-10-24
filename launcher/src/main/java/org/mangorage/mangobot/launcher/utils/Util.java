@@ -32,7 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class Util {
-    private static final String DATA_DIR = "botdata/";
+    private static final String DATA_DIR = "botresources/";
     private static final Gson GSON = new GsonBuilder().create();
 
 

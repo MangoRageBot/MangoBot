@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.basicutils.config;
+package org.mangorage.basicutils.config;
 
 public interface ISetting<X> {
     void set(X value);

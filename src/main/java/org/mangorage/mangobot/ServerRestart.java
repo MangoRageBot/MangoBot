@@ -24,7 +24,7 @@ package org.mangorage.mangobot;
 
 import com.mattmalec.pterodactyl4j.PteroBuilder;
 import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobot.core.util.BotSettings;
 
 public class ServerRestart {

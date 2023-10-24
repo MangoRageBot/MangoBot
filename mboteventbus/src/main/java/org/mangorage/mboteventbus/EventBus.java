@@ -22,7 +22,7 @@
 
 package org.mangorage.mboteventbus;
 
-import org.mangorage.mangobot.basicutils.LogHelper;
+import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mboteventbus.base.Event;
 import org.mangorage.mboteventbus.base.EventBuilder;
 import org.mangorage.mboteventbus.base.EventHolder;
