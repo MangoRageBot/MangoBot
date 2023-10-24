@@ -22,6 +22,7 @@
 
 package addon.example;
 
+import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobotapi.core.addon.Addon;
 import org.mangorage.mangobotapi.core.addon.IAddon;
 
@@ -32,7 +33,7 @@ public class ExamplePlugin implements IAddon {
     public static final String ID = "exampleaddon";
 
     public ExamplePlugin() {
-        System.out.println("WE LOADED THE PLUGIN!");
+        LogHelper.info("WE LOADED THE PLUGIN!");
     }
 
     @Override

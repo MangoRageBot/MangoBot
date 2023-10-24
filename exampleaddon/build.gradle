@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'org.mangorage'
-version = '1.0.0-c196'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
@@ -14,6 +14,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     compileOnly project(':mangobotapi')
+    compileOnly project(':mangoutils')
 }
 
 test {

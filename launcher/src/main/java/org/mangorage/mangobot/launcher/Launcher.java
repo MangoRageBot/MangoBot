@@ -236,6 +236,13 @@ public class Launcher {
                     "reflections",
                     "0.10.2",
                     ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.javassist",
+                    "javassist",
+                    "3.28.0-GA",
+                    ".jar"
             )
     );
 

@@ -19,8 +19,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
-    implementation project(path: ':mboteventbus') // Our EventBus System
-    implementation project(path: ':mangoutils') // Our Utils
+    compileOnly project(path: ':mboteventbus') // Our EventBus System
+    compileOnly project(path: ':mangoutils') // Our Utils
 
 
     compileOnly('org.reflections:reflections:0.10.2') // Reflections
