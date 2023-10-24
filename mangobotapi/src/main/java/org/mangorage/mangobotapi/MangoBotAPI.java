@@ -23,6 +23,7 @@
 package org.mangorage.mangobotapi;
 
 import net.dv8tion.jda.api.JDA;
+import org.mangorage.mangobotapi.core.addon.AddonLoader;
 import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
@@ -77,6 +78,7 @@ public class MangoBotAPI {
         EVENT_BUS.addListener(10, StartupEvent.class, event -> {
             switch (event.phase()) {
                 case STARTUP -> {
+                    AddonLoader.load(); // Load addons...
                     ScriptParser.init();
                     Actions.init();
                 }

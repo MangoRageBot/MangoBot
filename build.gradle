@@ -125,7 +125,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact shadowJar
+            artifact jar
             pom {
                 name = 'MangoBot'
                 description = 'A discord bot used for many servers'

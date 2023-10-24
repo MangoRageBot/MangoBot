@@ -16,8 +16,6 @@ repositories {
 }
 
 dependencies {
-
-    implementation project(path: ':mangoutils')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
@@ -25,9 +23,10 @@ dependencies {
     implementation project(path: ':mangoutils') // Our Utils
 
 
+    compileOnly('org.reflections:reflections:0.10.2') // Reflections
     compileOnly("net.dv8tion:JDA:$JDA_VERSION") // JDA
     compileOnly("com.google.code.gson:gson:$GSON_VERSION") // GSON
-    compileOnly("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
+    compileOnly("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION") // Log4J
 }
 
 test {

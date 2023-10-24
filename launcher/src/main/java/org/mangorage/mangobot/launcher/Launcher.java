@@ -229,8 +229,14 @@ public class Launcher {
                     "json",
                     "20230618",
                     ".jar"
+            ),
+            new Maven(
+                    "https://repo1.maven.org/maven2",
+                    "org.reflections",
+                    "reflections",
+                    "0.10.2",
+                    ".jar"
             )
-
     );
 
     public static final Maven MAVEN = new Maven(
@@ -238,7 +244,7 @@ public class Launcher {
             "io.github.realmangorage",
             "mangobot",
             "none", // default Version
-            "-all.jar"
+            ".jar"
     );
 
     public static void main(String[] args) {
