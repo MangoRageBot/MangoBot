@@ -177,8 +177,10 @@ public class BasicPermission {
             AtomicBoolean result = new AtomicBoolean(false);
 
             for (Role role : member.getRoles()) {
-                if (ROLES.contains(role.getId()))
+                if (ROLES.contains(role.getId())) {
+                    result.set(true);
                     break;
+                }
             }
 
             return result.get();

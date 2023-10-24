@@ -23,6 +23,7 @@
 package org.mangorage.mangobot.modules.basic.commands;
 
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
@@ -148,9 +149,16 @@ public class PermissionCommand implements IBasicCommand {
             PermissionRegistry.getPermission(permId).reset(guild.getId());
 
             return CommandResult.PASS;
+        } else if (subcmd.equalsIgnoreCase("test")) {
+            var userID = args.get(2);
+            Member member2 = guild.getMemberById(userID);
+            if (member2 == null) return CommandResult.PASS;
+            var result = PermissionRegistry.getPermission(permId).hasPermission(member2);
+            message.reply("Has Permission: %s".formatted(result)).queue();
+            return CommandResult.PASS;
         }
 
-        return CommandResult.PASS;
+        return CommandResult.FAIL;
     }
 
 
