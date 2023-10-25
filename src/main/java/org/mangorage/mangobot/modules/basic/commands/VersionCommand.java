@@ -29,9 +29,11 @@ import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.data.DataHandler;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+@AutoRegister.BasicCommand
 public class VersionCommand implements IBasicCommand {
     public record Version(String version) {
     }

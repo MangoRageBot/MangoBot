@@ -32,13 +32,15 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobot.core.config.BotPermissions;
+import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobot.modules.music.MusicPlayer;
 import org.mangorage.mangobot.modules.music.MusicUtil;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 
+@AutoRegister.BasicCommand
 public class PlayCommand implements IBasicCommand {
     @NotNull
     @Override

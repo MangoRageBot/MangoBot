@@ -69,18 +69,19 @@ dependencies {
 
 
     // Libs for Bot
-    compileOnly("net.dv8tion:JDA:$JDA_VERSION") // JDA
-    compileOnly("dev.arbjerg:lavaplayer:$LAVA_VERSION") // LavaPlayer to stream audio from YT/FILES to Discord
-    compileOnly("com.google.code.gson:gson:$GSON_VERSION")
-    compileOnly("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
-    compileOnly("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5") // GITHUB API
-    compileOnly('com.mattmalec:Pterodactyl4J:2.BETA_140')
-    compileOnly('org.slf4j:slf4j-simple:2.0.9')
+    implementation("net.dv8tion:JDA:$JDA_VERSION") // JDA
+    implementation("dev.arbjerg:lavaplayer:$LAVA_VERSION") // LavaPlayer to stream audio from YT/FILES to Discord
+    implementation("com.google.code.gson:gson:$GSON_VERSION")
+    implementation("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
+    implementation("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5") // GITHUB API
+    implementation('com.mattmalec:Pterodactyl4J:2.BETA_140')
+    implementation('org.slf4j:slf4j-simple:2.0.9')
+    implementation('org.reflections:reflections:0.10.2')
 
     // Core Libs
-    compileOnly project(path: ':mangobotapi')
-    compileOnly project(path: ':mboteventbus')
-    compileOnly project(path: ':mangoutils')
+    implementation project(path: ':mangobotapi')
+    implementation project(path: ':mboteventbus')
+    implementation project(path: ':mangoutils')
 
     internalimplementation project(path: ':mangobotapi')
     internalimplementation project(path: ':mboteventbus')

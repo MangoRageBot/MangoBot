@@ -20,26 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package addon.example;
+package org.mangorage.mangobot.launcher.utils;
 
-import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.addon.Addon;
-import org.mangorage.mangobotapi.core.addon.IAddon;
-import org.mangorage.mangobotapi.core.registry.CommandRegistry;
-
-import static addon.example.ExamplePlugin.ID;
-
-@Addon(id = ID)
-public class ExamplePlugin implements IAddon {
-    public static final String ID = "exampleaddon";
-
-    public ExamplePlugin() {
-        LogHelper.info("Loading Example plugin stuff");
-        CommandRegistry.addBasicCommand(new ExampleCommand());
-    }
-
-    @Override
-    public String getId() {
-        return ID;
-    }
+public class IOUtils {
 }

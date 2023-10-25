@@ -32,7 +32,7 @@ import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.basicutils.misc.PagedList;
 import org.mangorage.basicutils.misc.RunnableTask;
 import org.mangorage.mangobot.core.Bot;
-import org.mangorage.mangobot.core.config.BotPermissions;
+import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
@@ -41,9 +41,10 @@ import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.discord.DButtonInteractionEvent;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 import org.mangorage.mangobotapi.core.registry.GuildCache;
-import org.mangorage.mangobotapi.core.script.ScriptParser;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
+import org.mangorage.mangobotapi.core.util.ScriptParser;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -58,6 +59,7 @@ import java.util.concurrent.TimeUnit;
 import static org.mangorage.mangobot.core.Bot.EVENT_BUS;
 
 @SuppressWarnings("all")
+@AutoRegister.BasicCommand
 public class TrickCommand implements IBasicCommand {
     public enum Type {
         DEFAULT,

@@ -27,15 +27,17 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
-import org.mangorage.mangobot.core.config.BotPermissions;
+import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 import org.mangorage.mangobotapi.core.registry.BasicPermission;
 import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
 
 import java.util.List;
 
+@AutoRegister.BasicCommand
 public class PermissionCommand implements IBasicCommand {
 
 

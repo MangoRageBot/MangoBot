@@ -28,13 +28,15 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
-import org.mangorage.mangobot.core.config.BotPermissions;
+import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobot.modules.modmail.ModMailHandler;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 
+@AutoRegister.BasicCommand
 public class ModMailCommand implements IBasicCommand {
     @NotNull
     @Override

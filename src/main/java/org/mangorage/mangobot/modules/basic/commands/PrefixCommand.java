@@ -30,10 +30,12 @@ import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandPrefix;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 
 import static org.mangorage.mangobot.core.Bot.DEFAULT_SETTINGS;
-import static org.mangorage.mangobot.core.config.BotPermissions.PREFIX_ADMIN;
+import static org.mangorage.mangobot.core.BotPermissions.PREFIX_ADMIN;
 
+@AutoRegister.BasicCommand
 public class PrefixCommand implements IBasicCommand {
     @NotNull
     @Override

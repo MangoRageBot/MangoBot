@@ -27,16 +27,9 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
-    implementation("commons-io:commons-io:2.14.0")
+    implementation("commons-io:commons-io:2.14.0") // TODO: Remove our need for this.
     implementation("com.google.code.gson:gson:$GSON_VERSION")
     implementation project(path: ':mangoutils')
-
-    implementation 'commons-net:commons-net:3.10.0'
-
-    shadow('commons-net:commons-net:3.10.0')
-    shadow("commons-io:commons-io:2.14.0")
-    shadow("com.google.code.gson:gson:$GSON_VERSION")
-    shadow project(path: ':mangoutils')
 }
 
 test {

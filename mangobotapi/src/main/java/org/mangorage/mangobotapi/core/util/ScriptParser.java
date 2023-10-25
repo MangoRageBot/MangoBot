@@ -20,26 +20,17 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package addon.example;
+package org.mangorage.mangobotapi.core.util;
 
-import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.addon.Addon;
-import org.mangorage.mangobotapi.core.addon.IAddon;
-import org.mangorage.mangobotapi.core.registry.CommandRegistry;
+import javax.script.ScriptEngine;
 
-import static addon.example.ExamplePlugin.ID;
+@Deprecated
+public class ScriptParser {
 
-@Addon(id = ID)
-public class ExamplePlugin implements IAddon {
-    public static final String ID = "exampleaddon";
-
-    public ExamplePlugin() {
-        LogHelper.info("Loading Example plugin stuff");
-        CommandRegistry.addBasicCommand(new ExampleCommand());
+    public static ScriptEngine get() {
+        return null;
     }
 
-    @Override
-    public String getId() {
-        return ID;
+    public static void init() {
     }
 }

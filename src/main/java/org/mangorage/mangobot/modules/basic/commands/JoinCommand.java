@@ -28,10 +28,12 @@ import org.mangorage.mangobot.modules.music.MusicUtil;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 import org.mangorage.mangobotapi.core.util.APIUtil;
 
 import java.util.List;
 
+@AutoRegister.BasicCommand
 public class JoinCommand implements IBasicCommand {
     private static final List<String> USERS = List.of("194596094200643584");
 

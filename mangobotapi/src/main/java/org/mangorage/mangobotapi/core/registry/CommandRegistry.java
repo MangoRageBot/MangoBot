@@ -29,6 +29,7 @@ import org.mangorage.mangobotapi.core.commands.ICommand;
 import org.mangorage.mangobotapi.core.commands.ISlashCommand;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.events.SlashCommandEvent;
+import org.mangorage.mangobotapi.core.reflections.ReflectionsUtils;
 import org.mangorage.mboteventbus.base.EventHolder;
 import org.mangorage.mboteventbus.impl.IEventListener;
 
@@ -55,6 +56,28 @@ public class CommandRegistry {
             });
 
     private static final CopyOnWriteArrayList<ICommand<?, ?>> COMMANDS = new CopyOnWriteArrayList<>();
+
+    public static void load() {
+        ReflectionsUtils.REFLECTIONS.getTypesAnnotatedWith(AutoRegister.BasicCommand.class).forEach(cls -> {
+            var obj = ReflectionsUtils.createInstance(cls);
+            if (obj == null) throw new IllegalStateException("Unable to auto register command");
+
+            if (obj instanceof IBasicCommand command) {
+                addBasicCommand(command);
+            } else
+                throw new IllegalStateException("Unable to auto register command. Class must implement IBasicCommand");
+        });
+
+        ReflectionsUtils.REFLECTIONS.getTypesAnnotatedWith(AutoRegister.SlashCommand.class).forEach(cls -> {
+            var obj = ReflectionsUtils.createInstance(cls);
+            if (obj == null) throw new IllegalStateException("Unable to auto register command");
+
+            if (obj instanceof ISlashCommand command) {
+                addSlashCommand(command);
+            } else
+                throw new IllegalStateException("Unable to auto register command. Class must implement ISlashCommand");
+        });
+    }
 
     public static void addBasicCommand(IBasicCommand command) {
         BASIC_COMMAND_EVENT.addListener(command.getListener());

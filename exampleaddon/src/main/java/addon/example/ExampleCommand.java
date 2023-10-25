@@ -20,16 +20,23 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.script;
+package addon.example;
 
-import javax.script.ScriptEngine;
+import net.dv8tion.jda.api.entities.Message;
+import org.mangorage.mangobotapi.core.commands.Arguments;
+import org.mangorage.mangobotapi.core.commands.CommandResult;
+import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 
-public class ScriptParser {
+public class ExampleCommand implements IBasicCommand {
 
-    public static ScriptEngine get() {
-        return null;
+    @Override
+    public CommandResult execute(Message message, Arguments args) {
+        message.reply("This is an Example command! It works! From an Example Jar...").setSuppressedNotifications(true).mentionRepliedUser(false).queue();
+        return CommandResult.PASS;
     }
 
-    public static void init() {
+    @Override
+    public String commandId() {
+        return "examplecmd";
     }
 }

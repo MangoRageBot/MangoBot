@@ -28,10 +28,12 @@ import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@AutoRegister.BasicCommand
 public class TerminateCommand implements IBasicCommand {
     private static final List<String> USERS = List.of("194596094200643584");
 

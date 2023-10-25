@@ -23,7 +23,9 @@
 package org.mangorage.mangobot.modules.developer;
 
 import org.mangorage.mangobot.modules.basic.commands.ReplyCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 
+@AutoRegister.BasicCommand
 public class SpeakCommand extends ReplyCommand {
 
     public SpeakCommand() {

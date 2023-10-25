@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.config;
+package org.mangorage.mangobot.core;
 
 import net.dv8tion.jda.api.Permission;
 import org.mangorage.mangobotapi.core.registry.BasicPermission;

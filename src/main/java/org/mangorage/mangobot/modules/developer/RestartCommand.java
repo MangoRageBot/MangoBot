@@ -28,12 +28,15 @@ import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 // TODO: Make it so that it restarts in 60 second intervals, cooldown of 60 seconds from last restart is needed.
 // TODO: To prevent the server from thinking the bot cant be restarted. When it can indeed be restarted.
+
+@AutoRegister.BasicCommand
 public class RestartCommand implements IBasicCommand {
     private static final List<String> USERS = List.of("194596094200643584");
 

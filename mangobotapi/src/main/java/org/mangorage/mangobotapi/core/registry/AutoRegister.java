@@ -20,7 +20,18 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.launcher.data;
+package org.mangorage.mangobotapi.core.registry;
 
-public record FTPSettings(String host, int port, String username, String password) {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+public final class AutoRegister {
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface BasicCommand {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface SlashCommand {
+    }
 }

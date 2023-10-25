@@ -32,8 +32,6 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.mangorage.basicutils.LogHelper;
 import org.mangorage.basicutils.misc.LockableReference;
-import org.mangorage.mangobot.core.config.BotCommands;
-import org.mangorage.mangobot.core.config.BotPermissions;
 import org.mangorage.mangobot.modules.anticrosspost.Anticrosspost;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobot.modules.customvc.CustomVC;
@@ -199,7 +197,6 @@ public class Bot {
     public void onStartup(StartupEvent event) {
         switch (event.phase()) {
             case STARTUP -> {
-                BotCommands.init();
                 BotPermissions.init();
                 CustomVC.init();
             }

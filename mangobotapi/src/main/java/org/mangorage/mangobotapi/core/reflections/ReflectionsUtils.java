@@ -20,37 +20,34 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.launcher;
+package org.mangorage.mangobotapi.core.reflections;
 
-import org.mangorage.basicutils.LogHelper;
+import org.jetbrains.annotations.Nullable;
+import org.reflections.Reflections;
+import org.reflections.util.ConfigurationBuilder;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
+import java.lang.reflect.InvocationTargetException;
 
-public class Monitor extends Thread {
-    private final Process process;
+public class ReflectionsUtils {
+    public static final Reflections REFLECTIONS = new Reflections(
+            ConfigurationBuilder
+                    .build()
+                    .forPackages(
+                            "org",
+                            "addon",
+                            "com",
+                            "net"
+                    )
+    );
 
-    public Monitor(ProcessBuilder pb) {
+    public static @Nullable Object createInstance(Class<?> clazz) {
+
         try {
-            this.process = pb.start();
-            var os = process.getOutputStream();
-            System.setOut(new PrintStream(os, true, StandardCharsets.UTF_8));
-            this.start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            return clazz.getConstructor().newInstance();
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
+                 IllegalAccessException ignored) {
         }
-    }
 
-    @Override
-    public void run() {
-        while (process.isAlive()) {
-            try {
-                sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        LogHelper.info("Process has ended!");
+        return null;
     }
 }

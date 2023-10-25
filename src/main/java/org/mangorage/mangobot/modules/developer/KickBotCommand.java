@@ -28,9 +28,11 @@ import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.registry.AutoRegister;
 
 import java.util.List;
 
+@AutoRegister.BasicCommand
 public class KickBotCommand implements IBasicCommand {
     private static final List<String> USERS = List.of("194596094200643584");
 
