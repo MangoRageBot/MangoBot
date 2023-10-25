@@ -29,6 +29,8 @@ import org.apache.ivy.core.install.InstallOptions;
 import org.apache.ivy.core.module.id.ModuleRevisionId;
 import org.apache.ivy.core.resolve.ResolveOptions;
 import org.apache.ivy.core.settings.IvySettings;
+import org.apache.ivy.util.DefaultMessageLogger;
+import org.apache.ivy.util.Message;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.mangorage.mangobot.launcher.utils.Dependency;
 import org.mangorage.mangobot.launcher.utils.DependencyList;
@@ -46,6 +48,8 @@ public class CoreInstaller {
     }
 
     public static void install(File settingsFile, File dependencies) throws ParseException, IOException {
+        Message.setDefaultLogger(new DefaultMessageLogger(Message.MSG_ERR));
+
         IvySettings settings = new IvySettings();
         settings.setVariable("custom.base.dir", new File("repo").getAbsolutePath());
         settings.load(settingsFile);
@@ -65,7 +69,7 @@ public class CoreInstaller {
             resolveOptions.setTransitive(true);
             resolveOptions.setDownload(true);
             resolveOptions.setRefresh(true);
-            resolveOptions.setLog(LogOptions.LOG_DOWNLOAD_ONLY);
+            resolveOptions.setLog(LogOptions.LOG_QUIET);
 
             InstallOptions options = new InstallOptions();
             options.setConfs(new String[]{"default"});

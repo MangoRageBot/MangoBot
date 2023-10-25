@@ -74,12 +74,11 @@ public class Installer {
                 LogHelper.info("Downloaded!");
             } else {
                 LogHelper.info("No new Version found!");
-                downloadNewVersion(latestVersion);
             }
         } else {
             LogHelper.info("Installing Bot...");
             downloadNewVersion(latestVersion);
-            LogHelper.info("Installed!");
+            LogHelper.info("Installed Everything!");
         }
     }
 
@@ -107,7 +106,7 @@ public class Installer {
 
                 CoreInstaller.install(ivySettings, dependencies);
 
-                //FileUtils.deleteDirectory(new File("botresources/installer"));
+                FileUtils.deleteDirectory(new File("botresources/installer"));
                 Util.saveVersion(version);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
