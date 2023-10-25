@@ -23,8 +23,8 @@
 package org.mangorage.mangobot.core;
 
 import net.dv8tion.jda.api.Permission;
-import org.mangorage.mangobotapi.core.registry.BasicPermission;
-import org.mangorage.mangobotapi.core.registry.PermissionRegistry;
+import org.mangorage.mangobotapi.core.registry.permissions.BasicPermission;
+import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 
 public class BotPermissions {
 

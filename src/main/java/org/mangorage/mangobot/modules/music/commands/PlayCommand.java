@@ -38,7 +38,7 @@ import org.mangorage.mangobot.modules.music.MusicUtil;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.AutoRegister;
+import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
 
 @AutoRegister.BasicCommand
 public class PlayCommand implements IBasicCommand {

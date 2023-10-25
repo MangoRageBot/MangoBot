@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.registry;
+package org.mangorage.mangobotapi.core.registry.permissions;
 
 import com.google.gson.annotations.Expose;
 import net.dv8tion.jda.api.Permission;
@@ -29,9 +29,14 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.mangorage.mangobotapi.core.data.DataHandler;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * This class handles Permissions for Commands that are ran on guilds only!
@@ -42,8 +47,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 // TODO: Have DataHandler handle data for this.
 public class BasicPermission {
+    public @interface AutoRegister {
+    }
+
+    @Retention(RUNTIME)
+    @Target(FIELD)
+    public @interface Register {
+    }
+
+
     public static BasicPermission create(String id) {
-        return new BasicPermission(id);
+        return new BasicPermission(id, true);
+    }
+
+    public static BasicPermission create(String id, boolean saves) {
+        return new BasicPermission(id, saves);
     }
 
     private final HashSet<Permission> DISCORD_PERMISSIONS = new HashSet<>();
@@ -53,6 +71,7 @@ public class BasicPermission {
     private final HashMap<String, Node> NODES = new HashMap<>();
     @Expose
     private final String id;
+    private final boolean saves;
 
     private final DataHandler<BasicPermission> PERMISSION_DATA_HANDLER = DataHandler.create(
             (perm) -> {
@@ -66,9 +85,11 @@ public class BasicPermission {
                     .setFileName("permissions.json")
     );
 
-    private BasicPermission(String id) {
+    private BasicPermission(String id, boolean saves) {
         this.id = id;
-        PERMISSION_DATA_HANDLER.loadAll();
+        this.saves = saves;
+        if (saves)
+            PERMISSION_DATA_HANDLER.loadAll();
     }
 
     public String getId() {
@@ -116,7 +137,8 @@ public class BasicPermission {
     }
 
     private void save() {
-        PERMISSION_DATA_HANDLER.save(this, getId());
+        if (saves)
+            PERMISSION_DATA_HANDLER.save(this, getId());
     }
 
     public boolean hasPermission(Member member) {
@@ -154,7 +176,7 @@ public class BasicPermission {
     }
 
 
-    class Node {
+    private static class Node {
         @Expose
         private final HashSet<Permission> DISCORD_PERMISSIONS = new HashSet<>();
         @Expose

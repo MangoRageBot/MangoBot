@@ -29,7 +29,7 @@ import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
-import org.mangorage.mangobotapi.core.registry.CommandRegistry;
+import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 import org.mangorage.mboteventbus.impl.IEventBus;
 

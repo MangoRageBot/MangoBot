@@ -15,7 +15,10 @@ repositories {
     }
 }
 
+def libs = globalLibs
+
 dependencies {
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
@@ -23,10 +26,10 @@ dependencies {
     compileOnly project(path: ':mangoutils') // Our Utils
 
 
-    compileOnly('org.reflections:reflections:0.10.2') // Reflections
-    compileOnly("net.dv8tion:JDA:$JDA_VERSION") // JDA
-    compileOnly("com.google.code.gson:gson:$GSON_VERSION") // GSON
-    compileOnly("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION") // Log4J
+    compileOnly(libs.REFLECTIONS as String) // Reflections
+    compileOnly(libs.JDA as String) // JDA
+    compileOnly(libs.GSON as String) // GSON
+    compileOnly(libs.LOG4J_CORE as String) // Log4J
 }
 
 test {

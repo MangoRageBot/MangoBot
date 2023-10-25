@@ -28,7 +28,7 @@ import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.AutoRegister;
+import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
 
 import java.util.List;
 

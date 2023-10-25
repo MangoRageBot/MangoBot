@@ -41,8 +41,8 @@ import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.discord.DButtonInteractionEvent;
-import org.mangorage.mangobotapi.core.registry.AutoRegister;
 import org.mangorage.mangobotapi.core.registry.GuildCache;
+import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 import org.mangorage.mangobotapi.core.util.ScriptParser;
 

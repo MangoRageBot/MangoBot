@@ -20,18 +20,23 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.registry;
+package org.mangorage.mangobotapi.core.registry.commands;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
 
 public final class AutoRegister {
 
     @Retention(RetentionPolicy.RUNTIME)
+    @Target(TYPE)
     public @interface BasicCommand {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
+    @Target(TYPE)
     public @interface SlashCommand {
     }
 }

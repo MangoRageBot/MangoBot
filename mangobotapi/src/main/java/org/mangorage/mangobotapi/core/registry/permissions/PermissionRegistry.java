@@ -20,8 +20,12 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.registry;
+package org.mangorage.mangobotapi.core.registry.permissions;
 
+import org.mangorage.mangobotapi.core.reflections.ReflectionsUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,6 +35,25 @@ import java.util.List;
  */
 public class PermissionRegistry {
     private static HashMap<String, BasicPermission> PERMISSIONS = new HashMap<>();
+
+
+    public static void load() {
+        ReflectionsUtils.REFLECTIONS.getTypesAnnotatedWith(BasicPermission.AutoRegister.class).forEach(cls -> {
+            for (Field field : cls.getDeclaredFields()) {
+
+                if (!Modifier.isStatic(field.getModifiers())) return;
+                var permAnnotation = field.getAnnotation(BasicPermission.Register.class);
+                if (permAnnotation == null) return;
+                if (field.getType() != BasicPermission.class) return;
+                try {
+                    var obj = field.get(PermissionRegistry.class);
+                    if (obj instanceof BasicPermission permission) PermissionRegistry.register(permission);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+    }
 
     public static BasicPermission getPermission(String id) {
         return PERMISSIONS.get(id);

@@ -20,25 +20,22 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package addon.example;
+package org.mangorage.mangobot;
 
-import net.dv8tion.jda.api.entities.Message;
-import org.mangorage.mangobotapi.core.commands.Arguments;
-import org.mangorage.mangobotapi.core.commands.CommandResult;
-import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
 
-@AutoRegister.BasicCommand
-public class ExampleCommand implements IBasicCommand {
+import org.mangorage.basicutils.LogHelper;
+import org.mangorage.mangobotapi.core.registry.permissions.BasicPermission;
+import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 
-    @Override
-    public CommandResult execute(Message message, Arguments args) {
-        message.reply("This is an Example command! It works! From an Example Jar...").setSuppressedNotifications(true).mentionRepliedUser(false).queue();
-        return CommandResult.PASS;
-    }
+@BasicPermission.AutoRegister
+public class Test {
 
-    @Override
-    public String commandId() {
-        return "examplecmd";
+    @BasicPermission.Register
+    public static final BasicPermission PERMISSION = BasicPermission.create("testing", false);
+
+    public static void main(String[] args) {
+        PermissionRegistry.load();
+
+        LogHelper.info(PermissionRegistry.getPermission("testing").getId() + " ID of Permission");
     }
 }

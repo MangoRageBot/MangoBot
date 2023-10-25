@@ -61,27 +61,42 @@ sourceSets {
     }
 }
 
+def libs = [
+        JDA             : 'net.dv8tion:JDA:5.0.0-beta.15',
+        LAVA_PLAYER     : 'dev.arbjerg:lavaplayer:2.0.2',
+        GSON            : 'com.google.code.gson:gson:2.10.1',
+        LOG4J_CORE      : 'org.apache.logging.log4j:log4j-core:2.20.0',
+        LOG4J_SLF4J_IMPL: 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0',
+        GITHUB_API      : 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5',
+        PTERODACTYL4J   : 'com.mattmalec:Pterodactyl4J:2.BETA_140',
+        SLF4J_SIMPLE    : 'org.slf4j:slf4j-simple:2.0.9',
+        REFLECTIONS     : 'org.reflections:reflections:0.10.2'
+]
+
+ext.globalLibs = libs
+
+
 println("Current Bot Version: ${version}")
 
 dependencies {
-
-    runtimeOnly("org.apache.logging.log4j:log4j-slf4j-impl:$LOG4J_VERSION")
-
+    runtimeOnly(libs.LOG4J_SLF4J_IMPL)
 
     // Libs for Bot
-    implementation("net.dv8tion:JDA:$JDA_VERSION") // JDA
-    implementation("dev.arbjerg:lavaplayer:$LAVA_VERSION") // LavaPlayer to stream audio from YT/FILES to Discord
-    implementation("com.google.code.gson:gson:$GSON_VERSION")
-    implementation("org.apache.logging.log4j:log4j-core:$LOG4J_VERSION")
-    implementation("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5") // GITHUB API
-    implementation('com.mattmalec:Pterodactyl4J:2.BETA_140')
-    implementation('org.slf4j:slf4j-simple:2.0.9')
-    implementation('org.reflections:reflections:0.10.2')
+
+    implementation(libs.JDA)
+    implementation(libs.LAVA_PLAYER)
+    implementation(libs.GSON)
+    implementation(libs.LOG4J_CORE)
+    implementation(libs.GITHUB_API)
+    implementation(libs.PTERODACTYL4J)
+    implementation(libs.SLF4J_SIMPLE)
+    implementation(libs.REFLECTIONS)
 
     // Core Libs
     implementation project(path: ':mangobotapi')
     implementation project(path: ':mboteventbus')
     implementation project(path: ':mangoutils')
+    testImplementation project(path: ':mangoutils')
 
     internalimplementation project(path: ':mangobotapi')
     internalimplementation project(path: ':mboteventbus')

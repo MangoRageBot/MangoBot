@@ -44,7 +44,7 @@ import org.mangorage.mangobotapi.core.events.discord.DMessageUpdateEvent;
 import org.mangorage.mangobotapi.core.events.discord.DReactionEvent;
 import org.mangorage.mangobotapi.core.events.discord.DStringSelectInteractionEvent;
 import org.mangorage.mangobotapi.core.events.discord.DVoiceUpdateEvent;
-import org.mangorage.mangobotapi.core.registry.CommandRegistry;
+import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
 

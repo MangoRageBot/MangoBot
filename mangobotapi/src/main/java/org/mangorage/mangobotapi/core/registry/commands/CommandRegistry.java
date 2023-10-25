@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.registry;
+package org.mangorage.mangobotapi.core.registry.commands;
 
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.mangorage.mangobotapi.MangoBotAPI;

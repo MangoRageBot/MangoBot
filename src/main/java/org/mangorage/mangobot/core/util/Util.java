@@ -35,7 +35,7 @@ import org.mangorage.mangobotapi.MangoBotAPI;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandPrefix;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
-import org.mangorage.mangobotapi.core.registry.CommandRegistry;
+import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
