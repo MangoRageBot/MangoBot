@@ -29,6 +29,8 @@ import org.mangorage.mangobot.launcher.utils.Util;
 import org.mangorage.mangobot.launcher.utils.Versions;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 
 public class Launcher {
@@ -300,13 +302,10 @@ public class Launcher {
 
 
     public static void downloadDependencies() {
-        File dir = new File("libs/");
-        if (!dir.exists() && !dir.mkdirs()) {
-            LogHelper.info("Unable to create directories for dependencies...");
-            return;
+        try {
+            CoreInstaller.install();
+        } catch (ParseException | IOException e) {
+            throw new RuntimeException(e);
         }
-        DEPENDENCIES.forEach(e -> {
-            e.downloadTo(e.version(), new File("libs/%s-%s.jar".formatted(e.artifactId(), e.version())));
-        });
     }
 }

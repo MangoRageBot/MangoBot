@@ -36,6 +36,7 @@ public class Test {
     public static void main(String[] args) {
         PermissionRegistry.load();
 
+
         LogHelper.info(PermissionRegistry.getPermission("testing").getId() + " ID of Permission");
     }
 }

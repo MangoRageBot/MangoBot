@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot.modules.basic.commands;
 
+import com.google.gson.annotations.Expose;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.core.Bot;
@@ -35,7 +36,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @AutoRegister.BasicCommand
 public class VersionCommand implements IBasicCommand {
-    public record Version(String version) {
+    public class Version {
+        @Expose
+        String version;
+
+        public String version() {
+            return version;
+        }
     }
 
     private static final AtomicReference<Version> VERSION = new AtomicReference<>();
