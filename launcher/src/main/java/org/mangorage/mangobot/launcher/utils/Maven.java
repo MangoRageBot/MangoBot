@@ -41,13 +41,14 @@ import java.net.URL;
  */
 public record Maven(String repository, String groupId, String artifactId, String version, String jar) {
 
-    public void downloadTo(String version, File dest) {
+    public File downloadTo(String version, File dest) {
         String URL = "%s/%s/%s/%s/%s-%s%s".formatted(repository, groupId.replace(".", "/"), artifactId, version, artifactId, version, jar);
         try {
             FileUtils.copyURLToFile(new URL(URL), dest);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return dest;
     }
 
     public String downloadMetadata() {

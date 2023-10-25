@@ -43,6 +43,5 @@ public class ServerRestart {
                 LogHelper.info("Restarted Discord Bot Server.");
             }
         }
-
     }
 }

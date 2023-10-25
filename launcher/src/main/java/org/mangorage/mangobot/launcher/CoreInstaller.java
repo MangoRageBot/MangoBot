@@ -24,6 +24,7 @@ package org.mangorage.mangobot.launcher;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.ivy.Ivy;
+import org.apache.ivy.core.LogOptions;
 import org.apache.ivy.core.install.InstallOptions;
 import org.apache.ivy.core.module.id.ModuleRevisionId;
 import org.apache.ivy.core.resolve.ResolveOptions;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class CoreInstaller {
     private static final List<ModuleRevisionId> DEPS = List.of(
@@ -85,23 +87,13 @@ public class CoreInstaller {
             )
     );
 
-    public static void main(String[] args) throws ParseException, IOException {
-        install();
-    }
-
-    public static void install() throws ParseException, IOException {
-
-        var url = CoreInstaller.class.getResource("/ivysettings.xml");
-
-        FileUtils.copyURLToFile(url, FileUtils.getFile("ivysettings.xml"));
-
+    public static void install(File settingsFile, File dependencies) throws ParseException, IOException {
         IvySettings settings = new IvySettings();
         settings.setVariable("custom.base.dir", new File("repo").getAbsolutePath());
-        settings.load(url);
+        settings.load(settingsFile);
 
         Ivy ivy = Ivy.newInstance(settings);
         ivy.setSettings(settings);
-
 
         DEPS.forEach(mrid -> {
             // Create ResolveOptions and specify the configurations you want to resolve
@@ -111,7 +103,7 @@ public class CoreInstaller {
             resolveOptions.setTransitive(true);
             resolveOptions.setDownload(true);
             resolveOptions.setRefresh(true);
-
+            resolveOptions.setLog(LogOptions.LOG_DOWNLOAD_ONLY);
 
             InstallOptions options = new InstallOptions();
             options.setConfs(new String[]{"default"});
@@ -127,27 +119,27 @@ public class CoreInstaller {
         HashMap<String, FileWithVersion> FILES = new HashMap<>();
 
         File dir = new File("repo");
-        for (File file : dir.listFiles()) {
+        for (File file : Objects.requireNonNull(dir.listFiles())) {
             if (file.isFile() && file.getName().endsWith(".jar")) {
                 var nameArr = file.getName().replaceFirst(".jar", "").split("-");
-                var name = "";
+                StringBuilder name = new StringBuilder();
 
                 for (int i = 0; i < nameArr.length - 1; i++) {
                     if (i == (nameArr.length - 2))
-                        name += nameArr[i];
+                        name.append(nameArr[i]);
                     else
-                        name += nameArr[i] + "-";
+                        name.append(nameArr[i]).append("-");
                 }
 
-                if (FILES.containsKey(name)) {
-                    ComparableVersion old = new ComparableVersion(FILES.get(name).version());
+                if (FILES.containsKey(name.toString())) {
+                    ComparableVersion old = new ComparableVersion(FILES.get(name.toString()).version());
                     ComparableVersion newV = new ComparableVersion(nameArr[nameArr.length - 1]);
 
                     if (newV.compareTo(old) > 0) {
-                        FILES.put(name, new FileWithVersion(file, newV.toString()));
+                        FILES.put(name.toString(), new FileWithVersion(file, newV.toString()));
                     }
                 } else {
-                    FILES.put(name, new FileWithVersion(file, nameArr[nameArr.length - 1]));
+                    FILES.put(name.toString(), new FileWithVersion(file, nameArr[nameArr.length - 1]));
                 }
             }
         }
