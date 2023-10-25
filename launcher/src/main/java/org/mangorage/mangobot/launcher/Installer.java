@@ -87,7 +87,6 @@ public class Installer {
     private static void downloadNewVersion(String version) {
         try {
             FileUtils.deleteDirectory(new File("libs"));
-            FileUtils.deleteDirectory(new File("botresources/installer"));
 
             var jar = MAVEN.downloadTo(version, new File("libs/mangobot.jar"));
 
@@ -105,7 +104,11 @@ public class Installer {
                 File ivySettings = new File("botresources/installer/ivysettings.xml");
                 File dependencies = new File("botresources/installer/dependencies.json");
 
+
                 CoreInstaller.install(ivySettings, dependencies);
+
+                //FileUtils.deleteDirectory(new File("botresources/installer"));
+                Util.saveVersion(version);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }

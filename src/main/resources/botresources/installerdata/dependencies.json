@@ -16,18 +16,18 @@
       "version": "2.10.1"
     },
     {
-      "groupId": "groupId.apache.logging.log4j",
+      "groupId": "apache.logging.log4j",
       "artifactId": "log4j-core",
       "version": "2.20.0"
     },
     {
-      "groupId": "groupId.apache.logging.log4j",
+      "groupId": "apache.logging.log4j",
       "artifactId": "log4j-slf4j-impl",
       "version": "2.20.0"
     },
     {
-      "groupId": "groupId.eclipse.mylyn.github",
-      "artifactId": "groupId.eclipse.egit.github.core",
+      "groupId": "eclipse.mylyn.github",
+      "artifactId": "eclipse.egit.github.core",
       "version": "2.1.5"
     },
     {
@@ -36,12 +36,12 @@
       "version": "2.BETA_140"
     },
     {
-      "groupId": "groupId.slf4j",
+      "groupId": "slf4j",
       "artifactId": "slf4j-simple",
       "version": "2.0.9"
     },
     {
-      "groupId": "groupId.reflections",
+      "groupId": "reflections",
       "artifactId": "reflections",
       "version": "0.10.2"
     }

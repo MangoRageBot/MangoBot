@@ -45,7 +45,7 @@ public class Util {
             file.getParentFile().mkdirs();
         if (!file.exists())
             return null;
-        return loadJsonToObject(GSON, "%s/version.json".formatted(DATA_DIR), Version.class);
+        return loadJsonToObject("%s/version.json".formatted(DATA_DIR), Version.class);
     }
 
     public static void saveObjectToFile(Object object, String directory, String fileName) {
