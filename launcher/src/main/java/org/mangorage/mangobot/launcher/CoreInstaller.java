@@ -32,6 +32,7 @@ import org.apache.ivy.core.settings.IvySettings;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.HashSet;
 import java.util.List;
 
 public class CoreInstaller {
@@ -83,6 +84,10 @@ public class CoreInstaller {
             )
     );
 
+    public static void main(String[] args) throws ParseException, IOException {
+        install();
+    }
+
     public static void install() throws ParseException, IOException {
 
         var url = CoreInstaller.class.getResource("/ivysettings.xml");
@@ -118,10 +123,24 @@ public class CoreInstaller {
             }
         });
 
+        HashSet<String> files = new HashSet<>();
+
+
         File dir = new File("repo");
         for (File file : dir.listFiles()) {
-            if (file.isFile() && file.getName().endsWith(".jar"))
-                FileUtils.copyFile(file, new File("libs/" + file.getName()));
+            if (file.isFile() && file.getName().endsWith(".jar")) {
+                var nameArr = file.getName().replaceFirst(".jar", "").split("-");
+                var name = "";
+                for (int i = 0; i < nameArr.length - 1; i++) {
+                    name += nameArr[i] + "-";
+                }
+                if (files.contains(name)) {
+                    System.out.println("Found duplicate jar");
+                } else {
+                    files.add(name);
+                    FileUtils.copyFile(file, new File("libs/" + file.getName()));
+                }
+            }
         }
 
         FileUtils.deleteDirectory(dir);
