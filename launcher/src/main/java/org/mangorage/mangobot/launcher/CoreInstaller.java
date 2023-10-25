@@ -28,11 +28,12 @@ import org.apache.ivy.core.install.InstallOptions;
 import org.apache.ivy.core.module.id.ModuleRevisionId;
 import org.apache.ivy.core.resolve.ResolveOptions;
 import org.apache.ivy.core.settings.IvySettings;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 public class CoreInstaller {
@@ -123,26 +124,47 @@ public class CoreInstaller {
             }
         });
 
-        HashSet<String> files = new HashSet<>();
-
+        HashMap<String, FileWithVersion> FILES = new HashMap<>();
 
         File dir = new File("repo");
         for (File file : dir.listFiles()) {
             if (file.isFile() && file.getName().endsWith(".jar")) {
                 var nameArr = file.getName().replaceFirst(".jar", "").split("-");
                 var name = "";
+
                 for (int i = 0; i < nameArr.length - 1; i++) {
-                    name += nameArr[i] + "-";
+                    if (i == (nameArr.length - 2))
+                        name += nameArr[i];
+                    else
+                        name += nameArr[i] + "-";
                 }
-                if (files.contains(name)) {
-                    System.out.println("Found duplicate jar");
+
+                if (FILES.containsKey(name)) {
+                    ComparableVersion old = new ComparableVersion(FILES.get(name).version());
+                    ComparableVersion newV = new ComparableVersion(nameArr[nameArr.length - 1]);
+
+                    if (newV.compareTo(old) > 0) {
+                        FILES.put(name, new FileWithVersion(file, newV.toString()));
+                    }
                 } else {
-                    files.add(name);
-                    FileUtils.copyFile(file, new File("libs/" + file.getName()));
+                    FILES.put(name, new FileWithVersion(file, nameArr[nameArr.length - 1]));
                 }
             }
         }
 
+
+        FILES.forEach((key, fileWithVersion) -> {
+            try {
+                FileUtils.copyFile(fileWithVersion.file(), new File("libs/" + fileWithVersion.file().getName()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+
         FileUtils.deleteDirectory(dir);
+    }
+
+    public record FileWithVersion(File file, String version) {
     }
 }
