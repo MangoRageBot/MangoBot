@@ -1,7 +1,6 @@
 rootProject.name = 'mangobot'
 include 'mangobotapi'
 include 'mboteventbus'
-include 'launcher'
 include 'mangoutils'
 include 'exampleaddon'
 
