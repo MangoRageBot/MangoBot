@@ -42,7 +42,7 @@ public class VersionCommand implements IBasicCommand {
     private static final DataHandler<Version> VERSION_DATA_HANDLER = DataHandler.create(
             VERSION::set,
             Version.class,
-            "botresources/",
+            "installer/",
             DataHandler.Properties.create()
                     .setFileName("version.json")
                     .useDefaultFileNamePredicate()
