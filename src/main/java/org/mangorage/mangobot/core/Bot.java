@@ -145,9 +145,9 @@ public class Bot {
 
         builder.setActivity(
                 Activity.of(
-                        Activity.ActivityType.PLAYING,
+                        Activity.ActivityType.CUSTOM_STATUS,
                         """
-                                    Use !mail join to open a modmail ticket!
+                                    DM ME: !mail join to open a ticket!
                                     
                                     MangoBot is on version %s"
                                 """.formatted(VersionCommand.getVersion()),
