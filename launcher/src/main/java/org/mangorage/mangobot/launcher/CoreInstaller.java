@@ -30,6 +30,9 @@ import org.apache.ivy.core.module.id.ModuleRevisionId;
 import org.apache.ivy.core.resolve.ResolveOptions;
 import org.apache.ivy.core.settings.IvySettings;
 import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.mangorage.mangobot.launcher.utils.Dependency;
+import org.mangorage.mangobot.launcher.utils.DependencyList;
+import org.mangorage.mangobot.launcher.utils.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,53 +42,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class CoreInstaller {
-    private static final List<ModuleRevisionId> DEPS = List.of(
-            ModuleRevisionId.newInstance(
-                    "net.dv8tion",
-                    "JDA",
-                    "5.0.0-beta.15"
-            ),
-            ModuleRevisionId.newInstance(
-                    "dev.arbjerg",
-                    "lavaplayer",
-                    "2.0.2"
-            ),
-            ModuleRevisionId.newInstance(
-                    "com.google.code.gson",
-                    "gson",
-                    "2.10.1"
-            ),
-            ModuleRevisionId.newInstance(
-                    "org.apache.logging.log4j",
-                    "log4j-core",
-                    "2.20.0"
-            ),
-            ModuleRevisionId.newInstance(
-                    "org.apache.logging.log4j",
-                    "log4j-slf4j-impl",
-                    "2.20.0"
-            ),
-            ModuleRevisionId.newInstance(
-                    "org.eclipse.mylyn.github",
-                    "org.eclipse.egit.github.core",
-                    "2.1.5"
-            ),
-            ModuleRevisionId.newInstance(
-                    "com.mattmalec",
-                    "Pterodactyl4J",
-                    "2.BETA_140"
-            ),
-            ModuleRevisionId.newInstance(
-                    "org.slf4j",
-                    "slf4j-simple",
-                    "2.0.9"
-            ),
-            ModuleRevisionId.newInstance(
-                    "org.reflections",
-                    "reflections",
-                    "0.10.2"
-            )
-    );
+    public record FileWithVersion(File file, String version) {
+    }
 
     public static void install(File settingsFile, File dependencies) throws ParseException, IOException {
         IvySettings settings = new IvySettings();
@@ -95,7 +53,11 @@ public class CoreInstaller {
         Ivy ivy = Ivy.newInstance(settings);
         ivy.setSettings(settings);
 
-        DEPS.forEach(mrid -> {
+        List<Dependency> deps = Util.loadJsonToObject(dependencies, DependencyList.class).libs();
+
+        deps.forEach(dependency -> {
+            ModuleRevisionId mrid = dependency.getMRI();
+
             // Create ResolveOptions and specify the configurations you want to resolve
             ResolveOptions resolveOptions = new ResolveOptions();
             resolveOptions.setConfs(new String[]{"default"});
@@ -155,8 +117,5 @@ public class CoreInstaller {
 
 
         FileUtils.deleteDirectory(dir);
-    }
-
-    public record FileWithVersion(File file, String version) {
     }
 }

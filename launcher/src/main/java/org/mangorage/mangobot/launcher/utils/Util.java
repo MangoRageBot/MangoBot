@@ -32,11 +32,11 @@ import java.nio.file.Path;
 
 public class Util {
     private static final String DATA_DIR = "botresources/";
-    private static final Gson GSON = new GsonBuilder().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
 
     public static void saveVersion(String version) {
-        saveObjectToFile(GSON, new Version(version), DATA_DIR, "version.json");
+        saveObjectToFile(new Version(version), DATA_DIR, "version.json");
     }
 
     public static Version getVersion() {
@@ -45,12 +45,12 @@ public class Util {
             file.getParentFile().mkdirs();
         if (!file.exists())
             return null;
-        return loadJsonToObject(new Gson(), "%s/version.json".formatted(DATA_DIR), Version.class);
+        return loadJsonToObject(GSON, "%s/version.json".formatted(DATA_DIR), Version.class);
     }
 
-    public static void saveObjectToFile(Gson gson, Object object, String directory, String fileName) {
+    public static void saveObjectToFile(Object object, String directory, String fileName) {
         try {
-            String jsonData = gson.toJson(object);
+            String jsonData = GSON.toJson(object);
 
             File dirs = new File(directory);
             if (!dirs.exists() && !dirs.mkdirs()) return;
@@ -68,9 +68,17 @@ public class Util {
         }
     }
 
-    public static <T> T loadJsonToObject(Gson gson, String file, Class<T> cls) {
+    public static <T> T loadJsonToObject(String file, Class<T> cls) {
         try {
-            return gson.fromJson(Files.readString(Path.of(file)), cls);
+            return GSON.fromJson(Files.readString(Path.of(file)), cls);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T loadJsonToObject(File file, Class<T> cls) {
+        try {
+            return GSON.fromJson(Files.readString(file.toPath()), cls);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
