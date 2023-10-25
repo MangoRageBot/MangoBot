@@ -25,7 +25,6 @@ package addon.example;
 import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobotapi.core.addon.Addon;
 import org.mangorage.mangobotapi.core.addon.IAddon;
-import org.mangorage.mangobotapi.core.registry.CommandRegistry;
 
 import static addon.example.ExamplePlugin.ID;
 
@@ -35,7 +34,6 @@ public class ExamplePlugin implements IAddon {
 
     public ExamplePlugin() {
         LogHelper.info("Loading Example plugin stuff");
-        CommandRegistry.addBasicCommand(new ExampleCommand());
     }
 
     @Override
