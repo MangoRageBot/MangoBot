@@ -198,6 +198,8 @@ public class DataHandler<T> {
      * Loads all objects in the directory
      */
     public void loadAll() {
+        if (!Path.of(directory).toFile().exists()) return;
+
         getFiles(Path.of(directory), (f) -> properties.getFileNamePredicate().test(f.getName()), properties.getDepthLimit()).forEach(
                 (f) -> objectLoadingConsumer.accept(APIUtil.loadJsonToObject(getGson(), f.getAbsolutePath(), type))
         );
