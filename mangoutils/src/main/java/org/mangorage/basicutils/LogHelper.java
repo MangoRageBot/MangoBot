@@ -31,7 +31,7 @@ import java.time.format.DateTimeFormatter;
 
 public final class LogHelper {
 
-    private static class LogFileHandler {
+    public static class LogFileHandler {
         private static LogFileHandler create(Path path) {
             return new LogFileHandler(path);
         }

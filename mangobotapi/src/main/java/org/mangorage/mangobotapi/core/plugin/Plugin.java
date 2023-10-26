@@ -20,8 +20,20 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.addon;
+package org.mangorage.mangobotapi.core.plugin;
 
-public interface IAddon {
-    String getId();
+/*
+    Use this to define your addon's entrypoint...
+ */
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(TYPE)
+public @interface Plugin {
+    String id();
 }

@@ -141,6 +141,10 @@ jar {
     }
 }
 
+publish {
+    group "bot tasks"
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {

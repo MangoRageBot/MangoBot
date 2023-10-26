@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.addon;
+package org.mangorage.mangobotapi.core.plugin;
 
 import org.mangorage.basicutils.LogHelper;
 import org.reflections.Reflections;
@@ -28,7 +28,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.reflect.InvocationTargetException;
 
-public class AddonLoader {
+public class PluginLoader {
     private static final Reflections reflections = new Reflections(
             ConfigurationBuilder.build()
                     .forPackage("addon")
@@ -36,13 +36,13 @@ public class AddonLoader {
 
     public static void load() {
         LogHelper.info("Loading addons...");
-        reflections.getTypesAnnotatedWith(Addon.class).forEach(cls -> {
+        reflections.getTypesAnnotatedWith(Plugin.class).forEach(cls -> {
             try {
                 var plugin = cls.getConstructor().newInstance();
-                if (plugin instanceof IAddon addon) {
+                if (plugin instanceof IPlugin addon) {
                     LogHelper.info("Loaded addon: " + addon.getId());
                 } else {
-                    LogHelper.fatal("Addon " + cls.getName() + " does not implement IAddon!");
+                    LogHelper.fatal("Plugin " + cls.getName() + " does not implement IPlugin!");
                 }
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                      NoSuchMethodException e) {

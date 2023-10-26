@@ -29,7 +29,6 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 
 public final class AutoRegister {
-
     @Retention(RetentionPolicy.RUNTIME)
     @Target(TYPE)
     public @interface BasicCommand {

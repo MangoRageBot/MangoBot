@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -46,7 +47,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 
 // TODO: Have DataHandler handle data for this.
+
 public class BasicPermission {
+    @Retention(RUNTIME)
+    @Target(TYPE)
     public @interface AutoRegister {
     }
 

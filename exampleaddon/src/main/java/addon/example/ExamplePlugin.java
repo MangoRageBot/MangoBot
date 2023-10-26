@@ -23,13 +23,13 @@
 package addon.example;
 
 import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.addon.Addon;
-import org.mangorage.mangobotapi.core.addon.IAddon;
+import org.mangorage.mangobotapi.core.plugin.IPlugin;
+import org.mangorage.mangobotapi.core.plugin.Plugin;
 
 import static addon.example.ExamplePlugin.ID;
 
-@Addon(id = ID)
-public class ExamplePlugin implements IAddon {
+@Plugin(id = ID)
+public class ExamplePlugin implements IPlugin {
     public static final String ID = "exampleaddon";
 
     public ExamplePlugin() {
