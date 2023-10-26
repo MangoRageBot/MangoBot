@@ -41,6 +41,10 @@ public class LauncherClassLoader extends URLClassLoader {
         }
     }
 
+    public void addUrl(URL url) {
+        super.addURL(url);
+    }
+
     public void addJarsFromDirectory(File directory) {
         if (directory.isDirectory()) {
             File[] files = directory.listFiles((dir, name) -> name.endsWith(".jar"));
@@ -48,7 +52,7 @@ public class LauncherClassLoader extends URLClassLoader {
                 for (File file : files) {
                     try {
                         URL jarURL = file.toURI().toURL();
-                        addURLs(new URL[]{jarURL});
+                        addUrl(jarURL);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

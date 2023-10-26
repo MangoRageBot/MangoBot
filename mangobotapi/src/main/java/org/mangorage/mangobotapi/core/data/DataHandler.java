@@ -27,30 +27,31 @@ import com.google.gson.GsonBuilder;
 import org.mangorage.mangobotapi.core.util.APIUtil;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.FileVisitOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class DataHandler<T> {
-    private static final Gson GSON_EXPOSE = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    private static final Gson GSON_NON_EXPOSE = new Gson();
+    private static final Gson GSON_EXPOSE = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .setPrettyPrinting()
+            .create();
+    private static final Gson GSON_NON_EXPOSE = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
 
 
-    public static List<File> getFiles(ArrayList<File> files, String dir, int depthLimit, int depth) {
-        File file = new File(dir);
-        File[] filesArray = file.listFiles();
-        if (file.isDirectory() && filesArray != null) {
-            for (File f : filesArray) {
-                if (f.isDirectory()) {
-                    if (depth < depthLimit)
-                        getFiles(files, f.getAbsolutePath(), depthLimit, +1);
-                } else {
-                    files.add(f);
-                }
-            }
+    public static List<File> getFiles(Path directory, Predicate<File> filePredicate, int depth) {
+        try (Stream<Path> files = Files.walk(directory, depth, FileVisitOption.FOLLOW_LINKS)) {
+            return files.map(Path::toFile).filter(File::isFile).filter(filePredicate).toList();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return files;
     }
 
     public static String getDirectoryWithArgs(String path, String... args) {
@@ -80,8 +81,9 @@ public class DataHandler<T> {
             return new Properties();
         }
 
+
         private boolean useExpose = false;
-        private int depthLimit = 1;
+        private int depthLimit = 2; // default
 
         private String fileName;
         private Predicate<String> fileNamePredicate;
@@ -196,16 +198,8 @@ public class DataHandler<T> {
      * Loads all objects in the directory
      */
     public void loadAll() {
-        File file = new File(directory);
-        if (!file.exists() && !file.mkdirs()) return;
-
-        List<File> files = getFiles(new ArrayList<>(), directory, properties.getDepthLimit(), 0);
-        for (File f : files) {
-            // Don't bother loading if it's not the file we want
-            if (!properties.getFileNamePredicate().test(f.getName())) continue;
-
-            T t = APIUtil.loadJsonToObject(getGson(), f.getAbsolutePath(), type);
-            objectLoadingConsumer.accept(t);
-        }
+        getFiles(Path.of(directory), (f) -> properties.getFileNamePredicate().test(f.getName()), properties.getDepthLimit()).forEach(
+                (f) -> objectLoadingConsumer.accept(APIUtil.loadJsonToObject(getGson(), f.getAbsolutePath(), type))
+        );
     }
 }
