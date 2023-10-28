@@ -28,7 +28,6 @@ import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
-import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 import org.mangorage.mboteventbus.impl.IEventBus;
@@ -78,7 +77,6 @@ public class MangoBotAPI {
         EVENT_BUS.addListener(10, StartupEvent.class, event -> {
             switch (event.phase()) {
                 case STARTUP -> {
-                    PluginLoader.load(); // Load addons...
                     CommandRegistry.load(); // Load commands... via @AutoRegister
 
                     Actions.init();

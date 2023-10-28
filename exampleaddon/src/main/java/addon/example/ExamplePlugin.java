@@ -23,8 +23,8 @@
 package addon.example;
 
 import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.plugin.IPlugin;
-import org.mangorage.mangobotapi.core.plugin.Plugin;
+import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
+import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
 import static addon.example.ExamplePlugin.ID;
 

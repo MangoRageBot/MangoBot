@@ -22,18 +22,23 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
-/*
-    Use this to define your addon's entrypoint...
- */
+import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.HashMap;
+import java.util.List;
 
-import static java.lang.annotation.ElementType.TYPE;
+public class PluginManager {
+    private static final HashMap<String, PluginContainer> PLUGINS = new HashMap<>();
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(TYPE)
-public @interface Plugin {
-    String id();
+    public static List<PluginContainer> getPlugins() {
+        return PLUGINS.values().stream().toList();
+    }
+
+    public static boolean isLoaded(String id) {
+        return PLUGINS.containsKey(id);
+    }
+
+    protected static void registerPlugin(PluginType type, IPlugin plugin, String id) {
+        PLUGINS.put(id, new PluginContainer(type, plugin, id));
+    }
 }

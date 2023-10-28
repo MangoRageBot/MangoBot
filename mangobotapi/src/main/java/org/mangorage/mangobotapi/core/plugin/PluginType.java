@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
-public interface IPlugin {
-    String getId();
+public enum PluginType {
+    CORE,
+    ADDON
 }

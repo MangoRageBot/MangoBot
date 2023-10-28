@@ -20,18 +20,27 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.launcher;
+package org.mangorage.gradleutils;
 
-import java.net.MalformedURLException;
+import com.mattmalec.pterodactyl4j.PteroBuilder;
+import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
+import org.mangorage.basicutils.LogHelper;
 
-public class Test {
+public class ServerRestart {
+    public static void restart(String token) {
+        LogHelper.disableLogOutput();
+        LogHelper.info("Restarting Discord Bot Server...");
+        PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", token);
 
-    /**
-     * @param args -> the folders in which we load the jars from
-     * @throws MalformedURLException
-     */
-    public static void main(String[] args) throws MalformedURLException {
-
-        Launcher.main(new String[]{"org.mangorage.mangobot.Main", "libs/"});
+        var server = client.retrieveServerByIdentifier("f32263f3").execute();
+        if (server != null) {
+            if (server.isSuspended()) {
+                LogHelper.info("Server is suspended, unsuspending...");
+                server.start().execute();
+            } else {
+                server.restart().execute();
+                LogHelper.info("Restarted Discord Bot Server.");
+            }
+        }
     }
 }

@@ -20,12 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot;
+package org.mangorage.mangobotapi.core.plugin;
 
-import org.mangorage.mangobotapi.core.plugin.PluginLoader;
-
-public class Main {
-    public static void main(String[] args) {
-        PluginLoader.load();
-    }
+public class InterPluginComms {
 }

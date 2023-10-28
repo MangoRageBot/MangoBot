@@ -1,3 +1,5 @@
+import org.mangorage.installer.api.core.Datagen
+
 buildscript {
     repositories {
         mavenLocal()
@@ -6,10 +8,16 @@ buildscript {
         maven {
             url = uri("https://plugins.gradle.org/m2/")
         }
+        maven {
+            url = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+        }
     }
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
+        classpath 'com.google.code.gson:gson:2.10.1'
+        classpath 'io.github.realmangorage:InstallerAPI:1.0.2'
+        // classpath project(":gradleutils")
     }
 }
 
@@ -48,6 +56,9 @@ repositories {
     maven {
         url = 'https://repo.mattmalec.com/repository/releases'
     }
+    maven {
+        url = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+    }
 }
 
 sourceSets {
@@ -68,13 +79,11 @@ def libs = [
         LOG4J_CORE      : 'org.apache.logging.log4j:log4j-core:2.20.0',
         LOG4J_SLF4J_IMPL: 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0',
         GITHUB_API      : 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5',
-        PTERODACTYL4J   : 'com.mattmalec:Pterodactyl4J:2.BETA_140',
         SLF4J_SIMPLE    : 'org.slf4j:slf4j-simple:2.0.9',
         REFLECTIONS     : 'org.reflections:reflections:0.10.2'
 ]
 
 ext.globalLibs = libs
-
 
 println("Current Bot Version: ${version}")
 
@@ -88,7 +97,6 @@ dependencies {
     implementation(libs.GSON)
     implementation(libs.LOG4J_CORE)
     implementation(libs.GITHUB_API)
-    implementation(libs.PTERODACTYL4J)
     implementation(libs.SLF4J_SIMPLE)
     implementation(libs.REFLECTIONS)
 
@@ -124,7 +132,33 @@ tasks.register('runTestBot', JavaExec) {
     mainClass = 'org.mangorage.mangobottest.Main'
 }
 
+tasks.register('runDatagen') {
+    group "bot tasks"
+    description "Runs the data generator"
+
+    List<String> _args = libs.values().toList();
+    String directory = "%s/src/main/resources/installerdata".formatted(getProjectDir())
+
+    Datagen.generateDependenciesJson(directory, _args)
+    Datagen.generateIvySettingsXml(directory, getRepositories().stream().map {
+        it.getUrl().toString()
+    }.toList() as List<String>)
+}
+
+publish {
+    group "bot tasks"
+}
+
+task publishAndRestartServer(type: JavaExec) {
+    dependsOn(publish)
+    group = "bot tasks"
+    description = "Publish and restart Bot server"
+    classpath = sourceSets.main.runtimeClasspath
+    main = "org.mangorage.mangobot.ServerRestart"
+}
+
 jar {
+    dependsOn(runDatagen)
     dependsOn configurations.internalimplementation
 
     from {
@@ -139,10 +173,6 @@ jar {
     manifest {
         attributes 'Main-Class': 'org.mangorage.mangobot.Main'
     }
-}
-
-publish {
-    group "bot tasks"
 }
 
 publishing {
@@ -179,12 +209,4 @@ publishing {
             }
         }
     }
-}
-
-task publishAndRestartServer(type: JavaExec) {
-    dependsOn publish
-    group = "bot tasks"
-    description = "Publish and restart Bot server"
-    classpath = sourceSets.main.runtimeClasspath
-    main = "org.mangorage.mangobot.ServerRestart"
 }

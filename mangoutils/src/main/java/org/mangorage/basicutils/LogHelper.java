@@ -30,6 +30,11 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 public final class LogHelper {
+    public static boolean writeToLogFile = true;
+
+    public static void disableLogOutput() {
+        writeToLogFile = false;
+    }
 
     public static class LogFileHandler {
         private static LogFileHandler create(Path path) {
@@ -88,7 +93,8 @@ public final class LogHelper {
 
     private static String log(String logContent) {
         // Handle logs
-        HANDLER.log(logContent);
+        if (writeToLogFile)
+            HANDLER.log(logContent);
         return logContent;
     }
 

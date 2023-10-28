@@ -20,28 +20,9 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot;
+package org.mangorage.mangobotapi.core.plugin;
 
-import com.mattmalec.pterodactyl4j.PteroBuilder;
-import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
-import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobot.core.util.BotSettings;
+import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
 
-public class ServerRestart {
-
-    public static void main(String[] args) {
-        LogHelper.info("Restarting Discord Bot Server...");
-        PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", BotSettings.SERVER_TOKEN.get());
-
-        var server = client.retrieveServerByIdentifier("f32263f3").execute();
-        if (server != null) {
-            if (server.isSuspended()) {
-                LogHelper.info("Server is suspended, unsuspending...");
-                server.start().execute();
-            } else {
-                server.restart().execute();
-                LogHelper.info("Restarted Discord Bot Server.");
-            }
-        }
-    }
+public record PluginContainer(PluginType type, IPlugin plugin, String id) {
 }

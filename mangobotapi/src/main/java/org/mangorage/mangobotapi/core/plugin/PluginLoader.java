@@ -23,32 +23,66 @@
 package org.mangorage.mangobotapi.core.plugin;
 
 import org.mangorage.basicutils.LogHelper;
+import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
+import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PluginLoader {
     private static final Reflections reflections = new Reflections(
             ConfigurationBuilder.build()
-                    .forPackage("addon")
+                    .forPackages("org", "addon", "com", "net")
     );
 
     public static void load() {
         LogHelper.info("Loading addons...");
+        Set<Class<?>> PLUGINS_CORE = new HashSet<>();
+        Set<Class<?>> PLUGINS_ADDON = new HashSet<>();
+
         reflections.getTypesAnnotatedWith(Plugin.class).forEach(cls -> {
-            try {
-                var plugin = cls.getConstructor().newInstance();
-                if (plugin instanceof IPlugin addon) {
-                    LogHelper.info("Loaded addon: " + addon.getId());
-                } else {
-                    LogHelper.fatal("Plugin " + cls.getName() + " does not implement IPlugin!");
-                }
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                     NoSuchMethodException e) {
-                throw new RuntimeException(e);
+            if (!IPlugin.class.isAssignableFrom(cls)) return;
+
+            var pluginAnnotaion = cls.getAnnotation(Plugin.class);
+            switch (pluginAnnotaion.type()) {
+                case CORE -> PLUGINS_CORE.add(cls);
+                case ADDON -> PLUGINS_ADDON.add(cls);
             }
         });
+
+        PLUGINS_CORE.forEach(PluginLoader::loadCore);
+        PLUGINS_ADDON.forEach(PluginLoader::loadAddon);
+
         LogHelper.info("Finished loading plugins...");
+    }
+
+    public static void loadCore(Class<?> cls) {
+        loadPlugin(PluginType.CORE, cls);
+    }
+
+    public static void loadAddon(Class<?> cls) {
+        loadPlugin(PluginType.ADDON, cls);
+    }
+
+    public static void loadPlugin(PluginType type, Class<?> cls) {
+        var pluginAnnotaion = cls.getAnnotation(Plugin.class);
+        var pluginId = pluginAnnotaion.id();
+
+        if (PluginManager.isLoaded(pluginId)) {
+            LogHelper.error("Failed to load plugin: " + pluginId + " (already loaded)");
+            return;
+        }
+
+        LogHelper.info("Loading plugin: " + pluginId);
+
+        try {
+            var plugin = (IPlugin) cls.getDeclaredConstructor().newInstance();
+            PluginManager.registerPlugin(type, plugin, pluginId);
+        } catch (Exception e) {
+            LogHelper.error("Failed to load plugin: " + pluginId);
+            e.printStackTrace();
+        }
     }
 }

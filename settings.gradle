@@ -4,4 +4,5 @@ include 'mboteventbus'
 include 'mangoutils'
 include 'exampleaddon'
 include 'launcher'
+include 'gradleutils'
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'org.mangorage'
-version = '1.0.0-c215'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
@@ -12,6 +12,10 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation project(path: ':mangoutils')
+
+    implementation('com.mattmalec:Pterodactyl4J:2.BETA_140')
 }
 
 test {

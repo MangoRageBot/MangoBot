@@ -20,12 +20,24 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot;
+package org.mangorage.mangobotapi.core.plugin.impl;
 
-import org.mangorage.mangobotapi.core.plugin.PluginLoader;
+/*
+    Use this to define your addon's entrypoint...
+ */
 
-public class Main {
-    public static void main(String[] args) {
-        PluginLoader.load();
-    }
+import org.mangorage.mangobotapi.core.plugin.PluginType;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(TYPE)
+public @interface Plugin {
+    String id();
+
+    PluginType type() default PluginType.CORE;
 }
