@@ -3,5 +3,4 @@ include 'mangobotapi'
 include 'mboteventbus'
 include 'mangoutils'
 include 'exampleaddon'
-include 'gradleutils'
 
