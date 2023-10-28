@@ -129,4 +129,4 @@ secrets.properties
 /secret/
 /logs/
 /libs/
-/secrets.gradle
+/secrets.properties

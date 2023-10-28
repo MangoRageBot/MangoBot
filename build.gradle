@@ -1,3 +1,5 @@
+import com.mattmalec.pterodactyl4j.PteroBuilder
+import com.mattmalec.pterodactyl4j.client.entities.PteroClient
 import org.mangorage.installer.api.core.Datagen
 
 buildscript {
@@ -11,13 +13,16 @@ buildscript {
         maven {
             url = 'https://s01.oss.sonatype.org/content/repositories/releases/'
         }
+        maven {
+            url = 'https://repo.mattmalec.com/repository/releases'
+        }
     }
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
         classpath 'com.google.code.gson:gson:2.10.1'
         classpath 'io.github.realmangorage:InstallerAPI:1.0.2'
-        // classpath project(":gradleutils")
+        classpath 'com.mattmalec:Pterodactyl4J:2.BETA_140'
     }
 }
 
@@ -26,6 +31,10 @@ def getVersionCode = {
     proc.waitFor()
     return proc.text.trim()
 }
+
+def secrets = new Properties()
+file("secrets.properties").withInputStream { secrets.load(it) }
+
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
@@ -105,8 +114,6 @@ dependencies {
     implementation project(path: ':mboteventbus')
     implementation project(path: ':mangoutils')
 
-    // runtimeOnly project(path: ':exampleaddon')
-
     testImplementation project(path: ':mangoutils')
 
     internalimplementation project(path: ':mangobotapi')
@@ -136,25 +143,41 @@ tasks.register('runDatagen') {
     group "bot tasks"
     description "Runs the data generator"
 
-    List<String> _args = libs.values().toList();
-    String directory = "%s/src/main/resources/installerdata".formatted(getProjectDir())
+    doLast {
+        List<String> _args = libs.values().toList();
+        String directory = "%s/src/main/resources/installerdata".formatted(getProjectDir())
 
-    Datagen.generateDependenciesJson(directory, _args)
-    Datagen.generateIvySettingsXml(directory, getRepositories().stream().map {
-        it.getUrl().toString()
-    }.toList() as List<String>)
+        Datagen.generateDependenciesJson(directory, _args)
+        Datagen.generateIvySettingsXml(directory, getRepositories().stream().map {
+            it.getUrl().toString()
+        }.toList() as List<String>)
+    }
 }
 
 publish {
     group "bot tasks"
 }
 
-task publishAndRestartServer(type: JavaExec) {
+tasks.register('publishAndRestartServer') {
     dependsOn(publish)
     group = "bot tasks"
     description = "Publish and restart Bot server"
-    classpath = sourceSets.main.runtimeClasspath
-    main = "org.mangorage.mangobot.ServerRestart"
+
+    doLast {
+        println("Restarting Server...")
+        PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", secrets.getProperty("SERVER_TOKEN"));
+
+        var server = client.retrieveServerByIdentifier("f32263f3").execute();
+        if (server != null) {
+            if (server.isSuspended()) {
+                println("Server is suspended, unsuspending...");
+                server.start().execute();
+            } else {
+                server.restart().execute();
+                println("Restarted Discord Bot Server.");
+            }
+        }
+    }
 }
 
 jar {
