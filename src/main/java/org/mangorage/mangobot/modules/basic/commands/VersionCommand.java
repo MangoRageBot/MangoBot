@@ -24,16 +24,14 @@ package org.mangorage.mangobot.modules.basic.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.data.DataHandler;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-@AutoRegister.BasicCommand
 public class VersionCommand implements IBasicCommand {
     public record Version(String version) {
     }
@@ -56,11 +54,19 @@ public class VersionCommand implements IBasicCommand {
         return VERSION.get().version();
     }
 
+    private final CorePlugin corePlugin;
+
+    public VersionCommand(CorePlugin corePlugin) {
+        this.corePlugin = corePlugin;
+    }
+
+
+
 
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
-        var settings = Bot.DEFAULT_SETTINGS;
+        var settings = corePlugin.getMessageSettings();
         settings.apply(message.reply("Bot is running on Version: " + VERSION.get().version())).queue();
         return CommandResult.PASS;
     }

@@ -22,102 +22,122 @@
 
 package org.mangorage.mangobot;
 
-import com.sedmelluq.discord.lavaplayer.natives.ConnectorNativeLibLoader;
-import com.sedmelluq.lava.common.natives.architecture.DefaultArchitectureTypes;
-import com.sedmelluq.lava.common.natives.architecture.DefaultOperatingSystemTypes;
-import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobot.core.Bot;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.mangorage.mangobot.core.BotPermissions;
+import org.mangorage.mangobot.core.EventListener;
 import org.mangorage.mangobot.core.util.BotSettings;
+import org.mangorage.mangobot.modules.basic.commands.HelpCommand;
+import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
+import org.mangorage.mangobot.modules.developer.SpeakCommand;
+import org.mangorage.mangobot.modules.tricks.TrickCommand;
+import org.mangorage.mangobotapi.core.events.SaveEvent;
+import org.mangorage.mangobotapi.core.events.ShutdownEvent;
+import org.mangorage.mangobotapi.core.events.StartupEvent;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
-import org.mangorage.mangobotapi.core.util.APIUtil;
+import org.mangorage.mboteventbus.EventBus;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.Console;
+import java.util.EnumSet;
 
 @Plugin(id = Core.ID)
-public class Core implements IPlugin {
+public class Core extends CorePlugin implements IPlugin {
     public static final String ID = "mangobot";
 
 
+    private static final EnumSet<GatewayIntent> intents = EnumSet.of(
+            // Enables MessageReceivedEvent for guild (also known as servers)
+            GatewayIntent.GUILD_MESSAGES,
+            // Enables the event for private channels (also known as direct messages)
+            GatewayIntent.DIRECT_MESSAGES,
+            // Enables access to message.getContentRaw()
+            GatewayIntent.MESSAGE_CONTENT,
+            // Enables MessageReactionAddEvent for guild
+            GatewayIntent.GUILD_MESSAGE_REACTIONS,
+            // Enables MessageReactionAddEvent for private channels
+            GatewayIntent.DIRECT_MESSAGE_REACTIONS,
+            GatewayIntent.GUILD_VOICE_STATES,
+            GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
+            GatewayIntent.SCHEDULED_EVENTS,
+            GatewayIntent.GUILD_MEMBERS,
+            GatewayIntent.GUILD_PRESENCES
+    );
+
+    private static final EnumSet<CacheFlag> cacheFlags = EnumSet.of(
+            CacheFlag.EMOJI,
+            CacheFlag.ROLE_TAGS,
+            CacheFlag.VOICE_STATE,
+            CacheFlag.ACTIVITY, // Cant do
+            CacheFlag.CLIENT_STATUS,
+            CacheFlag.MEMBER_OVERRIDES,
+            CacheFlag.STICKER,
+            CacheFlag.SCHEDULED_EVENTS,
+            CacheFlag.FORUM_TAGS
+    );
+
     public Core() {
+        super(
+                JDABuilder.createDefault(BotSettings.BOT_TOKEN.get())
+                        .setToken(BotSettings.BOT_TOKEN.get())
+                        .setEnabledIntents(intents)
+                        .enableCache(cacheFlags)
+                        .setActivity(
+                                Activity.of(
+                                        Activity.ActivityType.CUSTOM_STATUS,
+                                        """
+                                                    DM ME: !mail join to open a ticket!
+                                                    
+                                                    MangoBot is on version %s"
+                                                """.formatted(VersionCommand.getVersion()),
+                                        "https://www.discord.minecraftforge.net/"
+                                )
+                        )
+                        .setStatus(OnlineStatus.ONLINE)
+                        .setMemberCachePolicy(MemberCachePolicy.ALL)
+                        .setEventManager(new AnnotatedEventManager())
+                        .setEnableShutdownHook(true)
+                        .setAutoReconnect(true),
+                EventBus.create()
+        );
 
-        //Operating system name
-        LogHelper.info("Your OS name -> " + System.getProperty("os.name"));
-
-        //Operating system version
-        LogHelper.info("Your OS version -> " + System.getProperty("os.version"));
-
-        //Operating system architecture
-        LogHelper.info("Your OS Architecture -> " + System.getProperty("os.arch"));
-
-
-        ConnectorNativeLibLoader.loadConnectorLibrary();
-
-        var a = DefaultArchitectureTypes.detect().identifier();
-        LogHelper.info("TEST -> %s".formatted(a));
-
-        var b = DefaultOperatingSystemTypes.detect();
-        LogHelper.info("TEST -> %s".formatted(b.identifier()));
-
-
-        var currentToken = BotSettings.BOT_TOKEN.get();
-        if (currentToken.equalsIgnoreCase("empty"))
-            requestBotToken(false);
-        if (!APIUtil.isValidBotToken(currentToken))
-            requestBotToken(true);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(Bot::close));
-        Bot.initiate(BotSettings.BOT_TOKEN.get());
+        getJDA().addEventListener(new EventListener(this));
     }
 
+    /**
+     *
+     */
+    @Override
+    public void loadCommands() {
+        var registry = getCommandRegistry();
 
-    private static void requestBotToken(boolean wasInvalid) {
-        String message = "Enter your Bot Token to get started...";
-        if (wasInvalid) {
-            LogHelper.info("Current Bot Token detected as invalid...");
-            LogHelper.info("Please re-enter your Discord Bot's Token:");
-            message = "Re-Enter your Bot Token";
-        } else {
-            LogHelper.info("Please enter your Discord Bot's Token:");
+        registry.addBasicCommand(new VersionCommand(this));
+        registry.addBasicCommand(new HelpCommand(this));
+        registry.addBasicCommand(new SpeakCommand(this));
+        registry.addBasicCommand(new TrickCommand(this));
+    }
+
+    public void onStartup(StartupEvent event) {
+        switch (event.phase()) {
+            case STARTUP -> {
+                BotPermissions.init();
+            }
+            case FINISHED -> {
+            }
         }
+    }
 
-        if (GraphicsEnvironment.isHeadless()) {
-            BotSettings.BOT_TOKEN.set("empty");
-            LogHelper.info("Manually set the token under botresources/.env");
-            System.exit(0);
-        }
-
-
-        final String token;
-        if (System.console() == null) {
-            final JPasswordField pf = new JPasswordField();
-            pf.setEchoChar('#');
-            int reponse = JOptionPane.showConfirmDialog(
-                    null,
-                    pf,
-                    message,
-                    JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-            );
-
-            if (reponse == JOptionPane.OK_CANCEL_OPTION || reponse == JOptionPane.CLOSED_OPTION)
-                System.exit(0);
-
-            token = reponse == JOptionPane.OK_OPTION ? new String(pf.getPassword()) : "";
-
-        } else {
-            Console c = System.console();
-            char[] chars = c.readPassword("Enter Bot Token:");
-            token = String.valueOf(chars);
-        }
-
-        if (APIUtil.isValidBotToken(token)) {
-            BotSettings.BOT_TOKEN.set(token);
-            LogHelper.info("Configured the Bot Token. Proceeding to init Bot.");
-        } else {
-            requestBotToken(true);
+    @SuppressWarnings("all")
+    public void onShutdown(ShutdownEvent event) {
+        switch (event.phase()) {
+            case PRE -> {
+                getPluginBus().post(new SaveEvent());
+            }
         }
     }
 

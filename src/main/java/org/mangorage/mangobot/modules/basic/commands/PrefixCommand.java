@@ -30,13 +30,25 @@ import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandPrefix;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
-import static org.mangorage.mangobot.core.Bot.DEFAULT_SETTINGS;
 import static org.mangorage.mangobot.core.BotPermissions.PREFIX_ADMIN;
 
-@AutoRegister.BasicCommand
+// TODO
+
 public class PrefixCommand implements IBasicCommand {
+
+    private final CorePlugin corePlugin;
+
+    public PrefixCommand(CorePlugin corePlugin) {
+        this.corePlugin = corePlugin;
+    }
+
+
+
+
+
+
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
@@ -49,13 +61,13 @@ public class PrefixCommand implements IBasicCommand {
             return CommandResult.of("You dont have permission to use this command! Lacking Permission Node '%s'".formatted(PREFIX_ADMIN.getId()));
 
         if (prefix.equals(CommandPrefix.getPrefix(guild.getId()))) {
-            DEFAULT_SETTINGS.apply(message.reply("Already have command prefix set to '%s'".formatted(prefix))).queue();
+            corePlugin.getMessageSettings().apply(message.reply("Already have command prefix set to '%s'".formatted(prefix))).queue();
             return CommandResult.PASS;
         }
 
         if (!prefix.isEmpty()) {
             CommandPrefix.configure(guild.getId(), prefix);
-            DEFAULT_SETTINGS.apply(message.reply("Changed command prefix to '%s'".formatted(prefix))).queue();
+            corePlugin.getMessageSettings().apply(message.reply("Changed command prefix to '%s'".formatted(prefix))).queue();
             return CommandResult.PASS;
         }
 

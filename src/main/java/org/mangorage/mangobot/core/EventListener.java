@@ -44,22 +44,32 @@ import org.mangorage.mangobotapi.core.events.discord.DMessageUpdateEvent;
 import org.mangorage.mangobotapi.core.events.discord.DReactionEvent;
 import org.mangorage.mangobotapi.core.events.discord.DStringSelectInteractionEvent;
 import org.mangorage.mangobotapi.core.events.discord.DVoiceUpdateEvent;
-import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
 
 @SuppressWarnings("unused")
-public record EventListener(IEventBus bus) {
+public class EventListener {
+
+
+    private final CorePlugin plugin;
+    private final IEventBus bus;
+
+    public EventListener(CorePlugin plugin) {
+        this.plugin = plugin;
+        this.bus = plugin.getPluginBus();
+    }
+
 
     @SubscribeEvent
     public void messageRecieved(MessageReceivedEvent event) {
-        var isCommand = Util.handleMessage(event);
+        var isCommand = Util.handleMessage(plugin, event);
         bus.post(new DMessageRecievedEvent(event, isCommand));
     }
 
     @SubscribeEvent
     public void onSlashCommand(SlashCommandInteractionEvent event) {
-        CommandRegistry.postSlashCommand(new SlashCommandEvent(event, event.getName(), Arguments.empty()));
+        plugin.getCommandRegistry().postSlashCommand(new SlashCommandEvent(event, event.getName(), Arguments.empty()));
     }
 
     @SubscribeEvent

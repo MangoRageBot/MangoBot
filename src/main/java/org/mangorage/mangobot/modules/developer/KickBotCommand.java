@@ -24,18 +24,22 @@ package org.mangorage.mangobot.modules.developer;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
 import java.util.List;
 
-@AutoRegister.BasicCommand
 public class KickBotCommand implements IBasicCommand {
     private static final List<String> USERS = List.of("194596094200643584");
 
+
+    private final CorePlugin plugin;
+
+    public KickBotCommand(CorePlugin plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * @param message
@@ -51,7 +55,7 @@ public class KickBotCommand implements IBasicCommand {
             return CommandResult.PASS;
         }
 
-        var guild = Bot.getJDAInstance().getGuildById(guildID);
+        var guild = plugin.getJDA().getGuildById(guildID);
         if (guild == null) {
             message.reply("Guild not found").queue();
             return CommandResult.PASS;

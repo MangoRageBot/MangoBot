@@ -22,37 +22,10 @@
 
 package org.mangorage.mangobot.core;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.mangorage.basicutils.LogHelper;
-import org.mangorage.basicutils.misc.LockableReference;
-import org.mangorage.mangobot.modules.anticrosspost.Anticrosspost;
-import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
-import org.mangorage.mangobot.modules.customvc.CustomVC;
-import org.mangorage.mangobot.modules.modmail.ModMailHandler;
-import org.mangorage.mangobot.modules.requestpaste.PasteRequestModule;
-import org.mangorage.mangobotapi.MangoBotAPI;
-import org.mangorage.mangobotapi.MangoBotAPIBuilder;
-import org.mangorage.mangobotapi.core.events.SaveEvent;
-import org.mangorage.mangobotapi.core.events.ShutdownEvent;
-import org.mangorage.mangobotapi.core.events.StartupEvent;
-import org.mangorage.mangobotapi.core.util.MessageSettings;
-import org.mangorage.mboteventbus.EventBus;
-
-import java.util.EnumSet;
-import java.util.function.Consumer;
-
-import static org.mangorage.mangobot.core.util.Constants.STARTUP_MESSAGE;
-
+/**
+ @Deprecated
 public class Bot {
-    private static final LockableReference<Bot> BOT_INSTANCE = new LockableReference<>();
-    public static final EventBus EVENT_BUS = EventBus.create();
+
     public static final MessageSettings DEFAULT_SETTINGS = MessageSettings.create().build();
     public static final MangoBotAPI APIHook;
 
@@ -148,8 +121,8 @@ public class Bot {
                         Activity.ActivityType.CUSTOM_STATUS,
                         """
                                     DM ME: !mail join to open a ticket!
-                                    
-                                    MangoBot is on version %s"
+
+    MangoBot is on version %s"
                                 """.formatted(VersionCommand.getVersion()),
                         "https://www.discord.minecraftforge.net/"
                 )
@@ -214,3 +187,4 @@ public class Bot {
         }
     }
 }
+ **/

@@ -24,30 +24,37 @@ package org.mangorage.mangobot.modules.basic.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
-import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
 import java.util.List;
 
-@AutoRegister.BasicCommand
 public class InfoCommand implements IBasicCommand {
+
+
+    private final CorePlugin corePlugin;
+
+    public InfoCommand(CorePlugin corePlugin) {
+        this.corePlugin = corePlugin;
+    }
+
+
+
 
     @NotNull
     @SuppressWarnings("unchecked")
     @Override
     public CommandResult execute(Message message, Arguments args) {
-        var settings = Bot.DEFAULT_SETTINGS;
+        var settings = corePlugin.getMessageSettings();
         String cmd = args.get(0);
         if (cmd == null) {
             settings.apply(message.reply(usage())).queue();
             return CommandResult.PASS;
         }
 
-        var command = CommandRegistry.getCommand(cmd);
+        var command = corePlugin.getCommandRegistry().getCommand(cmd);
         if (command == null) {
             settings.apply(message.reply("Command not found!")).queue();
             return CommandResult.PASS;

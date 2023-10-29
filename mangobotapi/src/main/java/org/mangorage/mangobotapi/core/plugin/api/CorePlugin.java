@@ -20,90 +20,90 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi;
+package org.mangorage.mangobotapi.core.plugin.api;
 
-
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import org.mangorage.mangobotapi.core.events.LoadEvent;
+import org.mangorage.mangobotapi.core.events.SaveEvent;
+import org.mangorage.mangobotapi.core.events.ShutdownEvent;
+import org.mangorage.mangobotapi.core.events.StartupEvent;
+import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
+import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
+import org.mangorage.mboteventbus.impl.IEventBus;
 
-public class MangoBotAPI {
+public class CorePlugin extends Plugin {
+    private final JDA JDA;
+    private final IEventBus pluginBus;
+    private final String COMMAND_PREFIX = "!";
+    private final MessageSettings DEFAULT_MESSAGE_SETTINGS = MessageSettings.create().build();
+    private final CommandRegistry commandRegistry = new CommandRegistry(this);
 
-    public final static MessageSettings MESSAGE_SETTINGS = MessageSettings.create().build();
-}
-
-
-/**
-public class MangoBotAPI {
-    private static final MangoBotAPI INSTANCE = MangoBotAPIBuilder.create();
-
-    public static MangoBotAPI getInstance() {
-        return INSTANCE;
+    public CorePlugin(JDABuilder builder, IEventBus pluginBus) {
+        this.JDA = builder.build();
+        this.pluginBus = pluginBus;
+        startup();
     }
 
-    private final IEventBus EVENT_BUS;
-    private final String COMMAND_PREFIX;
-    private final MessageSettings DEFAULT_MESSAGE_SETTINGS;
-    private final Supplier<JDA> JDA_INSTANCE;
-
-    protected MangoBotAPI(MangoBotAPIBuilder builder) {
-        this.EVENT_BUS = builder.getEventBus();
-        this.COMMAND_PREFIX = builder.getCommandPrefix();
-        this.DEFAULT_MESSAGE_SETTINGS = builder.getDefaultMessageSettings();
-        this.JDA_INSTANCE = builder.getJDAInstance();
+    public JDA getJDA() {
+        return JDA;
     }
 
-    public IEventBus getEventBus() {
-        return EVENT_BUS;
+    public IEventBus getPluginBus() {
+        return pluginBus;
+    }
+
+    public CommandRegistry getCommandRegistry() {
+        return commandRegistry;
     }
 
     public String getCommandPrefix() {
         return COMMAND_PREFIX;
     }
 
-    public MessageSettings getDefaultMessageSettings() {
+    public MessageSettings getMessageSettings() {
         return DEFAULT_MESSAGE_SETTINGS;
     }
 
-    public JDA getJDA() {
-        return JDA_INSTANCE.get();
+    public void loadCommands() {
     }
 
-    public void startup(Consumer<IEventBus> busConsumer) {
-        EVENT_BUS.startup();
+    public void startup() {
+        getPluginBus().startup();
 
-        EVENT_BUS.addListener(10, StartupEvent.class, event -> {
+        getPluginBus().addListener(10, StartupEvent.class, event -> {
             switch (event.phase()) {
                 case STARTUP -> {
-                    CommandRegistry.load(); // Load commands... via @AutoRegister
+                    loadCommands();
 
                     Actions.init();
                 }
                 case REGISTRATION -> {
                 }
                 case FINISHED -> {
-                    EVENT_BUS.post(new LoadEvent());
+                    getPluginBus().post(new LoadEvent());
                 }
             }
         });
 
-        EVENT_BUS.addListener(10, ShutdownEvent.class, event -> {
+        getPluginBus().addListener(10, ShutdownEvent.class, event -> {
             switch (event.phase()) {
                 case PRE -> {
                 }
                 case POST -> {
-                    EVENT_BUS.post(new SaveEvent());
+                    getPluginBus().post(new SaveEvent());
                 }
             }
         });
 
-        busConsumer.accept(EVENT_BUS);
         for (StartupEvent.Phase phase : StartupEvent.Phase.values())
-            EVENT_BUS.post(new StartupEvent(phase));
+            getPluginBus().post(new StartupEvent(phase));
     }
 
     public void shutdown() {
         for (ShutdownEvent.Phase phase : ShutdownEvent.Phase.values())
-            EVENT_BUS.post(new ShutdownEvent(phase));
-        EVENT_BUS.shutdown();
+            getPluginBus().post(new ShutdownEvent(phase));
+        getPluginBus().shutdown();
     }
 }
- **/

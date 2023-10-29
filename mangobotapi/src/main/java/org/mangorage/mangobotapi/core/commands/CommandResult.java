@@ -23,14 +23,13 @@
 package org.mangorage.mangobotapi.core.commands;
 
 import net.dv8tion.jda.api.entities.Message;
-import org.mangorage.mangobotapi.MangoBotAPI;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 
 import java.util.HashMap;
 
 
 public record CommandResult(String string) {
-    private static final MessageSettings DEFAULT_SETTINGS = MangoBotAPI.getInstance().getDefaultMessageSettings();
+    private static final MessageSettings DEFAULT_SETTINGS = MessageSettings.create().build();
     private static final HashMap<String, CommandResult> CACHE = new HashMap<>();
 
     public static CommandResult of(String content) {

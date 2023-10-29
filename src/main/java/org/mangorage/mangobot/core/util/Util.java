@@ -30,12 +30,10 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.utils.TimeUtil;
 import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobot.core.Bot;
-import org.mangorage.mangobotapi.MangoBotAPI;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandPrefix;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
-import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -55,9 +53,9 @@ public class Util {
     }
 
 
-    public static boolean handleMessage(MessageReceivedEvent event) {
+    public static boolean handleMessage(CorePlugin plugin, MessageReceivedEvent event) {
         // Handle Message and prefix
-        String Prefix = event.isFromGuild() ? CommandPrefix.getPrefix(event.getGuild().getId()) : CommandPrefix.DEFAULT;
+        String Prefix = event.isFromGuild() ? CommandPrefix.getPrefix(event.getGuild().getId()) : "!";
 
         Message message = event.getMessage();
         String rawMessage = message.getContentRaw();
@@ -69,21 +67,21 @@ public class Util {
             Arguments arguments = Arguments.of(Arguments.of(command_pre).getFrom(1).split(" "));
 
             var commandEvent = new BasicCommandEvent(event.getMessage(), command, arguments);
-            CommandRegistry.postBasicCommand(commandEvent);
+            plugin.getCommandRegistry().postBasicCommand(commandEvent);
 
             // Now post to anything using our EventBus...
             if (!commandEvent.isHandled())
-                MangoBotAPI.getInstance().getEventBus().post(commandEvent);
+                plugin.getPluginBus().post(commandEvent);
 
             if (commandEvent.getException() != null) {
-                Bot.DEFAULT_SETTINGS.apply(message.reply("""
+                plugin.getMessageSettings().apply(message.reply("""
                         An Exception occurred while executing the command.
                         %s
                         """.formatted(commandEvent.getException().getMessage()))).queue();
             } else if (commandEvent.isHandled()) {
                 commandEvent.getCommandResult().accept(message);
             } else if (verbose) {
-                Bot.DEFAULT_SETTINGS.apply(message.reply("Invalid Command")).queue();
+                plugin.getMessageSettings().apply(message.reply("Invalid Command")).queue();
             }
 
             return true;

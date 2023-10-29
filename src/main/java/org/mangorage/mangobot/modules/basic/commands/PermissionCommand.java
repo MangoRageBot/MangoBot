@@ -26,19 +26,26 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.registry.permissions.BasicPermission;
 import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 
 import java.util.List;
 
-@AutoRegister.BasicCommand
 public class PermissionCommand implements IBasicCommand {
+
+
+    private final CorePlugin corePlugin;
+
+    public PermissionCommand(CorePlugin corePlugin) {
+        this.corePlugin = corePlugin;
+    }
+
+
 
 
     @NotNull
@@ -49,7 +56,7 @@ public class PermissionCommand implements IBasicCommand {
         var member = message.getMember();
         if (member == null) return CommandResult.FAIL;
         if (!BotPermissions.PERMISSION_ADMIN.hasPermission(member)) return CommandResult.NO_PERMISSION;
-        var settings = Bot.DEFAULT_SETTINGS;
+        var settings = corePlugin.getMessageSettings();
 
         /**
          * !perm addRole permid id

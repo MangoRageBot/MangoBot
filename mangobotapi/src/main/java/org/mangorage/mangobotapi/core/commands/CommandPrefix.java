@@ -22,12 +22,10 @@
 
 package org.mangorage.mangobotapi.core.commands;
 
-import org.mangorage.mangobotapi.MangoBotAPI;
 
 import java.util.HashMap;
 
 public class CommandPrefix {
-    public static final String DEFAULT = MangoBotAPI.getInstance().getCommandPrefix();
 
     public static final HashMap<String, String> GUILD_PREFIXES = new HashMap<>();
 
@@ -36,8 +34,6 @@ public class CommandPrefix {
     }
 
     public static String getPrefix(String guildID) {
-        if (guildID == null)
-            return DEFAULT;
-        return GUILD_PREFIXES.getOrDefault(guildID, DEFAULT);
+        return "!";
     }
 }

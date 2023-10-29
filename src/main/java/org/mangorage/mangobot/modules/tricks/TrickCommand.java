@@ -31,7 +31,6 @@ import org.mangorage.basicutils.LogHelper;
 import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.basicutils.misc.PagedList;
 import org.mangorage.basicutils.misc.RunnableTask;
-import org.mangorage.mangobot.core.Bot;
 import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
@@ -41,8 +40,8 @@ import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.discord.DButtonInteractionEvent;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.registry.GuildCache;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 import org.mangorage.mangobotapi.core.util.ScriptParser;
 
@@ -56,10 +55,7 @@ import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-import static org.mangorage.mangobot.core.Bot.EVENT_BUS;
-
 @SuppressWarnings("all")
-@AutoRegister.BasicCommand
 public class TrickCommand implements IBasicCommand {
     public enum Type {
         DEFAULT,
@@ -72,18 +68,7 @@ public class TrickCommand implements IBasicCommand {
     private final HashMap<String, HashMap<String, Data>> CONTENT = new HashMap<>(); // guildID Map<ID, Content>
     private final ConcurrentHashMap<String, PagedList<String>> PAGES = new ConcurrentHashMap<>();
 
-    private final DataHandler<Data> TRICK_DATA_HANDLER = DataHandler.create(
-            (data) -> {
-                if (data.settings == null)
-                    data = data.withSettings(new TrickConfig(true));
-                LogHelper.info("Loaded Trick: '%s' for guild '%s'".formatted(data.trickID(), GuildCache.getGuildName(data.guildID)));
-                CONTENT.computeIfAbsent(data.guildID(), (k) -> new HashMap<>()).put(data.trickID(), data);
-            },
-            Data.class,
-            "data/tricks",
-            DataHandler.Properties.create()
-                    .setFileNamePredicate(e -> true)
-    );
+    private final DataHandler<Data> TRICK_DATA_HANDLER;
 
     public void onSaveEvent(SaveEvent event) {
         LogHelper.info("Saving Tricks Data!");
@@ -101,19 +86,34 @@ public class TrickCommand implements IBasicCommand {
         LogHelper.info("Finished loading Tricks Data!");
     }
 
-    public TrickCommand() {
+    private final CorePlugin plugin;
+
+    public TrickCommand(CorePlugin plugin) {
         // Register listeners to Bot.EVENT_BUS
-        EVENT_BUS.addListener(LoadEvent.class, this::onLoadEvent);
-        EVENT_BUS.addListener(SaveEvent.class, this::onSaveEvent);
-        EVENT_BUS.addListener(BasicCommandEvent.class, this::onCommandEvent);
-        EVENT_BUS.addListener(DButtonInteractionEvent.class, this::onButton);
+        this.plugin = plugin;
+        this.TRICK_DATA_HANDLER = DataHandler.create(
+                (data) -> {
+                    if (data.settings == null)
+                        data = data.withSettings(new TrickConfig(true));
+                    LogHelper.info("Loaded Trick: '%s' for guild '%s'".formatted(data.trickID(), GuildCache.getGuildName(plugin, data.guildID)));
+                    CONTENT.computeIfAbsent(data.guildID(), (k) -> new HashMap<>()).put(data.trickID(), data);
+                },
+                Data.class,
+                "data/tricks",
+                DataHandler.Properties.create()
+                        .setFileNamePredicate(e -> true)
+        );
+        plugin.getPluginBus().addListener(LoadEvent.class, this::onLoadEvent);
+        plugin.getPluginBus().addListener(SaveEvent.class, this::onSaveEvent);
+        plugin.getPluginBus().addListener(BasicCommandEvent.class, this::onCommandEvent);
+        plugin.getPluginBus().addListener(DButtonInteractionEvent.class, this::onButton);
     }
 
 
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
-        MessageSettings dMessage = Bot.DEFAULT_SETTINGS;
+        MessageSettings dMessage = plugin.getMessageSettings();
         Member member = message.getMember();
         String guildID = message.getGuild().getId();
         String type = args.get(0);
@@ -262,7 +262,7 @@ public class TrickCommand implements IBasicCommand {
     }
 
     private CommandResult executeTrick(Data data, MessageChannelUnion channel, Message message, Arguments args) {
-        MessageSettings dMessage = Bot.DEFAULT_SETTINGS;
+        MessageSettings dMessage = plugin.getMessageSettings();
         String response = data.content();
         String guildID = data.guildID;
 

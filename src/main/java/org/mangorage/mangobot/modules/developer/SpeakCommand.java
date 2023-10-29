@@ -23,13 +23,12 @@
 package org.mangorage.mangobot.modules.developer;
 
 import org.mangorage.mangobot.modules.basic.commands.ReplyCommand;
-import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
-@AutoRegister.BasicCommand
 public class SpeakCommand extends ReplyCommand {
 
-    public SpeakCommand() {
-        super("I have Spoken! Which means I am working as intended.");
+    public SpeakCommand(CorePlugin plugin) {
+        super(plugin, "I have Spoken! Which means I am working as intended.");
     }
 
 

@@ -27,14 +27,15 @@ import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
-import static org.mangorage.mangobot.core.Bot.DEFAULT_SETTINGS;
 
 public abstract class ReplyCommand implements IBasicCommand {
     private final String MESSAGE_RESPONSE;
+    private final CorePlugin plugin;
 
-
-    public ReplyCommand(String message) {
+    public ReplyCommand(CorePlugin plugin, String message) {
+        this.plugin = plugin;
         this.MESSAGE_RESPONSE = message;
     }
 
@@ -46,7 +47,7 @@ public abstract class ReplyCommand implements IBasicCommand {
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
-        DEFAULT_SETTINGS.apply(message.getChannel().sendMessage(MESSAGE_RESPONSE)).queue();
+        plugin.getMessageSettings().apply(message.getChannel().sendMessage(MESSAGE_RESPONSE)).queue();
         return CommandResult.PASS;
     }
 }

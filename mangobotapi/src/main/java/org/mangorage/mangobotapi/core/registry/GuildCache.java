@@ -22,11 +22,11 @@
 
 package org.mangorage.mangobotapi.core.registry;
 
-import org.mangorage.mangobotapi.MangoBotAPI;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
 public final class GuildCache {
-    public static String getGuildName(String guildID) {
-        var guild = MangoBotAPI.getInstance().getJDA().getGuildById(guildID);
+    public static String getGuildName(CorePlugin plugin, String guildID) {
+        var guild = plugin.getJDA().getGuildById(guildID);
         return guild != null ? guild.getName() : "[Undefined]";
     }
 }

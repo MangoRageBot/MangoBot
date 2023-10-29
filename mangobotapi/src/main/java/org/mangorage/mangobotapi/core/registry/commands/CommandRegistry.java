@@ -23,13 +23,12 @@
 package org.mangorage.mangobotapi.core.registry.commands;
 
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import org.mangorage.mangobotapi.MangoBotAPI;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.commands.ICommand;
 import org.mangorage.mangobotapi.core.commands.ISlashCommand;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.events.SlashCommandEvent;
-import org.mangorage.mangobotapi.core.reflections.ReflectionsUtils;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mboteventbus.base.EventHolder;
 import org.mangorage.mboteventbus.impl.IEventListener;
 
@@ -39,7 +38,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class CommandRegistry {
-    private static final EventHolder<BasicCommandEvent> BASIC_COMMAND_EVENT = EventHolder.create(
+
+    private final CorePlugin plugin;
+
+    public CommandRegistry(CorePlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    private final EventHolder<BasicCommandEvent> BASIC_COMMAND_EVENT = EventHolder.create(
             BasicCommandEvent.class,
             (i) -> (e) -> {
                 for (IEventListener<BasicCommandEvent> listener : i) {
@@ -47,7 +53,7 @@ public class CommandRegistry {
                 }
             });
 
-    public static final EventHolder<SlashCommandEvent> SLASH_COMMAND_EVENT = EventHolder.create(
+    public final EventHolder<SlashCommandEvent> SLASH_COMMAND_EVENT = EventHolder.create(
             SlashCommandEvent.class,
             (i) -> (e) -> {
                 for (IEventListener<SlashCommandEvent> listener : i) {
@@ -55,9 +61,10 @@ public class CommandRegistry {
                 }
             });
 
-    private static final CopyOnWriteArrayList<ICommand<?, ?>> COMMANDS = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<ICommand<?, ?>> COMMANDS = new CopyOnWriteArrayList<>();
 
     public static void load() {
+        /**
         ReflectionsUtils.REFLECTIONS.getTypesAnnotatedWith(AutoRegister.BasicCommand.class).forEach(cls -> {
             var obj = ReflectionsUtils.createInstance(cls);
             if (obj == null) throw new IllegalStateException("Unable to auto register command");
@@ -77,15 +84,18 @@ public class CommandRegistry {
             } else
                 throw new IllegalStateException("Unable to auto register command. Class must implement ISlashCommand");
         });
+         **/
+
+        // TODO: FIX THIS
     }
 
-    public static void addBasicCommand(IBasicCommand command) {
+    public void addBasicCommand(IBasicCommand command) {
         BASIC_COMMAND_EVENT.addListener(command.getListener());
         COMMANDS.add(command);
     }
 
-    public static void addSlashCommand(ISlashCommand command) {
-        var updateAction = MangoBotAPI.getInstance().getJDA().updateCommands();
+    public void addSlashCommand(ISlashCommand command) {
+        var updateAction = plugin.getJDA().updateCommands();
         var commandData = Commands.slash(command.commandId(), command.description());
         command.registerSubCommands(commandData);
         updateAction.addCommands(commandData).queue();
@@ -94,15 +104,15 @@ public class CommandRegistry {
         // COMMANDS.add(command); // Implement this later..., for now just add the basic commands...
     }
 
-    public static void postBasicCommand(BasicCommandEvent event) {
+    public void postBasicCommand(BasicCommandEvent event) {
         BASIC_COMMAND_EVENT.post(event);
     }
 
-    public static void postSlashCommand(SlashCommandEvent event) {
+    public void postSlashCommand(SlashCommandEvent event) {
         SLASH_COMMAND_EVENT.post(event);
     }
 
-    public static ICommand getCommand(String commandId) {
+    public ICommand getCommand(String commandId) {
         for (ICommand<?, ?> command : COMMANDS) {
             if (command.isValidCommand(commandId)) {
                 return command;
@@ -111,13 +121,13 @@ public class CommandRegistry {
         return null;
     }
 
-    public static String getUsage(String commandId) {
+    public String getUsage(String commandId) {
         var cmd = getCommand(commandId);
         return cmd != null ? cmd.usage() : null;
     }
 
 
-    public static List<String> getAliases(String commandId) {
+    public List<String> getAliases(String commandId) {
         var cmd = getCommand(commandId);
         return cmd != null ? cmd.commandAliases() : List.of();
     }

@@ -22,24 +22,11 @@
 
 package org.mangorage.mangobotapi;
 
-import net.dv8tion.jda.api.JDA;
-import org.mangorage.basicutils.misc.Lockable;
-import org.mangorage.mangobotapi.core.util.MessageSettings;
-import org.mangorage.mboteventbus.impl.IEventBus;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
+/**
 public class MangoBotAPIBuilder {
     private static final MangoBotAPIBuilder BUILDER = new MangoBotAPIBuilder();
 
-    /**
-     * Use this to configure the MangoBotAPI instance
-     * <p>
-     * DO NOT CALL MangoBotAPI before this!!! Otherwise, it will not work.
-     * This is designed to prevent any further stuff from occuring AFTER
-     * hooking into the API, so that properties cant be configured afterwards
-     */
+
     public static void hook(Consumer<MangoBotAPIBuilder> builderConsumer) {
         if (!BUILDER.isBuilt()) {
             builderConsumer.accept(BUILDER);
@@ -93,3 +80,4 @@ public class MangoBotAPIBuilder {
         return built.isLocked();
     }
 }
+ **/
