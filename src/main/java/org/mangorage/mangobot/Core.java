@@ -33,6 +33,8 @@ import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobot.core.EventListener;
 import org.mangorage.mangobot.core.util.BotSettings;
 import org.mangorage.mangobot.modules.basic.commands.HelpCommand;
+import org.mangorage.mangobot.modules.basic.commands.InfoCommand;
+import org.mangorage.mangobot.modules.basic.commands.PingCommand;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobot.modules.developer.SpeakCommand;
 import org.mangorage.mangobot.modules.tricks.TrickCommand;
@@ -80,6 +82,17 @@ public class Core extends CorePlugin implements IPlugin {
             CacheFlag.SCHEDULED_EVENTS,
             CacheFlag.FORUM_TAGS
     );
+    /*
+                                    Activity.of(
+                                        Activity.ActivityType.CUSTOM_STATUS,
+                                        """
+                                                    DM ME: !mail join to open a ticket!
+
+                                                    MangoBot is on version %s"
+                                                """.formatted(VersionCommand.getVersion()),
+                                        "https://www.discord.minecraftforge.net/"
+                                )
+     */
 
     public Core() {
         super(
@@ -91,8 +104,6 @@ public class Core extends CorePlugin implements IPlugin {
                                 Activity.of(
                                         Activity.ActivityType.CUSTOM_STATUS,
                                         """
-                                                    DM ME: !mail join to open a ticket!
-                                                    
                                                     MangoBot is on version %s"
                                                 """.formatted(VersionCommand.getVersion()),
                                         "https://www.discord.minecraftforge.net/"
@@ -118,6 +129,8 @@ public class Core extends CorePlugin implements IPlugin {
 
         registry.addBasicCommand(new VersionCommand(this));
         registry.addBasicCommand(new HelpCommand(this));
+        registry.addBasicCommand(new InfoCommand(this));
+        registry.addBasicCommand(new PingCommand());
         registry.addBasicCommand(new SpeakCommand(this));
         registry.addBasicCommand(new TrickCommand(this));
     }
