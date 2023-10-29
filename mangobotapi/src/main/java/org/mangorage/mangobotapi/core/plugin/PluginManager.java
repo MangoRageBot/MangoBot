@@ -22,23 +22,32 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
+import org.mangorage.mangobotapi.core.plugin.api.Plugin;
 import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class PluginManager {
-    private static final HashMap<String, PluginContainer> PLUGINS = new HashMap<>();
+    private static final HashMap<String, PluginContainer> PLUGIN_CONTAINERS = new HashMap<>();
 
-    public static List<PluginContainer> getPlugins() {
-        return PLUGINS.values().stream().toList();
+    public static List<PluginContainer> getPluginContainers() {
+        return PLUGIN_CONTAINERS.values().stream().toList();
+    }
+
+    public static <T extends Plugin> T getPlugin(String id, Class<T> type) {
+        return type.cast(PLUGIN_CONTAINERS.get(id).plugin());
+    }
+
+    public static IPlugin getPlugin(String id) {
+        return PLUGIN_CONTAINERS.get(id).plugin();
     }
 
     public static boolean isLoaded(String id) {
-        return PLUGINS.containsKey(id);
+        return PLUGIN_CONTAINERS.containsKey(id);
     }
 
     protected static void registerPlugin(PluginType type, IPlugin plugin, String id) {
-        PLUGINS.put(id, new PluginContainer(type, plugin, id));
+        PLUGIN_CONTAINERS.put(id, new PluginContainer(type, plugin, id));
     }
 }

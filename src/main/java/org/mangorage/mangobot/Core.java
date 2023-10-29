@@ -37,6 +37,7 @@ import org.mangorage.mangobot.modules.basic.commands.InfoCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingCommand;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobot.modules.developer.SpeakCommand;
+import org.mangorage.mangobot.modules.requestpaste.PasteRequestModule;
 import org.mangorage.mangobot.modules.tricks.TrickCommand;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
@@ -120,11 +121,8 @@ public class Core extends CorePlugin implements IPlugin {
         getJDA().addEventListener(new EventListener(this));
     }
 
-    /**
-     *
-     */
     @Override
-    public void loadCommands() {
+    public void load() {
         var registry = getCommandRegistry();
 
         registry.addBasicCommand(new VersionCommand(this));
@@ -133,6 +131,8 @@ public class Core extends CorePlugin implements IPlugin {
         registry.addBasicCommand(new PingCommand());
         registry.addBasicCommand(new SpeakCommand(this));
         registry.addBasicCommand(new TrickCommand(this));
+
+        PasteRequestModule.register(getPluginBus());
     }
 
     public void onStartup(StartupEvent event) {

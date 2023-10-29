@@ -66,7 +66,7 @@ public class CorePlugin extends Plugin {
         return DEFAULT_MESSAGE_SETTINGS;
     }
 
-    public void loadCommands() {
+    public void load() {
     }
 
     public void startup() {
@@ -75,7 +75,7 @@ public class CorePlugin extends Plugin {
         getPluginBus().addListener(10, StartupEvent.class, event -> {
             switch (event.phase()) {
                 case STARTUP -> {
-                    loadCommands();
+                    load();
 
                     Actions.init();
                 }
