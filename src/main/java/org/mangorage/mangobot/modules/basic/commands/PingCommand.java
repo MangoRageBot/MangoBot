@@ -30,8 +30,11 @@ import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 
 import java.awt.*;
+import java.util.List;
 
 public class PingCommand implements IBasicCommand {
+    private static final List<String> ALLIASES = List.of("pings");
+
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
@@ -60,6 +63,11 @@ public class PingCommand implements IBasicCommand {
     @Override
     public String usage() {
         return "!ping";
+    }
+
+    @Override
+    public List<String> commandAliases() {
+        return ALLIASES;
     }
 
     @Override

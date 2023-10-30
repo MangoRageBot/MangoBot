@@ -37,12 +37,12 @@ import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 import java.util.List;
 
 public class PermissionCommand implements IBasicCommand {
-
-
     private final CorePlugin corePlugin;
+    private final PermissionRegistry permissionRegistry;
 
     public PermissionCommand(CorePlugin corePlugin) {
         this.corePlugin = corePlugin;
+        this.permissionRegistry = corePlugin.getPermissionRegistry();
     }
 
 
@@ -89,44 +89,44 @@ public class PermissionCommand implements IBasicCommand {
 
 
         if (subcmd.equals("addRole")) {
-            if (PermissionRegistry.getPermission(permId) == null) {
+            if (permissionRegistry.getPermission(permId) == null) {
                 settings.apply(message.reply("Bot Permission '%s' not found!".formatted(permId))).queue();
                 return CommandResult.PASS;
             }
 
-            PermissionRegistry.getPermission(permId).addRole(guild.getId(), id);
+            permissionRegistry.getPermission(permId).addRole(guild.getId(), id);
             return CommandResult.PASS;
         } else if (subcmd.equals("removeRole")) {
-            if (PermissionRegistry.getPermission(permId) == null) {
+            if (permissionRegistry.getPermission(permId) == null) {
                 settings.apply(message.reply("Bot Permission '%s' not found!".formatted(permId))).queue();
                 return CommandResult.PASS;
             }
 
-            PermissionRegistry.getPermission(permId).removeRole(guild.getId(), id);
+            permissionRegistry.getPermission(permId).removeRole(guild.getId(), id);
             return CommandResult.PASS;
         } else if (subcmd.equals("addPerm")) {
-            if (PermissionRegistry.getPermission(permId) == null) {
+            if (permissionRegistry.getPermission(permId) == null) {
                 settings.apply(message.reply("Bot Permission '%s' not found!".formatted(permId))).queue();
                 return CommandResult.PASS;
             }
 
-            PermissionRegistry.getPermission(permId).addPermission(guild.getId(), Permission.valueOf(id));
+            permissionRegistry.getPermission(permId).addPermission(guild.getId(), Permission.valueOf(id));
             return CommandResult.PASS;
         } else if (subcmd.equals("removePerm")) {
-            if (PermissionRegistry.getPermission(permId) == null) {
+            if (permissionRegistry.getPermission(permId) == null) {
                 settings.apply(message.reply("Bot Permission '%s' not found!".formatted(permId))).queue();
                 return CommandResult.PASS;
             }
 
-            PermissionRegistry.getPermission(permId).removePermission(guild.getId(), Permission.valueOf(id));
+            permissionRegistry.getPermission(permId).removePermission(guild.getId(), Permission.valueOf(id));
             return CommandResult.PASS;
         } else if (subcmd.equals("info")) {
-            if (PermissionRegistry.getPermission(permId) == null) {
+            if (permissionRegistry.getPermission(permId) == null) {
                 settings.apply(message.reply("Bot Permission '%s' not found!".formatted(permId))).queue();
                 return CommandResult.PASS;
             }
 
-            BasicPermission permission = PermissionRegistry.getPermission(permId);
+            BasicPermission permission = permissionRegistry.getPermission(permId);
 
             settings.apply(message.reply(permission.getInfo(guild))).setAllowedMentions(List.of()).setSuppressedNotifications(true).queue();
 
@@ -144,25 +144,25 @@ public class PermissionCommand implements IBasicCommand {
         } else if (subcmd.equals("list")) {
             StringBuilder list = new StringBuilder();
             list.append("Permissions:").append("\n\n");
-            PermissionRegistry.getPermissions().forEach((perm) -> {
+            permissionRegistry.getPermissions().forEach((perm) -> {
                 list.append(perm).append("\n");
             });
             settings.apply(message.reply(list.toString())).queue();
             return CommandResult.PASS;
         } else if (subcmd.equals("reset")) {
-            if (PermissionRegistry.getPermission(permId) == null) {
+            if (permissionRegistry.getPermission(permId) == null) {
                 settings.apply(message.reply("Bot Permission '%s' not found!".formatted(permId))).queue();
                 return CommandResult.PASS;
             }
 
-            PermissionRegistry.getPermission(permId).reset(guild.getId());
+            permissionRegistry.getPermission(permId).reset(guild.getId());
 
             return CommandResult.PASS;
         } else if (subcmd.equalsIgnoreCase("test")) {
             var userID = args.get(2);
             Member member2 = guild.getMemberById(userID);
             if (member2 == null) return CommandResult.PASS;
-            var result = PermissionRegistry.getPermission(permId).hasPermission(member2);
+            var result = permissionRegistry.getPermission(permId).hasPermission(member2);
             message.reply("Has Permission: %s".formatted(result)).queue();
             return CommandResult.PASS;
         }

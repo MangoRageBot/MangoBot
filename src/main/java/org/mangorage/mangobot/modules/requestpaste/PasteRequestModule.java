@@ -30,7 +30,7 @@ import org.eclipse.egit.github.core.service.GistService;
 import org.jetbrains.annotations.Nullable;
 import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.basicutils.misc.LazyReference;
-import org.mangorage.mangobot.core.util.BotSettings;
+import org.mangorage.mangobot.Core;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
@@ -46,7 +46,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PasteRequestModule {
-    private static final LazyReference<GitHubClient> GITHUB_CLIENT = LazyReference.create(() -> new GitHubClient().setOAuth2Token(BotSettings.PASTE_TOKEN.get()));
+    private static final LazyReference<GitHubClient> GITHUB_CLIENT = LazyReference.create(() -> new GitHubClient().setOAuth2Token(Core.PASTE_TOKEN.get()));
     private static final List<String> VALID_EXTENSIONS = List.of(
             "txt",
             "log",

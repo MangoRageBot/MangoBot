@@ -27,17 +27,10 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
-import org.mangorage.mangobotapi.core.data.DataHandler;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * This class handles Permissions for Commands that are ran on guilds only!
@@ -49,51 +42,20 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 // TODO: Have DataHandler handle data for this.
 
 public class BasicPermission {
-    @Retention(RUNTIME)
-    @Target(TYPE)
-    public @interface AutoRegister {
-    }
-
-    @Retention(RUNTIME)
-    @Target(FIELD)
-    public @interface Register {
-    }
-
-
     public static BasicPermission create(String id) {
-        return new BasicPermission(id, true);
-    }
-
-    public static BasicPermission create(String id, boolean saves) {
-        return new BasicPermission(id, saves);
+        return new BasicPermission(id);
     }
 
     private final HashSet<Permission> DISCORD_PERMISSIONS = new HashSet<>();
     private final HashSet<String> ROLES = new HashSet<>();
 
     @Expose
-    private final HashMap<String, Node> NODES = new HashMap<>();
+    protected final HashMap<String, Node> NODES = new HashMap<>();
     @Expose
     private final String id;
-    private final boolean saves;
 
-    private final DataHandler<BasicPermission> PERMISSION_DATA_HANDLER = DataHandler.create(
-            (perm) -> {
-                NODES.putAll(perm.NODES);
-            },
-            BasicPermission.class,
-            "data/permissions/",
-            DataHandler.Properties.create()
-                    .useExposeAnnotation()
-                    .useDefaultFileNamePredicate()
-                    .setFileName("permissions.json")
-    );
-
-    private BasicPermission(String id, boolean saves) {
+    private BasicPermission(String id) {
         this.id = id;
-        this.saves = saves;
-        if (saves)
-            PERMISSION_DATA_HANDLER.loadAll();
     }
 
     public String getId() {
@@ -141,8 +103,6 @@ public class BasicPermission {
     }
 
     private void save() {
-        if (saves)
-            PERMISSION_DATA_HANDLER.save(this, getId());
     }
 
     public boolean hasPermission(Member member) {

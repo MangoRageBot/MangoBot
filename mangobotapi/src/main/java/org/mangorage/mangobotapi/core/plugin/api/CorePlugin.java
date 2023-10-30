@@ -24,26 +24,57 @@ package org.mangorage.mangobotapi.core.plugin.api;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import org.mangorage.mangobotapi.core.events.LoadEvent;
-import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
-import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
 import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
+import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
-public class CorePlugin extends Plugin {
+public abstract class CorePlugin extends AbstractPlugin {
     private final JDA JDA;
     private final IEventBus pluginBus;
     private final String COMMAND_PREFIX = "!";
     private final MessageSettings DEFAULT_MESSAGE_SETTINGS = MessageSettings.create().build();
     private final CommandRegistry commandRegistry = new CommandRegistry(this);
+    private final PermissionRegistry permissionRegistry = new PermissionRegistry(this);
 
-    public CorePlugin(JDABuilder builder, IEventBus pluginBus) {
+
+    public CorePlugin(String id, JDABuilder builder, IEventBus pluginBus) {
+        super(id);
         this.JDA = builder.build();
         this.pluginBus = pluginBus;
-        startup();
+
+
+        getPluginBus().startup();
+
+        getPluginBus().addListener(10, StartupEvent.class, event -> {
+            switch (event.phase()) {
+                case STARTUP -> {
+                    startup();
+                }
+                case REGISTRATION -> {
+                    registration();
+                }
+                case FINISHED -> {
+                    finished();
+                }
+            }
+        });
+
+        getPluginBus().addListener(10, ShutdownEvent.class, event -> {
+            switch (event.phase()) {
+                case PRE -> {
+                    shutdownPre();
+                }
+                case POST -> {
+                    shutdownPost();
+                }
+            }
+        });
+
+        for (StartupEvent.Phase phase : StartupEvent.Phase.values())
+            getPluginBus().post(new StartupEvent(phase));
     }
 
     public JDA getJDA() {
@@ -58,6 +89,10 @@ public class CorePlugin extends Plugin {
         return commandRegistry;
     }
 
+    public PermissionRegistry getPermissionRegistry() {
+        return permissionRegistry;
+    }
+
     public String getCommandPrefix() {
         return COMMAND_PREFIX;
     }
@@ -66,40 +101,15 @@ public class CorePlugin extends Plugin {
         return DEFAULT_MESSAGE_SETTINGS;
     }
 
-    public void load() {
-    }
+    public abstract void registration();
 
-    public void startup() {
-        getPluginBus().startup();
+    public abstract void startup();
 
-        getPluginBus().addListener(10, StartupEvent.class, event -> {
-            switch (event.phase()) {
-                case STARTUP -> {
-                    load();
+    public abstract void finished();
 
-                    Actions.init();
-                }
-                case REGISTRATION -> {
-                }
-                case FINISHED -> {
-                    getPluginBus().post(new LoadEvent());
-                }
-            }
-        });
+    public abstract void shutdownPre();
 
-        getPluginBus().addListener(10, ShutdownEvent.class, event -> {
-            switch (event.phase()) {
-                case PRE -> {
-                }
-                case POST -> {
-                    getPluginBus().post(new SaveEvent());
-                }
-            }
-        });
-
-        for (StartupEvent.Phase phase : StartupEvent.Phase.values())
-            getPluginBus().post(new StartupEvent(phase));
-    }
+    public abstract void shutdownPost();
 
     public void shutdown() {
         for (ShutdownEvent.Phase phase : ShutdownEvent.Phase.values())

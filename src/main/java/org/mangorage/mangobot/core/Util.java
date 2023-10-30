@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.util;
+package org.mangorage.mangobot.core;
 
 
 import com.google.gson.Gson;

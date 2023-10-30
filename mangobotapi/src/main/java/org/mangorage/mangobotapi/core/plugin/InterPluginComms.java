@@ -22,5 +22,6 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
+// TODO: Work on making this...
 public class InterPluginComms {
 }

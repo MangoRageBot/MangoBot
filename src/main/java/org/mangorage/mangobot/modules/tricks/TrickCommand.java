@@ -99,7 +99,7 @@ public class TrickCommand implements IBasicCommand {
                     CONTENT.computeIfAbsent(data.guildID(), (k) -> new HashMap<>()).put(data.trickID(), data);
                 },
                 Data.class,
-                "data/tricks",
+                "plugins/%s/data/tricks".formatted(plugin.getId()),
                 DataHandler.Properties.create()
                         .setFileNamePredicate(e -> true)
         );

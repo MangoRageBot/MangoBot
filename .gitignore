@@ -130,3 +130,5 @@ secrets.properties
 /logs/
 /libs/
 /secrets.properties
+.env
+/plugins/

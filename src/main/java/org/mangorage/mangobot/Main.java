@@ -23,11 +23,13 @@
 package org.mangorage.mangobot;
 
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
+import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 
 public class Main {
     public static void main(String[] args) {
         VersionCommand.init();
+        Actions.init();
         PluginLoader.load();
     }
 }

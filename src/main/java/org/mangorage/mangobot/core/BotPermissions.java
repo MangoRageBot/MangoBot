@@ -24,19 +24,8 @@ package org.mangorage.mangobot.core;
 
 import net.dv8tion.jda.api.Permission;
 import org.mangorage.mangobotapi.core.registry.permissions.BasicPermission;
-import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 
 public class BotPermissions {
-
-    /**
-     * // Admin Role
-     * PERMISSIONS.register(BotPermissions.TRICK_ADMIN, UserPermission.of("1129067881842360381"));
-     * // Moderators Role
-     * PERMISSIONS.register(BotPermissions.TRICK_ADMIN, UserPermission.of("1129070272302022656"));
-     * // Mango Bot Tester Role
-     * PERMISSIONS.register(BotPermissions.TRICK_ADMIN, UserPermission.of("1150880910745538631"));
-     **/
-
     public static final BasicPermission PLAYING = BasicPermission.create("playing");
     public static final BasicPermission TRICK_ADMIN = BasicPermission.create("trickadmin");
     public static final BasicPermission PREFIX_ADMIN = BasicPermission.create("prefix");
@@ -46,14 +35,6 @@ public class BotPermissions {
 
 
     static {
-        PermissionRegistry.register(PLAYING);
-        PermissionRegistry.register(TRICK_ADMIN);
-        PermissionRegistry.register(PREFIX_ADMIN);
-        PermissionRegistry.register(MOD_MAIL);
-        PermissionRegistry.register(PERMISSION_ADMIN);
-        PermissionRegistry.register(CUSTOM_VC_ADMIN);
-
-
         PLAYING.addPermission(Permission.ADMINISTRATOR);
         TRICK_ADMIN.addPermission(Permission.ADMINISTRATOR);
         PREFIX_ADMIN.addPermission(Permission.ADMINISTRATOR);

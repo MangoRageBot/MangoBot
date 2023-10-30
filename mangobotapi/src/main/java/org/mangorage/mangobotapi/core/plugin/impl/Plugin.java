@@ -26,7 +26,8 @@ package org.mangorage.mangobotapi.core.plugin.impl;
     Use this to define your addon's entrypoint...
  */
 
-import org.mangorage.mangobotapi.core.plugin.PluginType;
+import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,7 +38,21 @@ import static java.lang.annotation.ElementType.TYPE;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(TYPE)
 public @interface Plugin {
+    enum Type {
+        CORE(CorePlugin.class),
+        ADDON(AddonPlugin.class);
+
+        private final Class<?> clazz;
+
+        Type(Class<?> clazz) {
+            this.clazz = clazz;
+        }
+
+        public Class<?> getClazz() {
+            return clazz;
+        }
+    }
     String id();
 
-    PluginType type() default PluginType.CORE;
+    Plugin.Type type() default Plugin.Type.CORE;
 }

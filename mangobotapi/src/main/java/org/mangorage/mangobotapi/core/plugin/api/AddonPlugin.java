@@ -20,9 +20,10 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin;
+package org.mangorage.mangobotapi.core.plugin.api;
 
-public enum PluginType {
-    CORE,
-    ADDON
+public abstract class AddonPlugin extends AbstractPlugin {
+    public AddonPlugin(String id) {
+        super(id);
+    }
 }

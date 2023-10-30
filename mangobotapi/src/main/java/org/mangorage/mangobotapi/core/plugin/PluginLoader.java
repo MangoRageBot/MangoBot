@@ -23,7 +23,9 @@
 package org.mangorage.mangobotapi.core.plugin;
 
 import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
+import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
+import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
+import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -43,12 +45,22 @@ public class PluginLoader {
         Set<Class<?>> PLUGINS_ADDON = new HashSet<>();
 
         reflections.getTypesAnnotatedWith(Plugin.class).forEach(cls -> {
-            if (!IPlugin.class.isAssignableFrom(cls)) return;
-
             var pluginAnnotaion = cls.getAnnotation(Plugin.class);
             switch (pluginAnnotaion.type()) {
-                case CORE -> PLUGINS_CORE.add(cls);
-                case ADDON -> PLUGINS_ADDON.add(cls);
+                case CORE -> {
+                    if (!CorePlugin.class.isAssignableFrom(cls)) {
+                        LogHelper.error("Failed to load plugin: " + pluginAnnotaion.id() + " (must extend CorePlugin)");
+                        return;
+                    }
+                    PLUGINS_CORE.add(cls);
+                }
+                case ADDON -> {
+                    if (!AddonPlugin.class.isAssignableFrom(cls)) {
+                        LogHelper.error("Failed to load plugin: " + pluginAnnotaion.id() + " (must extend AddonPlugin)");
+                        return;
+                    }
+                    PLUGINS_ADDON.add(cls);
+                }
             }
         });
 
@@ -59,14 +71,14 @@ public class PluginLoader {
     }
 
     public static void loadCore(Class<?> cls) {
-        loadPlugin(PluginType.CORE, cls);
+        loadPlugin(Plugin.Type.CORE, cls);
     }
 
     public static void loadAddon(Class<?> cls) {
-        loadPlugin(PluginType.ADDON, cls);
+        loadPlugin(Plugin.Type.ADDON, cls);
     }
 
-    public static void loadPlugin(PluginType type, Class<?> cls) {
+    public static void loadPlugin(Plugin.Type type, Class<?> cls) {
         var pluginAnnotaion = cls.getAnnotation(Plugin.class);
         var pluginId = pluginAnnotaion.id();
 
@@ -78,11 +90,11 @@ public class PluginLoader {
         LogHelper.info("Loading plugin: " + pluginId);
 
         try {
-            var plugin = (IPlugin) cls.getDeclaredConstructor().newInstance();
+            var plugin = (AbstractPlugin) cls.getDeclaredConstructor().newInstance();
             PluginManager.registerPlugin(type, plugin, pluginId);
         } catch (Exception e) {
             LogHelper.error("Failed to load plugin: " + pluginId);
-            e.printStackTrace();
+            LogHelper.error(e.getMessage());
         }
     }
 }

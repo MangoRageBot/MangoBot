@@ -20,16 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.util;
+package org.mangorage.mangobotapi.core.reflection;
+
+import java.util.Arrays;
+
+public class ReflectionUtils {
 
 
-import org.mangorage.basicutils.config.Config;
-import org.mangorage.basicutils.config.ConfigSetting;
-import org.mangorage.basicutils.config.ISetting;
+    @SuppressWarnings("all")
+    public static <T> T newInstance(Class<T> clazz) {
+        return newInstance(clazz, new Class<?>[]{}, new Object[]{});
+    }
 
-public class BotSettings {
-    private final static Config CONFIG = new Config("botresources/", ".env");
-    public static final ISetting<String> BOT_TOKEN = ConfigSetting.create(CONFIG, "BOT_TOKEN", "empty");
-    public static final ISetting<String> PASTE_TOKEN = ConfigSetting.create(CONFIG, "PASTE_TOKEN", "empty");
-    public static final ISetting<String> SERVER_TOKEN = ConfigSetting.create(CONFIG, "SERVER_TOKEN", "empty");
+    @SuppressWarnings("all")
+    public static <T> T newInstance(Class<T> clazz, Class<?>[] types, Object[] args) {
+        try {
+            if (types.length > 0)
+                return (T) clazz.getConstructor(types).newInstance(args);
+            return (T) clazz.getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create new instance of " + clazz.getName() + " with args " + Arrays.toString(args), e);
+        }
+    }
 }

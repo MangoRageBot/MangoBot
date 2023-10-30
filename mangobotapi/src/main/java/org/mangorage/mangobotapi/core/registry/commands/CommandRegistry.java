@@ -62,33 +62,6 @@ public class CommandRegistry {
             });
 
     private final CopyOnWriteArrayList<ICommand<?, ?>> COMMANDS = new CopyOnWriteArrayList<>();
-
-    public static void load() {
-        /**
-        ReflectionsUtils.REFLECTIONS.getTypesAnnotatedWith(AutoRegister.BasicCommand.class).forEach(cls -> {
-            var obj = ReflectionsUtils.createInstance(cls);
-            if (obj == null) throw new IllegalStateException("Unable to auto register command");
-
-            if (obj instanceof IBasicCommand command) {
-                addBasicCommand(command);
-            } else
-                throw new IllegalStateException("Unable to auto register command. Class must implement IBasicCommand");
-        });
-
-        ReflectionsUtils.REFLECTIONS.getTypesAnnotatedWith(AutoRegister.SlashCommand.class).forEach(cls -> {
-            var obj = ReflectionsUtils.createInstance(cls);
-            if (obj == null) throw new IllegalStateException("Unable to auto register command");
-
-            if (obj instanceof ISlashCommand command) {
-                addSlashCommand(command);
-            } else
-                throw new IllegalStateException("Unable to auto register command. Class must implement ISlashCommand");
-        });
-         **/
-
-        // TODO: FIX THIS
-    }
-
     public void addBasicCommand(IBasicCommand command) {
         BASIC_COMMAND_EVENT.addListener(command.getListener());
         COMMANDS.add(command);

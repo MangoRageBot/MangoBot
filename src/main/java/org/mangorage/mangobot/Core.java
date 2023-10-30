@@ -29,31 +29,45 @@ import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.mangorage.basicutils.config.Config;
+import org.mangorage.basicutils.config.ConfigSetting;
+import org.mangorage.basicutils.config.ISetting;
 import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobot.core.EventListener;
-import org.mangorage.mangobot.core.util.BotSettings;
+import org.mangorage.mangobot.core.Listeners;
 import org.mangorage.mangobot.modules.basic.commands.HelpCommand;
 import org.mangorage.mangobot.modules.basic.commands.InfoCommand;
+import org.mangorage.mangobot.modules.basic.commands.JoinCommand;
+import org.mangorage.mangobot.modules.basic.commands.LeaveCommand;
+import org.mangorage.mangobot.modules.basic.commands.PermissionCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingCommand;
+import org.mangorage.mangobot.modules.basic.commands.PrefixCommand;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
+import org.mangorage.mangobot.modules.developer.KickBotCommand;
+import org.mangorage.mangobot.modules.developer.RestartCommand;
 import org.mangorage.mangobot.modules.developer.SpeakCommand;
+import org.mangorage.mangobot.modules.developer.TerminateCommand;
+import org.mangorage.mangobot.modules.music.commands.PauseCommand;
+import org.mangorage.mangobot.modules.music.commands.PlayCommand;
+import org.mangorage.mangobot.modules.music.commands.PlayingCommand;
+import org.mangorage.mangobot.modules.music.commands.QueueCommand;
+import org.mangorage.mangobot.modules.music.commands.StopCommand;
+import org.mangorage.mangobot.modules.music.commands.VolumeCommand;
 import org.mangorage.mangobot.modules.requestpaste.PasteRequestModule;
 import org.mangorage.mangobot.modules.tricks.TrickCommand;
+import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
-import org.mangorage.mangobotapi.core.events.ShutdownEvent;
-import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
-import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 import org.mangorage.mboteventbus.EventBus;
 
 import java.util.EnumSet;
 
+import static org.mangorage.mangobot.core.BotPermissions.*;
+
 @Plugin(id = Core.ID)
-public class Core extends CorePlugin implements IPlugin {
+public class Core extends CorePlugin {
     public static final String ID = "mangobot";
-
-
     private static final EnumSet<GatewayIntent> intents = EnumSet.of(
             // Enables MessageReceivedEvent for guild (also known as servers)
             GatewayIntent.GUILD_MESSAGES,
@@ -83,22 +97,15 @@ public class Core extends CorePlugin implements IPlugin {
             CacheFlag.SCHEDULED_EVENTS,
             CacheFlag.FORUM_TAGS
     );
-    /*
-                                    Activity.of(
-                                        Activity.ActivityType.CUSTOM_STATUS,
-                                        """
-                                                    DM ME: !mail join to open a ticket!
 
-                                                    MangoBot is on version %s"
-                                                """.formatted(VersionCommand.getVersion()),
-                                        "https://www.discord.minecraftforge.net/"
-                                )
-     */
+    private final static Config CONFIG = new Config("plugins/%s/".formatted(Core.ID), ".env");
+    public static final ISetting<String> BOT_TOKEN = ConfigSetting.create(CONFIG, "BOT_TOKEN", "empty");
+    public static final ISetting<String> PASTE_TOKEN = ConfigSetting.create(CONFIG, "PASTE_TOKEN", "empty");
 
     public Core() {
         super(
-                JDABuilder.createDefault(BotSettings.BOT_TOKEN.get())
-                        .setToken(BotSettings.BOT_TOKEN.get())
+                Core.ID,
+                JDABuilder.createDefault(BOT_TOKEN.get())
                         .setEnabledIntents(intents)
                         .enableCache(cacheFlags)
                         .setActivity(
@@ -122,43 +129,70 @@ public class Core extends CorePlugin implements IPlugin {
     }
 
     @Override
-    public void load() {
-        var registry = getCommandRegistry();
-
-        registry.addBasicCommand(new VersionCommand(this));
-        registry.addBasicCommand(new HelpCommand(this));
-        registry.addBasicCommand(new InfoCommand(this));
-        registry.addBasicCommand(new PingCommand());
-        registry.addBasicCommand(new SpeakCommand(this));
-        registry.addBasicCommand(new TrickCommand(this));
-
-        PasteRequestModule.register(getPluginBus());
+    public void startup() {
+        BotPermissions.init();
+        getPluginBus().register(Listeners.class);
     }
 
-    public void onStartup(StartupEvent event) {
-        switch (event.phase()) {
-            case STARTUP -> {
-                BotPermissions.init();
-            }
-            case FINISHED -> {
-            }
-        }
-    }
 
-    @SuppressWarnings("all")
-    public void onShutdown(ShutdownEvent event) {
-        switch (event.phase()) {
-            case PRE -> {
-                getPluginBus().post(new SaveEvent());
-            }
-        }
-    }
-
-    /**
-     * @return
-     */
     @Override
-    public String getId() {
-        return Core.ID;
+    public void registration() {
+        var cmdRegistry = getCommandRegistry();
+        var permRegistry = getPermissionRegistry();
+
+        permRegistry.register(PLAYING);
+        permRegistry.register(TRICK_ADMIN);
+        permRegistry.register(PREFIX_ADMIN);
+        permRegistry.register(MOD_MAIL);
+        permRegistry.register(PERMISSION_ADMIN);
+        permRegistry.register(CUSTOM_VC_ADMIN);
+
+
+        // Basic Commands
+        cmdRegistry.addBasicCommand(new HelpCommand(this));
+        cmdRegistry.addBasicCommand(new InfoCommand(this));
+        cmdRegistry.addBasicCommand(new JoinCommand());
+        cmdRegistry.addBasicCommand(new LeaveCommand());
+        cmdRegistry.addBasicCommand(new PermissionCommand(this));
+        cmdRegistry.addBasicCommand(new PingCommand());
+        cmdRegistry.addBasicCommand(new PrefixCommand(this));
+        cmdRegistry.addBasicCommand(new VersionCommand(this));
+
+        // Developer Commands
+        cmdRegistry.addBasicCommand(new KickBotCommand(this));
+        cmdRegistry.addBasicCommand(new RestartCommand());
+        cmdRegistry.addBasicCommand(new SpeakCommand(this));
+        cmdRegistry.addBasicCommand(new TerminateCommand());
+
+        // Music Commands
+        cmdRegistry.addBasicCommand(new PlayCommand());
+        cmdRegistry.addBasicCommand(new PauseCommand());
+        cmdRegistry.addBasicCommand(new PlayingCommand());
+        cmdRegistry.addBasicCommand(new QueueCommand());
+        cmdRegistry.addBasicCommand(new StopCommand());
+        cmdRegistry.addBasicCommand(new VolumeCommand());
+
+        // Tricks
+        cmdRegistry.addBasicCommand(new TrickCommand(this));
+
+        permRegistry.save();
+        PasteRequestModule.register(getPluginBus());
+
+    }
+
+    @Override
+    public void finished() {
+        getPluginBus().post(new LoadEvent());
+    }
+
+    @Override
+    public void shutdownPre() {
+        getPluginBus().post(new SaveEvent());
+    }
+
+
+    @Override
+    public void shutdownPost() {
+
     }
 }

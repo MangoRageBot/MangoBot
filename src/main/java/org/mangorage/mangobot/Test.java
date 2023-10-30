@@ -23,20 +23,7 @@
 package org.mangorage.mangobot;
 
 
-import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.registry.permissions.BasicPermission;
-import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
-
-@BasicPermission.AutoRegister
 public class Test {
-
-    @BasicPermission.Register
-    public static final BasicPermission PERMISSION = BasicPermission.create("testing", false);
-
     public static void main(String[] args) {
-        PermissionRegistry.load();
-
-
-        LogHelper.info(PermissionRegistry.getPermission("testing").getId() + " ID of Permission");
     }
 }

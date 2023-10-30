@@ -46,9 +46,6 @@ public class PrefixCommand implements IBasicCommand {
 
 
 
-
-
-
     @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {

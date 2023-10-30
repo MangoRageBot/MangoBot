@@ -22,8 +22,8 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
-import org.mangorage.mangobotapi.core.plugin.api.Plugin;
-import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
+import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
+import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,11 +35,11 @@ public class PluginManager {
         return PLUGIN_CONTAINERS.values().stream().toList();
     }
 
-    public static <T extends Plugin> T getPlugin(String id, Class<T> type) {
+    public static <T extends AbstractPlugin> T getPlugin(String id, Class<T> type) {
         return type.cast(PLUGIN_CONTAINERS.get(id).plugin());
     }
 
-    public static IPlugin getPlugin(String id) {
+    public static AbstractPlugin getPlugin(String id) {
         return PLUGIN_CONTAINERS.get(id).plugin();
     }
 
@@ -47,7 +47,7 @@ public class PluginManager {
         return PLUGIN_CONTAINERS.containsKey(id);
     }
 
-    protected static void registerPlugin(PluginType type, IPlugin plugin, String id) {
+    protected static void registerPlugin(Plugin.Type type, AbstractPlugin plugin, String id) {
         PLUGIN_CONTAINERS.put(id, new PluginContainer(type, plugin, id));
     }
 }

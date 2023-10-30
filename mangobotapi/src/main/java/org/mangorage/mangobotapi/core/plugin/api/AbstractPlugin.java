@@ -20,34 +20,16 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.reflections;
+package org.mangorage.mangobotapi.core.plugin.api;
 
-import org.jetbrains.annotations.Nullable;
-import org.reflections.Reflections;
-import org.reflections.util.ConfigurationBuilder;
+public abstract class AbstractPlugin {
+    private final String id;
 
-import java.lang.reflect.InvocationTargetException;
+    public AbstractPlugin(String id) {
+        this.id = id;
+    }
 
-public class ReflectionsUtils {
-    public static final Reflections REFLECTIONS = new Reflections(
-            ConfigurationBuilder
-                    .build()
-                    .forPackages(
-                            "org",
-                            "addon",
-                            "com",
-                            "net"
-                    )
-    );
-
-    public static @Nullable Object createInstance(Class<?> clazz) {
-
-        try {
-            return clazz.getConstructor().newInstance();
-        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
-                 IllegalAccessException ignored) {
-        }
-
-        return null;
+    public String getId() {
+        return id;
     }
 }

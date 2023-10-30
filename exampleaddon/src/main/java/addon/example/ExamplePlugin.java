@@ -22,22 +22,16 @@
 
 package addon.example;
 
-import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.plugin.impl.IPlugin;
+import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
 import static addon.example.ExamplePlugin.ID;
 
-@Plugin(id = ID)
-public class ExamplePlugin implements IPlugin {
+@Plugin(id = ID, type = Plugin.Type.ADDON)
+public class ExamplePlugin extends AddonPlugin {
     public static final String ID = "exampleaddon";
 
     public ExamplePlugin() {
-        LogHelper.info("Loading Example plugin stuff");
-    }
-
-    @Override
-    public String getId() {
-        return ID;
+        super(ExamplePlugin.ID);
     }
 }
