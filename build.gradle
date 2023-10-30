@@ -21,7 +21,7 @@ buildscript {
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
         classpath 'com.google.code.gson:gson:2.10.1'
-        classpath 'io.github.realmangorage:InstallerAPI:1.0.2'
+        classpath 'io.github.realmangorage:InstallerAPI:1.0.4'
         classpath 'com.mattmalec:Pterodactyl4J:2.BETA_140'
     }
 }
@@ -50,7 +50,7 @@ java {
 }
 
 configurations {
-    api.extendsFrom internalimplementation
+    api.extendsFrom internal
 }
 
 
@@ -82,7 +82,7 @@ sourceSets {
 }
 
 def libs = [
-        JDA             : 'net.dv8tion:JDA:5.0.0-beta.15',
+        JDA: 'net.dv8tion:JDA:5.0.0-beta.17',
         LAVA_PLAYER     : 'dev.arbjerg:lavaplayer:2.0.2',
         GSON            : 'com.google.code.gson:gson:2.10.1',
         LOG4J_CORE      : 'org.apache.logging.log4j:log4j-core:2.20.0',
@@ -110,15 +110,15 @@ dependencies {
     implementation(libs.REFLECTIONS)
 
     // Core Libs
-    implementation project(path: ':mangobotapi')
-    implementation project(path: ':mboteventbus')
-    implementation project(path: ':mangoutils')
+    compileOnly project(path: ':mangobotapi')
+    compileOnly project(path: ':mboteventbus')
+    compileOnly project(path: ':mangoutils')
 
     testImplementation project(path: ':mangoutils')
 
-    internalimplementation project(path: ':mangobotapi')
-    internalimplementation project(path: ':mboteventbus')
-    internalimplementation project(path: ':mangoutils')
+    internal project(path: ':mangobotapi')
+    internal project(path: ':mboteventbus')
+    internal project(path: ':mangoutils')
 }
 
 tasks.register('runBot', JavaExec) {
@@ -144,10 +144,19 @@ tasks.register('runDatagen') {
     description "Runs the data generator"
 
     doLast {
-        List<String> _args = libs.values().toList();
         String directory = "%s/src/main/resources/installerdata".formatted(getProjectDir())
 
-        Datagen.generateDependenciesJson(directory, _args)
+        Datagen.generateDependenciesJson(
+                "%s/src/main/resources/installerdata".formatted(getProjectDir()),
+                configurations.implementation.getDependencies().stream().map {
+                    "%s:%s:%s".formatted(
+                            it.getGroup(),
+                            it.getName(),
+                            it.getVersion()
+                    )
+                }.toList() as List<String>
+        )
+
         Datagen.generateIvySettingsXml(directory, getRepositories().stream().map {
             it.getUrl().toString()
         }.toList() as List<String>)
@@ -182,11 +191,11 @@ tasks.register('publishAndRestartServer') {
 
 jar {
     dependsOn(runDatagen)
-    dependsOn configurations.internalimplementation
+    dependsOn configurations.internal
 
     from {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        configurations.internalimplementation.collect {
+        configurations.internal.collect {
             zipTree(it)
         }
     } {
