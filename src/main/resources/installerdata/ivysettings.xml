@@ -1,12 +1,36 @@
+<!--
+  ~ Copyright (c) 2023. MangoRage
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  ~ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  ~ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  ~ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+  ~ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+  ~ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+  ~ OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
 <ivysettings>
 	<settings defaultResolver="chain-1"/>
 	<resolvers>
 		<ibiblio name="central" m2compatible="true"/>
 		<ibiblio name="repo-0" m2compatible="true" root="https://repo.maven.apache.org/maven2/"/>
-		<ibiblio name="repo-1" m2compatible="true" root="https://m2.dv8tion.net/releases"/>
-		<ibiblio name="repo-2" m2compatible="true" root="https://jitpack.io"/>
-		<ibiblio name="repo-3" m2compatible="true" root="https://repo.mattmalec.com/repository/releases"/>
-		<ibiblio name="repo-4" m2compatible="true" root="https://s01.oss.sonatype.org/content/repositories/releases/"/>
+		<ibiblio name="repo-1" m2compatible="true" root="https://jcenter.bintray.com/"/>
+		<ibiblio name="repo-2" m2compatible="true" root="https://m2.dv8tion.net/releases"/>
+		<ibiblio name="repo-3" m2compatible="true" root="https://jitpack.io"/>
+		<ibiblio name="repo-4" m2compatible="true" root="https://repo.mattmalec.com/repository/releases"/>
+		<ibiblio name="repo-5" m2compatible="true" root="https://s01.oss.sonatype.org/content/repositories/releases/"/>
+		<ibiblio name="repo-6" m2compatible="true" root="https://repo.spring.io/plugins-release/"/>
 		<filesystem name="custom" checkmodified="true">
 			<ivy pattern="${custom.base.dir}/ivy/[artifact]-[revision].ivy"/>
 			<artifact pattern="${custom.base.dir}/[artifact]-[revision].[ext]"/>
@@ -18,6 +42,8 @@
 			<resolver ref="repo-2"/>
 			<resolver ref="repo-3"/>
 			<resolver ref="repo-4"/>
+			<resolver ref="repo-5"/>
+			<resolver ref="repo-6"/>
 		</chain>
 	</resolvers>
 </ivysettings>

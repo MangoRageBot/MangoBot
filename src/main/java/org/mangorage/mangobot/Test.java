@@ -24,6 +24,16 @@ package org.mangorage.mangobot;
 
 
 public class Test {
+    public static int sumNumbers(String str) {
+        String result = str.replaceAll("[^0-9]", " ");
+        int count = 0;
+        for (String string : result.split(" "))
+            if (string.length() != 0)
+                count = count + Integer.parseInt(string);
+
+        return count;
+    }
     public static void main(String[] args) {
+        System.out.println(sumNumbers("1x1"));
     }
 }

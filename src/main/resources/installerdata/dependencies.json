@@ -34,6 +34,26 @@
       "groupId": "org.reflections",
       "artifactId": "reflections",
       "version": "0.10.2"
+    },
+    {
+      "groupId": "org.luaj",
+      "artifactId": "luaj-jse",
+      "version": "3.0.1"
+    },
+    {
+      "groupId": "org.mangorage",
+      "artifactId": "mangobotapi",
+      "version": "1.0.0"
+    },
+    {
+      "groupId": "org.mangorage",
+      "artifactId": "mboteventbus",
+      "version": "1.0.0"
+    },
+    {
+      "groupId": "org.mangorage.mangobot",
+      "artifactId": "mangoutils",
+      "version": "1.0.0-c146"
     }
   ]
 }
