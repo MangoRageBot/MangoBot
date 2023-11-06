@@ -37,22 +37,25 @@ public class TrickScriptable {
     }
 
     public void reply(String input) {
-        message.reply(input).queue();
+        message.reply(input).mentionRepliedUser(false).queue();
     }
 
 
     public static void execute(String script, Message message, String[] args) {
-        Globals globals = JsePlatform.standardGlobals();
-        LuaValue myClassInstance = CoerceJavaToLua.coerce(new TrickScriptable(message));
-        globals.set("JDA", myClassInstance);
-        LuaValue code = globals.load(script);
-        code.call();
+        try {
+            Globals globals = JsePlatform.standardGlobals();
+            LuaValue myClassInstance = CoerceJavaToLua.coerce(new TrickScriptable(message));
+            globals.set("JDA", myClassInstance);
+            LuaValue code = globals.load(script);
+            code.call();
 
-        LuaValue method = globals.get("execute");
-        LuaTable arr = new LuaTable();
-        for (int i = 0; i < args.length; i++) {
-            arr.set(i + 1, LuaValue.valueOf(args[i]));
+            LuaValue method = globals.get("execute");
+            LuaTable arr = new LuaTable();
+            for (int i = 0; i < args.length; i++)
+                arr.set(i + 1, LuaValue.valueOf(args[i]));
+            method.call(arr);
+        } catch (Exception e) {
+            message.reply(e.getMessage()).mentionRepliedUser(false).queue();
         }
-        method.call(arr);
     }
 }
