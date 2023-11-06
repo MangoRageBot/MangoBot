@@ -56,6 +56,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
     maven {
         url 'https://m2.dv8tion.net/releases'
     }
@@ -67,6 +68,9 @@ repositories {
     }
     maven {
         url = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+    }
+    maven {
+        url = 'https://repo.spring.io/plugins-release/'
     }
 }
 
@@ -89,7 +93,8 @@ def libs = [
         LOG4J_SLF4J_IMPL: 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0',
         GITHUB_API      : 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5',
         SLF4J_SIMPLE    : 'org.slf4j:slf4j-simple:2.0.9',
-        REFLECTIONS     : 'org.reflections:reflections:0.10.2'
+        REFLECTIONS: 'org.reflections:reflections:0.10.2',
+        LUA_JAVA   : 'org.luaj:luaj-jse:3.0.1'
 ]
 
 ext.globalLibs = libs
@@ -108,11 +113,12 @@ dependencies {
     implementation(libs.GITHUB_API)
     implementation(libs.SLF4J_SIMPLE)
     implementation(libs.REFLECTIONS)
+    implementation(libs.LUA_JAVA)
 
     // Core Libs
-    compileOnly project(path: ':mangobotapi')
-    compileOnly project(path: ':mboteventbus')
-    compileOnly project(path: ':mangoutils')
+    implementation project(path: ':mangobotapi')
+    implementation project(path: ':mboteventbus')
+    implementation project(path: ':mangoutils')
 
     testImplementation project(path: ':mangoutils')
 

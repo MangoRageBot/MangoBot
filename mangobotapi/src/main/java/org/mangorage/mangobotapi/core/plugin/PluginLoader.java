@@ -95,6 +95,7 @@ public class PluginLoader {
         } catch (Exception e) {
             LogHelper.error("Failed to load plugin: " + pluginId);
             LogHelper.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -20,24 +20,39 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core;
+package org.mangorage.mangobot.modules.tricks;
 
-import org.mangorage.mangobotapi.core.events.discord.DButtonInteractionEvent;
-import org.mangorage.mangobotapi.core.modules.buttonactions.ButtonActions;
-import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
-import org.mangorage.mboteventbus.annotations.SubscribeEvent;
+import net.dv8tion.jda.api.entities.Message;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaTable;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.CoerceJavaToLua;
+import org.luaj.vm2.lib.jse.JsePlatform;
 
-public class Listeners {
-    private final CorePlugin plugin;
+public class TrickScriptable {
+    private final Message message;
 
-    public Listeners(CorePlugin plugin) {
-        this.plugin = plugin;
+    public TrickScriptable(Message message) {
+        this.message = message;
     }
 
-    @SubscribeEvent
-    public void onButtonInteraction(DButtonInteractionEvent event) {
-        var dEvent = event.get();
-        ButtonActions.post(dEvent.getInteraction());
+    public void reply(String input) {
+        message.reply(input).queue();
     }
 
+
+    public static void execute(String script, Message message, String[] args) {
+        Globals globals = JsePlatform.standardGlobals();
+        LuaValue myClassInstance = CoerceJavaToLua.coerce(new TrickScriptable(message));
+        globals.set("JDA", myClassInstance);
+        LuaValue code = globals.load(script);
+        code.call();
+
+        LuaValue method = globals.get("execute");
+        LuaTable arr = new LuaTable();
+        for (int i = 0; i < args.length; i++) {
+            arr.set(i + 1, LuaValue.valueOf(args[i]));
+        }
+        method.call(arr);
+    }
 }

@@ -131,7 +131,7 @@ public class Core extends CorePlugin {
     @Override
     public void startup() {
         BotPermissions.init();
-        getPluginBus().register(Listeners.class);
+        getPluginBus().register(new Listeners(this));
     }
 
 
@@ -174,6 +174,8 @@ public class Core extends CorePlugin {
 
         // Tricks
         cmdRegistry.addBasicCommand(new TrickCommand(this));
+
+        // Test
 
         permRegistry.save();
         PasteRequestModule.register(getPluginBus());

@@ -43,11 +43,7 @@ import org.mangorage.mangobotapi.core.events.discord.DButtonInteractionEvent;
 import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.registry.GuildCache;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
-import org.mangorage.mangobotapi.core.util.ScriptParser;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -273,8 +269,8 @@ public class TrickCommand implements IBasicCommand {
                 dMessage.withDeletion(mData, message.getAuthor()).queue();
             }
             case CODE -> {
-                // executeScript(message, args.getFrom(2).split(" "), response);
-                dMessage.apply(message.reply("Code Tricks are disabled!")).queue();
+                executeScript(message, args.getFrom(2).split(" "), response);
+                // TODO: Readd Scripts!
             }
             case ALIAS -> {
                 String defer = data.content();
@@ -298,7 +294,6 @@ public class TrickCommand implements IBasicCommand {
     }
 
     private void executeScript(Message message, String[] args, String script) {
-        LogHelper.info(script);
         String[] strArr = script.split("\\n");
 
         if (strArr[0].startsWith("```")) {
@@ -311,17 +306,7 @@ public class TrickCommand implements IBasicCommand {
             scriptHandled.add(strArr[i]);
         }
 
-        LogHelper.info("cool -> %s".formatted(scriptHandled.toString()));
-
-        ScriptEngine engine = ScriptParser.get();
-
-        try {
-            engine.eval(scriptHandled.toString());
-            Invocable inv = (Invocable) engine;
-            inv.invokeFunction("main", message, args);
-        } catch (ScriptException | NoSuchMethodException e) {
-            message.reply(e.getMessage()).setSuppressedNotifications(true).queue();
-        }
+        TrickScriptable.execute(scriptHandled.toString(), message, args);
     }
 
     @Override
