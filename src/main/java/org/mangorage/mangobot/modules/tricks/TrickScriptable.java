@@ -47,25 +47,20 @@ public class TrickScriptable {
     public static Globals sandBoxedGlobals(Message message) {
         Globals server_globals = new Globals();
 
-        // Load only the essential libraries you want to make available in the sandbox
         server_globals.load(new JseBaseLib());
         server_globals.load(new PackageLib());
         server_globals.load(new JseMathLib());
 
-        // Create a new environment for the sandbox
         LuaValue sandbox = new LuaTable();
-        //sandbox.set("print", server_globals.get("print")); // Allow the 'print' function
-
-        // Create the sandboxed environment with the custom functions
         sandbox.set("JDALib", CoerceJavaToLua.coerce(new JDALib(message.getJDA())));
         sandbox.set("JDAMessage", CoerceJavaToLua.coerce(new JDAMessageLib(message)));
-        // Set any other custom variables or functions that your Lua script expects in the sandbox
 
-        // Load the Lua standard libraries into the sandbox
+
         LoadState.install(server_globals);
         LuaC.install(server_globals);
 
-        // Remove dangerous libraries
+
+        // Remove dangerous libraries...
         server_globals.set("os", LuaValue.NIL);
         server_globals.set("io", LuaValue.NIL);
         server_globals.set("luajava", LuaValue.NIL);
@@ -100,7 +95,7 @@ public class TrickScriptable {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                message.reply(e.getMessage() + " -> " + e.getLocalizedMessage()).mentionRepliedUser(false).queue();
+                message.reply(e.getMessage()).mentionRepliedUser(false).queue();
             }
         };
 
