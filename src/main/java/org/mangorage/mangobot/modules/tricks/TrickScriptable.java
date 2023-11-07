@@ -32,6 +32,8 @@ import org.luaj.vm2.lib.PackageLib;
 import org.luaj.vm2.lib.jse.CoerceJavaToLua;
 import org.luaj.vm2.lib.jse.JseBaseLib;
 import org.luaj.vm2.lib.jse.JseMathLib;
+import org.mangorage.mangobot.modules.tricks.lua.JDALib;
+import org.mangorage.mangobot.modules.tricks.lua.JDAMessageLib;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -41,15 +43,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TrickScriptable {
-    private final Message message;
-
-    public TrickScriptable(Message message) {
-        this.message = message;
-    }
-
-    public void reply(String input) {
-        message.reply(input).mentionRepliedUser(false).queue();
-    }
 
     public static Globals sandBoxedGlobals(Message message) {
         Globals server_globals = new Globals();
@@ -64,8 +57,8 @@ public class TrickScriptable {
         sandbox.set("print", server_globals.get("print")); // Allow the 'print' function
 
         // Create the sandboxed environment with the custom functions
-        LuaValue JDA = CoerceJavaToLua.coerce(new TrickScriptable(message));
-        sandbox.set("JDA", JDA);
+        sandbox.set("JDALib", CoerceJavaToLua.coerce(new JDALib(message.getJDA())));
+        sandbox.set("JDAMessage", CoerceJavaToLua.coerce(new JDAMessageLib(message)));
         // Set any other custom variables or functions that your Lua script expects in the sandbox
 
         // Load the Lua standard libraries into the sandbox
