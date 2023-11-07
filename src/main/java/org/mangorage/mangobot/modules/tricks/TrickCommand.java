@@ -152,7 +152,7 @@ public class TrickCommand implements IBasicCommand {
                 oldData = CONTENT.get(guildID).remove(id);
             } else {
                 dMessage.apply(message.reply("Trick '%s' does not exist!".formatted(id))).queue();
-                return CommandResult.FAIL;
+                return CommandResult.PASS;
             }
 
             boolean hasSupressArg = args.hasArg("-supress");
@@ -191,8 +191,8 @@ public class TrickCommand implements IBasicCommand {
                 return executeTrick(data, channel, message, args);
             } else {
                 dMessage.apply(message.reply("Trick '%s' does not exist!".formatted(id))).queue();
+                return CommandResult.PASS;
             }
-            return CommandResult.PASS;
         } else if (type.equals("-l") || type.equals("-list")) {
             MessageChannelUnion channel = message.getChannel();
             if (CONTENT.containsKey(guildID) && !CONTENT.get(guildID).isEmpty()) {

@@ -54,7 +54,7 @@ public class TrickScriptable {
 
         // Create a new environment for the sandbox
         LuaValue sandbox = new LuaTable();
-        sandbox.set("print", server_globals.get("print")); // Allow the 'print' function
+        //sandbox.set("print", server_globals.get("print")); // Allow the 'print' function
 
         // Create the sandboxed environment with the custom functions
         sandbox.set("JDALib", CoerceJavaToLua.coerce(new JDALib(message.getJDA())));
@@ -91,14 +91,16 @@ public class TrickScriptable {
                 for (int i = 0; i < args.length; i++)
                     arr.set(i + 1, LuaValue.valueOf(args[i]));
 
-                method.call(arr);
+                if (!method.isnil())
+                    method.call(arr);
                 if (TASK.get() != null) {
                     var a = TASK.get();
                     if (a.isDone() || a.isCancelled()) return;
                     a.cancel(true);
                 }
             } catch (Exception e) {
-                message.reply(e.getMessage()).mentionRepliedUser(false).queue();
+                e.printStackTrace();
+                message.reply(e.getMessage() + " -> " + e.getLocalizedMessage()).mentionRepliedUser(false).queue();
             }
         };
 

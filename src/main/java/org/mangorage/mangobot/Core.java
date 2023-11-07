@@ -45,6 +45,7 @@ import org.mangorage.mangobot.modules.basic.commands.PrefixCommand;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobot.modules.developer.KickBotCommand;
 import org.mangorage.mangobot.modules.developer.RestartCommand;
+import org.mangorage.mangobot.modules.developer.RunCode;
 import org.mangorage.mangobot.modules.developer.SpeakCommand;
 import org.mangorage.mangobot.modules.developer.TerminateCommand;
 import org.mangorage.mangobot.modules.music.commands.PauseCommand;
@@ -176,6 +177,7 @@ public class Core extends CorePlugin {
         cmdRegistry.addBasicCommand(new TrickCommand(this));
 
         // Test
+        cmdRegistry.addBasicCommand(new RunCode());
 
         permRegistry.save();
         PasteRequestModule.register(getPluginBus());
