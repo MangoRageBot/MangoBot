@@ -41,9 +41,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class TrickScriptable {
-
     public static Globals sandBoxedGlobals(Message message) {
         Globals server_globals = new Globals();
 
@@ -59,12 +59,15 @@ public class TrickScriptable {
         LoadState.install(server_globals);
         LuaC.install(server_globals);
 
+        var array = new String[]{"os", "io", "luajava", "debug", "load", "loadfile"};
 
-        // Remove dangerous libraries...
-        server_globals.set("os", LuaValue.NIL);
-        server_globals.set("io", LuaValue.NIL);
-        server_globals.set("luajava", LuaValue.NIL);
-        server_globals.set("debug", LuaValue.NIL);
+        Consumer<String> NILLIFY = a -> {
+            server_globals.set(a, LuaValue.NIL);
+        };
+
+        for (String library : array)
+            NILLIFY.accept(library);
+
         server_globals.set("api", sandbox);
 
         return server_globals;
@@ -74,11 +77,14 @@ public class TrickScriptable {
         // Create a ScheduledExecutorService
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(2);
         AtomicReference<ScheduledFuture<?>> TASK = new AtomicReference<>();
+
         // Define the task you want to execute
+
+        Globals globals = sandBoxedGlobals(message);
+        LuaValue code = globals.load(script);
+
         Runnable task = () -> {
             try {
-                Globals globals = sandBoxedGlobals(message);
-                LuaValue code = globals.load(script);
                 code.call();
 
                 LuaValue method = globals.get("execute");
@@ -86,31 +92,32 @@ public class TrickScriptable {
                 for (int i = 0; i < args.length; i++)
                     arr.set(i + 1, LuaValue.valueOf(args[i]));
 
-                if (!method.isnil())
+                if (!method.isnil()) {
                     method.call(arr);
+                }
                 if (TASK.get() != null) {
                     var a = TASK.get();
                     if (a.isDone() || a.isCancelled()) return;
                     a.cancel(true);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
                 message.reply(e.getMessage()).mentionRepliedUser(false).queue();
             }
         };
 
         // Submit the task to the executor
-        Future<?> future = executor.submit(task);
-
-        // Set a timeout for the task (in this example, 5 seconds)
-        int timeoutInSeconds = 5;
+        Future<?> future = executor.submit(() -> {
+            long time = System.currentTimeMillis();
+            task.run();
+            System.out.println("Script Took: %s ms".formatted(System.currentTimeMillis() - time));
+        });
 
         // Schedule a task to cancel the original task if it runs longer than the timeout
         TASK.set(executor.schedule(() -> {
             if (future.isDone() || future.isCancelled()) return;
             message.reply("Trick took to long to run. Stopping Trick...").mentionRepliedUser(false).queue();
             future.cancel(true);
-        }, timeoutInSeconds, TimeUnit.SECONDS));
+        }, 25, TimeUnit.MILLISECONDS));
 
         // Shutdown the executor
         executor.shutdown();

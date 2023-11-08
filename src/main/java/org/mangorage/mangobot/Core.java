@@ -179,6 +179,7 @@ public class Core extends CorePlugin {
         // Test
         cmdRegistry.addBasicCommand(new RunCode());
 
+
         permRegistry.save();
         PasteRequestModule.register(getPluginBus());
 
