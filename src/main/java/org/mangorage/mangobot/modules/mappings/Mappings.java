@@ -3,6 +3,9 @@
  *  You are allowed to use this code unconditionally just like AssistRemapper. If you notice a bug please report to AssistRemapper as well
  */
 //package com.asbestosstar.assistremapper;
+
+//Important Info  https://pagure.io/FeatureCreep/MappingExFormat
+//To Edit Mappings https://pagure.io/FeatureCreep/enigma-mappingex
 package org.mangorage.mangobot.modules.mappings;
 
 import java.io.BufferedReader;
