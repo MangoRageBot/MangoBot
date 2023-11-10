@@ -22,13 +22,15 @@
 
 package org.mangorage.mangobot;
 
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import static org.mangorage.mangobot.core.BotPermissions.CUSTOM_VC_ADMIN;
+import static org.mangorage.mangobot.core.BotPermissions.MOD_MAIL;
+import static org.mangorage.mangobot.core.BotPermissions.PERMISSION_ADMIN;
+import static org.mangorage.mangobot.core.BotPermissions.PLAYING;
+import static org.mangorage.mangobot.core.BotPermissions.PREFIX_ADMIN;
+import static org.mangorage.mangobot.core.BotPermissions.TRICK_ADMIN;
+
+import java.util.EnumSet;
+
 import org.mangorage.basicutils.config.Config;
 import org.mangorage.basicutils.config.ConfigSetting;
 import org.mangorage.basicutils.config.ISetting;
@@ -48,6 +50,16 @@ import org.mangorage.mangobot.modules.developer.RestartCommand;
 import org.mangorage.mangobot.modules.developer.RunCode;
 import org.mangorage.mangobot.modules.developer.SpeakCommand;
 import org.mangorage.mangobot.modules.developer.TerminateCommand;
+import org.mangorage.mangobot.modules.mappings.ClassMapCommand;
+import org.mangorage.mangobot.modules.mappings.DefMapCommand;
+import org.mangorage.mangobot.modules.mappings.FCICommand;
+import org.mangorage.mangobot.modules.mappings.MCPCommand;
+import org.mangorage.mangobot.modules.mappings.MappingsMainCommand;
+import org.mangorage.mangobot.modules.mappings.MappingsManager;
+import org.mangorage.mangobot.modules.mappings.VarMapCommand;
+import org.mangorage.mangobot.modules.mappings.YCCommand;
+import org.mangorage.mangobot.modules.mappings.YFCommand;
+import org.mangorage.mangobot.modules.mappings.YMCommand;
 import org.mangorage.mangobot.modules.music.commands.PauseCommand;
 import org.mangorage.mangobot.modules.music.commands.PlayCommand;
 import org.mangorage.mangobot.modules.music.commands.PlayingCommand;
@@ -62,9 +74,13 @@ import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 import org.mangorage.mboteventbus.EventBus;
 
-import java.util.EnumSet;
-
-import static org.mangorage.mangobot.core.BotPermissions.*;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 @Plugin(id = Core.ID)
 public class Core extends CorePlugin {
@@ -176,6 +192,20 @@ public class Core extends CorePlugin {
         // Tricks
         cmdRegistry.addBasicCommand(new TrickCommand(this));
 
+        // Mappings
+        MappingsManager latest_mappings_manager = MappingsManager.new_();//Soon we need to do for multiple versions but not ATM
+        latest_mappings_manager.init(CONFIG);
+        cmdRegistry.addBasicCommand(new MappingsMainCommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new ClassMapCommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new DefMapCommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new VarMapCommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new MCPCommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new FCICommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new YCCommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new YMCommand(latest_mappings_manager,this));
+        cmdRegistry.addBasicCommand(new YFCommand(latest_mappings_manager,this));
+
+        
         // Test
         cmdRegistry.addBasicCommand(new RunCode());
 
