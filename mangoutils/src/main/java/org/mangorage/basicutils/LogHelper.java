@@ -58,6 +58,7 @@ public final class LogHelper {
                         throw new RuntimeException("Unable to create new file!");
                     }
                 } else {
+                	file.getParentFile().mkdirs();
                     if (!file.createNewFile())
                         throw new RuntimeException("Unable to create new file!");
                 }
