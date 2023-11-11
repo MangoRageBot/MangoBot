@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2023. MangoRage
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 /*FeatureCreep Moderation Bot Mapping Module
  * Ported to MangoBot from Ruby by FeatureCreep Team
  *  https://pagure.io/FeatureCreep/featurecreep-moderation-bot
@@ -5,6 +27,9 @@
  */
 
 package org.mangorage.mangobot.modules.mappings;
+
+import net.dv8tion.jda.api.entities.Message;
+import org.mangorage.basicutils.config.ISetting;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,10 +54,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.mangorage.basicutils.config.Config;
-
-import net.dv8tion.jda.api.entities.Message;
 
 public class MappingsManager {
 
@@ -118,14 +139,14 @@ public class MappingsManager {
     return latest;
   }
 
-  private String checkForUpdates(Config conf) {
+  private String checkForUpdates(ISetting<String> conf) {
     // TODO Auto-generated method stub
     System.out.println("Checking for Mapping Updates");
     try {
       URL version_url = new URL("https://pagure.io/FeatureCreep/featurecreep-moderation-bot/raw/main/f/mappings/latest");
       Path version_path = Paths.get(version_url.toURI());
       String version = new String(Files.readAllBytes(version_path), StandardCharsets.UTF_8);
-      if (version.compareTo(conf.get("mapping-version")) > 0) {
+      if (version.compareTo(conf.get()) > 0) {
         System.out.println("Mapping update found. Downloading");
         return get_mappings();
       }
@@ -135,17 +156,17 @@ public class MappingsManager {
       e.printStackTrace();
     }
 
-    return conf.get("mapping-version");
+    return conf.get();
   }
 
-  public void init(Config conf) {
+  public void init(ISetting<String> conf) {
 
     String latest;
-    if (conf.get("mapping_version") == null) {
+    if (conf.get().equals("empty")) {
       latest = get_mappings().split("-")[0];
-      conf.set("mapping_version", latest);
+      conf.set(latest);
     } else {
-      String current = conf.get("mapping_version").split("-")[0]; //after - is FeatureCreep Version
+      String current = conf.get().split("-")[0]; //after - is FeatureCreep Version
       latest = checkForUpdates(conf);
     }
 

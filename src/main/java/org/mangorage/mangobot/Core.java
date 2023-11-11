@@ -22,15 +22,13 @@
 
 package org.mangorage.mangobot;
 
-import static org.mangorage.mangobot.core.BotPermissions.CUSTOM_VC_ADMIN;
-import static org.mangorage.mangobot.core.BotPermissions.MOD_MAIL;
-import static org.mangorage.mangobot.core.BotPermissions.PERMISSION_ADMIN;
-import static org.mangorage.mangobot.core.BotPermissions.PLAYING;
-import static org.mangorage.mangobot.core.BotPermissions.PREFIX_ADMIN;
-import static org.mangorage.mangobot.core.BotPermissions.TRICK_ADMIN;
-
-import java.util.EnumSet;
-
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.mangorage.basicutils.config.Config;
 import org.mangorage.basicutils.config.ConfigSetting;
 import org.mangorage.basicutils.config.ISetting;
@@ -74,13 +72,9 @@ import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 import org.mangorage.mboteventbus.EventBus;
 
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import java.util.EnumSet;
+
+import static org.mangorage.mangobot.core.BotPermissions.*;
 
 @Plugin(id = Core.ID)
 public class Core extends CorePlugin {
@@ -116,6 +110,8 @@ public class Core extends CorePlugin {
     );
 
     private final static Config CONFIG = new Config("plugins/%s/".formatted(Core.ID), ".env");
+
+    public static final ISetting<String> MAPPINGS_VERSION = ConfigSetting.create(CONFIG, "", "empty");
     public static final ISetting<String> BOT_TOKEN = ConfigSetting.create(CONFIG, "BOT_TOKEN", "empty");
     public static final ISetting<String> PASTE_TOKEN = ConfigSetting.create(CONFIG, "PASTE_TOKEN", "empty");
 
@@ -194,7 +190,7 @@ public class Core extends CorePlugin {
 
         // Mappings
         MappingsManager latest_mappings_manager = MappingsManager.new_();//Soon we need to do for multiple versions but not ATM
-        latest_mappings_manager.init(CONFIG);
+        latest_mappings_manager.init(MAPPINGS_VERSION);
         cmdRegistry.addBasicCommand(new MappingsMainCommand(latest_mappings_manager,this));
         cmdRegistry.addBasicCommand(new ClassMapCommand(latest_mappings_manager,this));
         cmdRegistry.addBasicCommand(new DefMapCommand(latest_mappings_manager,this));
