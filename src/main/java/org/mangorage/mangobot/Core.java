@@ -111,7 +111,7 @@ public class Core extends CorePlugin {
 
     private final static Config CONFIG = new Config("plugins/%s/".formatted(Core.ID), ".env");
 
-    public static final ISetting<String> MAPPINGS_VERSION = ConfigSetting.create(CONFIG, "", "empty");
+    public static final ISetting<String> MAPPINGS_VERSION = ConfigSetting.create(CONFIG, "MAPPINGS_VERSION", "empty");
     public static final ISetting<String> BOT_TOKEN = ConfigSetting.create(CONFIG, "BOT_TOKEN", "empty");
     public static final ISetting<String> PASTE_TOKEN = ConfigSetting.create(CONFIG, "PASTE_TOKEN", "empty");
 
