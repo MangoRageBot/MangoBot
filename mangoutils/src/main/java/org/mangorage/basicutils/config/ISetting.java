@@ -22,8 +22,8 @@
 
 package org.mangorage.basicutils.config;
 
-public interface ISetting<X> {
-    void set(X value);
+import java.util.function.Supplier;
 
-    X get();
+public interface ISetting<X> extends Supplier<X> {
+    void set(X value);
 }

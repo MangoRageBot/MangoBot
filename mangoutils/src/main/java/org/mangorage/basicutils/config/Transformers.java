@@ -24,22 +24,6 @@ package org.mangorage.basicutils.config;
 
 public class Transformers {
     public static final Transformer<String, String> STRING = Transformer.create(v -> v, v -> v);
-    public static final Transformer<Boolean, String> BOOLEAN = Transformer.create(
-            v -> {
-                if (v.equalsIgnoreCase("false"))
-                    return false;
-                if (v.equalsIgnoreCase("true"))
-                    return true;
-                return null;
-            }, Object::toString);
-
-    public static final Transformer<Integer, String> INTEGER = Transformer.create(
-            v -> {
-                try {
-                    return Integer.parseInt(v);
-                } catch (NumberFormatException ignored) {
-                }
-
-                return null;
-            }, Object::toString);
+    public static final Transformer<Boolean, String> BOOLEAN = Transformer.create(Boolean::parseBoolean, Object::toString);
+    public static final Transformer<Integer, String> INTEGER = Transformer.create(Integer::parseInt, Object::toString);
 }

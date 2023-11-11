@@ -22,23 +22,35 @@
 
 package org.mangorage.basicutils.config;
 
+import org.mangorage.basicutils.misc.FileMonitor;
+
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
-// Simple Key -> Value System
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+
+/**
+ * Simple class that handles Key Value pairs (SomeKey=123)
+ * Handles when the file contents change as well.
+ */
 public class Config {
     public static final Pattern CONFIG_REGEX = Pattern.compile("^\\s*([\\w.\\-]+)\\s*(=)\\s*(['][^']*[']|[\"][^\"]*[\"]|[^#]*)?\\s*(#.*)?$");
 
     private final Path file;
 
-    private final HashMap<String, String> ENTRIES = new HashMap<>();
+    private final ConcurrentHashMap<String, String> ENTRIES = new ConcurrentHashMap<>();
+
 
     public Config(String directory, String filename) {
+        this(directory, filename, false);
+    }
+
+    public Config(String directory, String filename, boolean autoReload) {
         String dir = directory
                 .replaceAll("\\\\", "/")
                 .replaceFirst("\\.env$", "")
@@ -46,27 +58,45 @@ public class Config {
 
         String location = dir + "/" + filename;
         String lowerLocation = location.toLowerCase();
-        Path path = lowerLocation.startsWith("file:") || lowerLocation.startsWith("android.resource:")
+
+        this.file = lowerLocation.startsWith("file:") || lowerLocation.startsWith("android.resource:")
                 ? Paths.get(URI.create(location))
                 : Paths.get(location);
 
-        this.file = path;
-        if (Files.exists(path)) {
-            try {
-                Files.readAllLines(path).forEach(e -> {
-                    if (CONFIG_REGEX.matcher(e).matches()) {
-                        var a = e.split("=", 2);
-                        ENTRIES.put(a[0], a[1]);
-                    }
-                });
-            } catch (Exception ignored) {
-            }
+        try {
+            load();
+
+            if (autoReload)
+                FileMonitor.getMonitor().register(file, kind -> {
+                    if (kind == ENTRY_MODIFY)
+                        reload(); // Reload it was modified...
+                }, ENTRY_MODIFY);
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to load Config...");
+        }
+    }
+
+    private void load() throws IOException {
+        if (Files.exists(file)) {
+            Files.readAllLines(file).forEach(e -> {
+                if (CONFIG_REGEX.matcher(e).matches()) {
+                    var a = e.split("=", 2);
+                    ENTRIES.put(a[0], a[1]);
+                }
+            });
         } else {
-            try {
-                Files.createDirectories(path.getParent());
-                Files.createFile(path);
-            } catch (IOException ignored) {
-            }
+            Files.createDirectories(file.getParent());
+            Files.createFile(file);
+        }
+    }
+
+    public void reload() {
+        ENTRIES.clear();
+        try {
+            load();
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to reload config...");
         }
     }
 

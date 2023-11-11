@@ -109,9 +109,7 @@ public abstract class CorePlugin extends AbstractPlugin {
 
     public abstract void shutdownPre();
 
-    public abstract void shutdownPost();
-
-    public void shutdown() {
+    public void shutdownPost() {
         for (ShutdownEvent.Phase phase : ShutdownEvent.Phase.values())
             getPluginBus().post(new ShutdownEvent(phase));
         getPluginBus().shutdown();

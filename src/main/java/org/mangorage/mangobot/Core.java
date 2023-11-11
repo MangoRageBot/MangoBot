@@ -101,7 +101,7 @@ public class Core extends CorePlugin {
             CacheFlag.EMOJI,
             CacheFlag.ROLE_TAGS,
             CacheFlag.VOICE_STATE,
-            CacheFlag.ACTIVITY, // Cant do
+            CacheFlag.ACTIVITY,
             CacheFlag.CLIENT_STATUS,
             CacheFlag.MEMBER_OVERRIDES,
             CacheFlag.STICKER,
@@ -109,8 +109,11 @@ public class Core extends CorePlugin {
             CacheFlag.FORUM_TAGS
     );
 
+    // Where we create our "config"
     private final static Config CONFIG = new Config("plugins/%s/".formatted(Core.ID), ".env");
 
+
+    // Where we create Settings for said Config
     public static final ISetting<String> MAPPINGS_VERSION = ConfigSetting.create(CONFIG, "MAPPINGS_VERSION", "empty");
     public static final ISetting<String> BOT_TOKEN = ConfigSetting.create(CONFIG, "BOT_TOKEN", "empty");
     public static final ISetting<String> PASTE_TOKEN = ConfigSetting.create(CONFIG, "PASTE_TOKEN", "empty");
@@ -171,11 +174,13 @@ public class Core extends CorePlugin {
         cmdRegistry.addBasicCommand(new PrefixCommand(this));
         cmdRegistry.addBasicCommand(new VersionCommand(this));
 
+
         // Developer Commands
         cmdRegistry.addBasicCommand(new KickBotCommand(this));
         cmdRegistry.addBasicCommand(new RestartCommand());
         cmdRegistry.addBasicCommand(new SpeakCommand(this));
         cmdRegistry.addBasicCommand(new TerminateCommand());
+
 
         // Music Commands
         cmdRegistry.addBasicCommand(new PlayCommand());
@@ -185,11 +190,12 @@ public class Core extends CorePlugin {
         cmdRegistry.addBasicCommand(new StopCommand());
         cmdRegistry.addBasicCommand(new VolumeCommand());
 
+
         // Tricks
         cmdRegistry.addBasicCommand(new TrickCommand(this));
 
         // Mappings
-        MappingsManager latest_mappings_manager = MappingsManager.new_();//Soon we need to do for multiple versions but not ATM
+        MappingsManager latest_mappings_manager = MappingsManager.new_(); // Soon we need to do for multiple versions but not ATM
         latest_mappings_manager.init(MAPPINGS_VERSION);
         cmdRegistry.addBasicCommand(new MappingsMainCommand(latest_mappings_manager,this));
         cmdRegistry.addBasicCommand(new ClassMapCommand(latest_mappings_manager,this));

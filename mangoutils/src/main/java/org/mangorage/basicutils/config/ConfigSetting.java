@@ -22,9 +22,12 @@
 
 package org.mangorage.basicutils.config;
 
+// TODO: Add reload capabilites
+
 public class ConfigSetting<T> implements ISetting<T> {
+    // We need to make it save ... After loading
     public static ConfigSetting<String> create(Config config, String ID, String defaultValue) {
-        return new ConfigSetting<>(config, ID, Transformers.STRING, defaultValue);
+        return create(config, ID, Transformers.STRING, defaultValue);
     }
 
     public static <T> ConfigSetting<T> create(Config config, String ID, Transformer<T, String> transformer, T defaultValue) {
@@ -43,19 +46,13 @@ public class ConfigSetting<T> implements ISetting<T> {
         this.transformer = transformer.getTransformer();
         this.transformerReversed = transformer.getTransformerReversed();
         this.defaultvalue = defaultvalue;
-    }
 
-    private ConfigSetting(Config config, String ID, Transformer<T, String> transformer) {
-        this(config, ID, transformer, null);
-    }
-
-    protected String getRaw() {
-        return config.get(id);
+        if (config.get(id) == null) set(defaultvalue); // Set default value if no value is present...
     }
 
     @Override
     public T get() {
-        var result = transformer.transform(getRaw());
+        var result = transformer.transform(config.get(id));
         return result != null ? result : defaultvalue;
     }
 
