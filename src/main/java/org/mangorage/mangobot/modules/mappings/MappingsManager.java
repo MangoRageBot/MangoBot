@@ -167,7 +167,7 @@ public class MappingsManager {
       conf.set(latest);
     } else {
       String current = conf.get().split("-")[0]; //after - is FeatureCreep Version
-      latest = checkForUpdates(conf);
+      latest = conf.get();
     }
 
     try {
