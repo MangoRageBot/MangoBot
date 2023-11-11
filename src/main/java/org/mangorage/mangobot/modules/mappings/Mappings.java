@@ -67,7 +67,9 @@ public class Mappings {
 			while ((line = reader.readLine()) != null) {
 				// Perform your action for each line stripped here
 				String[] row_array = line.split("¶");
+				System.out.println(line);
 				if (num == 0) {
+
 				} else if (row_array[0].equals("Class")) {
 					classes.put(row_array[1], row_array[2]);
 					System.out.println("Class %s -> %s".formatted(row_array[1], row_array[2]));
