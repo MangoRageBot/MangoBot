@@ -66,7 +66,7 @@ public class Mappings {
 		try {
 			while ((line = reader.readLine()) != null) {
 				// Perform your action for each line stripped here
-				String[] row_array = line.split("¶");
+				String[] row_array = line.split("\\u00B6");
 				System.out.println("LINE -> %s".formatted(line));
 				System.out.println("Size -> %s".formatted(row_array.length));
 				System.out.println(row_array[0]);
