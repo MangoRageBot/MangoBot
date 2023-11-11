@@ -46,10 +46,10 @@ import java.util.regex.Pattern;
  */
 public class Mappings {
 	//We soon need to add comments/javadocs as well
-	public Map<String, String> classes = new HashMap<String, String>();
-	public Map<String, String> defs = new HashMap<String, String>();
-	public Map<String, String> vars = new HashMap<String, String>();
-	public Map<String, String> params = new HashMap<String, String>();
+	public final Map<String, String> classes = new HashMap<>();
+	public final Map<String, String> defs = new HashMap<>();
+	public final Map<String, String> vars = new HashMap<>();
+	public final Map<String, String> params = new HashMap<>();
 
 	public Mappings reverse;
 
@@ -66,17 +66,20 @@ public class Mappings {
 		try {
 			while ((line = reader.readLine()) != null) {
 				// Perform your action for each line stripped here
-				System.out.println("Line: -> %s".formatted(line));
 				String[] row_array = line.split("¶");
 				if (num == 0) {
 				} else if (row_array[0].equals("Class")) {
 					classes.put(row_array[1], row_array[2]);
+					System.out.println("Class %s -> %s".formatted(row_array[1], row_array[2]));
 				} else if (row_array[0].equals("Def")) {
 					defs.put(row_array[1], row_array[2]);
+					System.out.println("Def %s -> %s".formatted(row_array[1], row_array[2]));
 				} else if (row_array[0].equals("Var")) {
 					vars.put(row_array[1], row_array[2]);
+					System.out.println("Var %s -> %s".formatted(row_array[1], row_array[2]));
 				} else if (row_array[0].equals("Param")) {
 					params.put(row_array[3] + "_" + row_array[4], row_array[2]);
+					System.out.println("Param %s -> %s".formatted(row_array[3] + "_" + row_array[4], row_array[2]));
 				}
 
 				num++;
