@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2023. MangoRage
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+ * OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 /*Copied from AssistRemapper
  *  https://pagure.io/AssistRemapper
  *  You are allowed to use this code unconditionally just like AssistRemapper. If you notice a bug please report to AssistRemapper as well
@@ -45,14 +67,20 @@ public class Mappings {
 			try {
 				while ((line = reader.readLine()) != null) {
 				    // Perform your action for each line stripped here
-String[] row_array = line.split("¶");				
-if (num == 0) {}
-else if (row_array[0].equals("Class"))	{classes.put(row_array[1], row_array[2]);}			    
-else if (row_array[0].equals("Def"))	{defs.put(row_array[1], row_array[2]);}			    
-else if (row_array[0].equals("Var"))	{vars.put(row_array[1], row_array[2]);}			    
-else if (row_array[0].equals("Param"))	{params.put(row_array[3]+"_"+row_array[4], row_array[2]);}			    
+					System.out.println("Line: -> %s".formatted(line));
+					String[] row_array = line.split("¶");
+					if (num == 0) {
+					} else if (row_array[0].equals("Class")) {
+						classes.put(row_array[1], row_array[2]);
+					} else if (row_array[0].equals("Def")) {
+						defs.put(row_array[1], row_array[2]);
+					} else if (row_array[0].equals("Var")) {
+						vars.put(row_array[1], row_array[2]);
+					} else if (row_array[0].equals("Param")) {
+						params.put(row_array[3] + "_" + row_array[4], row_array[2]);
+					}
 
-num++;
+					num++;
 				}
             // Close the BufferedReader
             reader.close();	
@@ -62,7 +90,7 @@ num++;
 				e.printStackTrace();
 			}
 	          parseSubClasses();
-System.out.println("Getting reverse mappings");
+			System.out.println("Getting reverse mappings");
 			reverse();
 			
 		}

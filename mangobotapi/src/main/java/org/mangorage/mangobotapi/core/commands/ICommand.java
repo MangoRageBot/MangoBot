@@ -44,12 +44,18 @@ public interface ICommand<Type, EventClass> {
         return List.of();
     }
 
+    /**
+     * @return Tell's the user the basic gist of how to use the cmd
+     */
     default String description() {
-        return "";
+        return "No Info Provided.";
     }
 
+    /**
+     * @return Tell's the user more advanced info on how to use the cmd.
+     */
     default String usage() {
-        return "";
+        return "No Help Info Provided.";
     }
 
     default boolean ignoreCase() {
@@ -67,5 +73,4 @@ public interface ICommand<Type, EventClass> {
     default List<String> allowedUsers() {
         return List.of();
     }
-
 }
