@@ -172,10 +172,10 @@ public class MappingsManager {
 
     try {
       System.out.println("Version -> %s".formatted(latest));
-      this.SRG = new Mappings(new FileInputStream("mappings/" + latest + "/srg.pdme"));
-      this.SUGARCANE = new Mappings(new FileInputStream("mappings/" + latest + "/sugarcane.pdme"));
-      this.YARN = new Mappings(new FileInputStream("mappings/" + latest + "/yarn.pdme"));
-      this.FABRIC_INTERMEDIARY = new Mappings(new FileInputStream("mappings/" + latest + "/fabric-intermediary.pdme"));
+      this.SRG = new Mappings(new FileInputStream(new File("mappings/" + latest + "/srg.pdme")));
+      this.SUGARCANE = new Mappings(new FileInputStream(new File("mappings/" + latest + "/sugarcane.pdme")));
+      this.YARN = new Mappings(new FileInputStream(new File("mappings/" + latest + "/yarn.pdme")));
+      this.FABRIC_INTERMEDIARY = new Mappings(new FileInputStream(new File("mappings/" + latest + "/fabric-intermediary.pdme")));
     } catch (FileNotFoundException e) {
       // TODO Auto-generated catch block
       this.SRG = new Mappings();
