@@ -102,16 +102,16 @@ public void reverse() {
 
 
 	Mappings rev = new Mappings();
-//for every entry in def
+	//for every entry in def
 	for (Map.Entry<String, String> def : defs.entrySet()) {
-			//	System.out.println(def.getKey());
-			String[] old_class_arr =	java.util.Arrays.copyOfRange(def.getKey().split("\\."), 0, def.getKey().split("\\.").length - 1);
-			String old_classname =   String.join(".",old_class_arr)   ;
+		//	System.out.println(def.getKey());
+		String[] old_class_arr = java.util.Arrays.copyOfRange(def.getKey().split("\\."), 0, def.getKey().split("\\.").length - 1);
+		String old_classname = String.join(".", old_class_arr);
 
-			String new_classname = getClassMappedName(old_classname);
-			String des = renameClassesInMethodDescriptor("("+def.getKey().split("\\(")[1]);
+		String new_classname = getClassMappedName(old_classname);
+		String des = renameClassesInMethodDescriptor("(" + def.getKey().split("\\(")[1]);
 
-			String[] divided = def.getKey().split("\\.");
+		String[] divided = def.getKey().split("\\.");
 
 		rev.defs.put(new_classname + "." + def.getValue() + des, divided[divided.length - 1].split("\\(")[0]);
 
@@ -204,8 +204,8 @@ public void reverse() {
 	 * @return name
 	 */
 	public String getParamMappedName(String method_with_descriptor, int location) {
-		if (defs.get(method_with_descriptor + "_" + Integer.toString(location)) != null) {
-			return defs.get(method_with_descriptor + "_" + Integer.toString(location));
+		if (defs.get(method_with_descriptor + "_" + location) != null) {
+			return defs.get(method_with_descriptor + "_" + location);
 		} else {
 			return method_with_descriptor;
 		}
@@ -278,7 +278,7 @@ public void reverse() {
 			String clazz = getClassMappedName(old_clazz).replaceAll("\\.", "/");
 			String desc = old_desc.replaceAll(old_clazz.replaceAll("\\.", "/"), clazz);
 			return desc;
-				}
-			}
+		}
+	}
 
 }

@@ -45,14 +45,14 @@ public interface ICommand<Type, EventClass> {
     }
 
     /**
-     * @return Tell's the user the basic gist of how to use the cmd
+     * @return Tell's the user the description of the cmd.
      */
     default String description() {
-        return "No Info Provided.";
+        return "No Description was Provided.";
     }
 
     /**
-     * @return Tell's the user more advanced info on how to use the cmd.
+     * @return Tell's the user more info on how to use the cmd.
      */
     default String usage() {
         return "No Help Info Provided.";
