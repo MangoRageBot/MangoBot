@@ -66,29 +66,18 @@ public class Mappings {
 		try {
 			while ((line = reader.readLine()) != null) {
 				// Perform your action for each line stripped here
-				String[] row_array = line.split("\\u00B6");
-				System.out.println("LINE -> %s".formatted(line));
-				System.out.println("Size -> %s".formatted(row_array.length));
-				System.out.println(row_array[0]);
-
-				for (String s : row_array) {
-					System.out.println("Array Content -> %s".formatted(s));
-				}
+				String[] row_array = line.split("¶");
 
 				if (num == 0) {
 
 				} else if (row_array[0].equals("Class")) {
 					classes.put(row_array[1], row_array[2]);
-					System.out.println("Class %s -> %s".formatted(row_array[1], row_array[2]));
 				} else if (row_array[0].equals("Def")) {
 					defs.put(row_array[1], row_array[2]);
-					System.out.println("Def %s -> %s".formatted(row_array[1], row_array[2]));
 				} else if (row_array[0].equals("Var")) {
 					vars.put(row_array[1], row_array[2]);
-					System.out.println("Var %s -> %s".formatted(row_array[1], row_array[2]));
 				} else if (row_array[0].equals("Param")) {
 					params.put(row_array[3] + "_" + row_array[4], row_array[2]);
-					System.out.println("Param %s -> %s".formatted(row_array[3] + "_" + row_array[4], row_array[2]));
 				}
 
 				num++;
