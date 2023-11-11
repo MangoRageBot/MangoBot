@@ -89,7 +89,7 @@ public class Mappings {
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(System.out);
 		}
 		parseSubClasses();
 		System.out.println("Getting reverse mappings");

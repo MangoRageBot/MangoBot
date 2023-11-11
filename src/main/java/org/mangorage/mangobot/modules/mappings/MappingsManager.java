@@ -187,7 +187,7 @@ public class MappingsManager {
       YARN.reverse = new Mappings();
       FABRIC_INTERMEDIARY.reverse = new Mappings();
 
-      e.printStackTrace();
+      e.printStackTrace(System.out);
     }
 
   }
