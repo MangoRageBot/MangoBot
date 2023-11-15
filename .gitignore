@@ -135,3 +135,4 @@ secrets.properties
 /src/main/resources/installerdata/dependencies.json
 /src/main/resources/installerdata/ivysettings.xml
 
+/mappings/

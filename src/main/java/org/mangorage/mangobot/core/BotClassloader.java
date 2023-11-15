@@ -20,24 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot;
+package org.mangorage.mangobot.core;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Objects;
 
-import java.util.Set;
-
-public class Test {
-    public static final StackWalker WALKER = StackWalker.getInstance(Set.of(StackWalker.Option.values()));
-
-    public static int getTotalTicksWithRate(int rate, int seconds) {
-        return (rate / 2) * (20 * seconds);
+public class BotClassloader extends URLClassLoader {
+    public BotClassloader(ClassLoader parent) {
+        super("botclassloader", new URL[]{}, parent);
+        Objects.requireNonNull(parent, "Parent cant be null");
     }
 
-    public static int getEachUseDuration(int rate) {
-        return (rate / 2) * (20 * 30); // 20 ticks * 30 seconds
+
+    @Override
+    public void addURL(URL url) {
+        super.addURL(url);
+        System.out.println("Added lib Jar:" + url);
     }
 
-    public static void main(String[] args) {
-        System.out.println(getTotalTicksWithRate(256, 30));
-        System.out.println(getEachUseDuration(256));
+    public Class<?> loadClass(String clazz, Boolean bool) throws ClassNotFoundException {
+        return super.loadClass(clazz, bool);
     }
 }

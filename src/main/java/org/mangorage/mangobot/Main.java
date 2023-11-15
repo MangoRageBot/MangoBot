@@ -22,14 +22,79 @@
 
 package org.mangorage.mangobot;
 
-import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
-import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
-import org.mangorage.mangobotapi.core.plugin.PluginLoader;
+import org.mangorage.mangobot.core.BotClassloader;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
 public class Main {
+    private static final String jarFile = ".jar";
+
     public static void main(String[] args) {
-        VersionCommand.init();
-        Actions.init();
-        PluginLoader.load();
+        try (BotClassloader botClassloader = new BotClassloader(Main.class.getClassLoader())) {
+
+            Path libsDirectory = Path.of("libs/");
+            Path pluginDirectory = Path.of("plugins/");
+
+            try (Stream<Path> files = Files.walk(libsDirectory)) {
+                files
+                        .filter(path -> path.toFile().getName().endsWith(jarFile))
+                        .forEach(path -> {
+                            try {
+                                botClassloader.addURL(path.toAbsolutePath().toUri().toURL());
+                            } catch (MalformedURLException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+            }
+
+            try (Stream<Path> files = Files.walk(pluginDirectory)) {
+                files
+                        .filter(path -> path.toFile().getName().endsWith(jarFile))
+                        .forEach(path -> {
+                            try {
+                                botClassloader.addURL(path.toAbsolutePath().toUri().toURL());
+                            } catch (MalformedURLException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+            }
+
+
+            // List out urls
+
+            URL[] urls = botClassloader.getURLs();
+
+            // Print the URLs
+            for (URL url : urls) {
+                System.out.println("URL -> " + url.getFile());
+            }
+
+
+            try {
+                Class<?> gson = botClassloader.loadClass("com.google.gson.Gson");
+                System.out.println(gson);
+                System.out.println(gson.newInstance());
+
+
+                Class<?> mainClass = botClassloader.loadClass("org.mangorage.mangobot.BotMain");
+                Method method = mainClass.getDeclaredMethod("main", String[].class);
+                method.invoke(null, (Object) new String[]{});
+            } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException |
+                     IllegalAccessException exception) {
+                throw new RuntimeException(exception);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

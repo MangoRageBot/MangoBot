@@ -22,22 +22,15 @@
 
 package org.mangorage.mangobot;
 
+import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
+import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
+import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 
-import java.util.Set;
-
-public class Test {
-    public static final StackWalker WALKER = StackWalker.getInstance(Set.of(StackWalker.Option.values()));
-
-    public static int getTotalTicksWithRate(int rate, int seconds) {
-        return (rate / 2) * (20 * seconds);
-    }
-
-    public static int getEachUseDuration(int rate) {
-        return (rate / 2) * (20 * 30); // 20 ticks * 30 seconds
-    }
-
+public class BotMain {
     public static void main(String[] args) {
-        System.out.println(getTotalTicksWithRate(256, 30));
-        System.out.println(getEachUseDuration(256));
+        System.out.println("Ran Bot Main");
+        VersionCommand.init();
+        Actions.init();
+        PluginLoader.load();
     }
 }

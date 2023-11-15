@@ -35,6 +35,7 @@ import org.mangorage.basicutils.config.ISetting;
 import org.mangorage.mangobot.core.BotPermissions;
 import org.mangorage.mangobot.core.EventListener;
 import org.mangorage.mangobot.core.Listeners;
+import org.mangorage.mangobot.modules.basic.commands.GetEmbedsCommand;
 import org.mangorage.mangobot.modules.basic.commands.HelpCommand;
 import org.mangorage.mangobot.modules.basic.commands.InfoCommand;
 import org.mangorage.mangobot.modules.basic.commands.JoinCommand;
@@ -210,6 +211,7 @@ public class Core extends CorePlugin {
         
         // Test
         cmdRegistry.addBasicCommand(new RunCode());
+        cmdRegistry.addBasicCommand(new GetEmbedsCommand());
 
 
         permRegistry.save();

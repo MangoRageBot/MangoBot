@@ -41,8 +41,8 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 group 'org.mangorage'
-version "${BOT_VERSION}-c" + getVersionCode()
-
+//version "${BOT_VERSION}-c" + getVersionCode()
+version ""
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)

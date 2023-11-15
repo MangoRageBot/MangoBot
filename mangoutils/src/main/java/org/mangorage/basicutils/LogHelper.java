@@ -28,8 +28,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
 
 public final class LogHelper {
+    public static final StackWalker WALKER = StackWalker.getInstance(Set.of(StackWalker.Option.values()));
     public static boolean writeToLogFile = true;
 
     public static void disableLogOutput() {
@@ -84,8 +86,7 @@ public final class LogHelper {
     private static final LogFileHandler HANDLER = LogFileHandler.create(Path.of("logs/latest.log"));
 
     private static String getCallingClass() {
-        var l = Thread.currentThread().getStackTrace();
-        return l[3].getClassName();
+        return WALKER.getCallerClass().getCanonicalName();
     }
 
     private static String format(String type, String calledFrom, String content) {
@@ -100,26 +101,26 @@ public final class LogHelper {
     }
 
     public static void info(String content) {
-        System.out.println(log(format("INFO", getCallingClass(), content)));
+        System.out.println(log(format("INFO", WALKER.getCallerClass().getCanonicalName(), content)));
     }
 
     public static void error(String content) {
-        System.err.println(log(format("ERROR", getCallingClass(), content)));
+        System.err.println(log(format("ERROR", WALKER.getCallerClass().getCanonicalName(), content)));
     }
 
     public static void debug(String content) {
-        System.out.println(log(format("DEBUG", getCallingClass(), content)));
+        System.out.println(log(format("DEBUG", WALKER.getCallerClass().getCanonicalName(), content)));
     }
 
     public static void warn(String content) {
-        System.out.println(log(format("WARN", getCallingClass(), "%s: %s".formatted("WARN", content))));
+        System.out.println(log(format("WARN", WALKER.getCallerClass().getCanonicalName(), "%s: %s".formatted("WARN", content))));
     }
 
     public static void fatal(String content) {
-        System.err.println(log(format("FATAL", getCallingClass(), content)));
+        System.err.println(log(format("FATAL", WALKER.getCallerClass().getCanonicalName(), content)));
     }
 
     public static void trace(String content) {
-        System.out.println(log(format("TRACE", getCallingClass(), content)));
+        System.out.println(log(format("TRACE", WALKER.getCallerClass().getCanonicalName(), content)));
     }
 }
