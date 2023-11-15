@@ -43,8 +43,5 @@ public class Main {
         Actions.init();
         PluginLoader.load();
         System.out.println("Finished Bot Main");
-
-        do {
-        } while (running.get());
     }
 }

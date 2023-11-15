@@ -74,23 +74,26 @@ public class LauncherMain {
         });
 
 
-        try (var classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), LauncherMain.class.getClassLoader().getParent())) {
-            ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader(classLoader);
+        Runnable runnable = () -> {
+            try (var classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), LauncherMain.class.getClassLoader().getParent())) {
+                ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
+                Thread.currentThread().setContextClassLoader(classLoader);
 
-            try {
-                Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", false, classLoader);
-                Method method = mainClass.getDeclaredMethod("main", String[].class);
-                method.invoke(null, (Object) args); // Pass through the args...
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                     InvocationTargetException exception) {
-                throw new RuntimeException(exception);
-            } finally {
-                System.err.println("Finished");
-                Thread.currentThread().setContextClassLoader(oldCL);
+                try {
+                    Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", false, classLoader);
+                    Method method = mainClass.getDeclaredMethod("main", String[].class);
+                    method.invoke(null, (Object) args); // Pass through the args...
+                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                         InvocationTargetException exception) {
+                    throw new RuntimeException(exception);
+                } finally {
+                    System.err.println("Finished");
+                    Thread.currentThread().setContextClassLoader(oldCL);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        };
+        new Thread(runnable).start();
     }
 }
