@@ -26,16 +26,25 @@ import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Main {
+    private static final AtomicBoolean running = new AtomicBoolean(false);
     public static void main(String[] args) {
+        running.set(true);
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            running.set(false);
+            System.out.println("Shutting down program!");
+        }));
+
         System.out.println("Ran Bot Main");
         VersionCommand.init();
         Actions.init();
         PluginLoader.load();
         System.out.println("Finished Bot Main");
 
-        while (true) {
-            // Loop De Loop!
-        }
+        do {
+        } while (running.get());
     }
 }

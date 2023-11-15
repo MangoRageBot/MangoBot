@@ -62,7 +62,6 @@ public class BotEventListener {
 
     @SubscribeEvent
     public void messageRecieved(MessageReceivedEvent event) {
-        System.out.println("Recieved Message -> " + event.getMessage().getContentRaw());
         var isCommand = Util.handleMessage(plugin, event);
         bus.post(new DMessageRecievedEvent(event, isCommand));
     }

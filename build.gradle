@@ -54,7 +54,6 @@ configurations {
     api.extendsFrom internal
 }
 
-
 repositories {
     mavenCentral()
     jcenter()
@@ -131,19 +130,19 @@ dependencies {
 tasks.register('runBot', JavaExec) {
     group "bot tasks"
     description "Runs the bot"
-    args "-dev"
 
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'org.mangorage.mangobot.Main'
+    workingDir = file('build/run/')
 }
 
-tasks.register('runTestBot', JavaExec) {
+tasks.register('runBotLauncher', JavaExec) {
     group "bot tasks"
-    description "Runs the test bot"
-    args "-dev"
+    description "Runs the built in Launcher."
 
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'org.mangorage.mangobottest.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'org.mangorage.mangobot.LauncherMain'
+    workingDir = file('build/run/')
 }
 
 tasks.register('runDatagen') {
