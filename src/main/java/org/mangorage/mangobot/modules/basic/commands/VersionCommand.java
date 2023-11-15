@@ -51,6 +51,8 @@ public class VersionCommand implements IBasicCommand {
     }
 
     public static String getVersion() {
+        if (VERSION.get() == null)
+            VERSION.set(new Version("Undefined Version"));
         return VERSION.get().version();
     }
 
