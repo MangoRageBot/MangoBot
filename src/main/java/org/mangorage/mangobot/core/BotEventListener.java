@@ -48,13 +48,13 @@ import org.mangorage.mboteventbus.impl.IEventBus;
 
 
 @SuppressWarnings("unused")
-public class EventListener {
+public class BotEventListener {
 
 
     private final CorePlugin plugin;
     private final IEventBus bus;
 
-    public EventListener(CorePlugin plugin) {
+    public BotEventListener(CorePlugin plugin) {
         this.plugin = plugin;
         this.bus = plugin.getPluginBus();
     }
@@ -62,6 +62,7 @@ public class EventListener {
 
     @SubscribeEvent
     public void messageRecieved(MessageReceivedEvent event) {
+        System.out.println("Recieved Message -> " + event.getMessage().getContentRaw());
         var isCommand = Util.handleMessage(plugin, event);
         bus.post(new DMessageRecievedEvent(event, isCommand));
     }

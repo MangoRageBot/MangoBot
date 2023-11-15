@@ -23,27 +23,26 @@
 package org.mangorage.mangobotapi.core.plugin.api;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
+import org.mangorage.mboteventbus.EventBus;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
 public abstract class CorePlugin extends AbstractPlugin {
     private final JDA JDA;
-    private final IEventBus pluginBus;
+    private final IEventBus pluginBus = EventBus.create();
     private final String COMMAND_PREFIX = "!";
     private final MessageSettings DEFAULT_MESSAGE_SETTINGS = MessageSettings.create().build();
     private final CommandRegistry commandRegistry = new CommandRegistry(this);
     private final PermissionRegistry permissionRegistry = new PermissionRegistry(this);
 
 
-    public CorePlugin(String id, JDABuilder builder, IEventBus pluginBus) {
+    public CorePlugin(String id, JDA jda) {
         super(id);
-        this.JDA = builder.build();
-        this.pluginBus = pluginBus;
+        this.JDA = jda;
 
 
         getPluginBus().startup();

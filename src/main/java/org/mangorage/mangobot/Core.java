@@ -25,15 +25,18 @@ package org.mangorage.mangobot;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.jetbrains.annotations.NotNull;
 import org.mangorage.basicutils.config.Config;
 import org.mangorage.basicutils.config.ConfigSetting;
 import org.mangorage.basicutils.config.ISetting;
+import org.mangorage.mangobot.core.BotEventListener;
 import org.mangorage.mangobot.core.BotPermissions;
-import org.mangorage.mangobot.core.EventListener;
 import org.mangorage.mangobot.core.Listeners;
 import org.mangorage.mangobot.modules.basic.commands.GetEmbedsCommand;
 import org.mangorage.mangobot.modules.basic.commands.HelpCommand;
@@ -71,7 +74,6 @@ import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
-import org.mangorage.mboteventbus.EventBus;
 
 import java.util.EnumSet;
 
@@ -129,7 +131,7 @@ public class Core extends CorePlugin {
                                 Activity.of(
                                         Activity.ActivityType.CUSTOM_STATUS,
                                         """
-                                                    MangoBot is on version %s"
+                                                    MangoBot is on version BETA ABC -> %s"
                                                 """.formatted(VersionCommand.getVersion()),
                                         "https://www.discord.minecraftforge.net/"
                                 )
@@ -138,11 +140,22 @@ public class Core extends CorePlugin {
                         .setMemberCachePolicy(MemberCachePolicy.ALL)
                         .setEventManager(new AnnotatedEventManager())
                         .setEnableShutdownHook(true)
-                        .setAutoReconnect(true),
-                EventBus.create()
+                        .setAutoReconnect(true)
+                        .build()
         );
 
-        getJDA().addEventListener(new EventListener(this));
+        getJDA().addEventListener(new BotEventListener(this));
+    }
+
+    public static class Test implements EventListener {
+
+        /**
+         * @param event The Event to handle.
+         */
+        @Override
+        public void onEvent(@NotNull GenericEvent event) {
+            System.out.println(event);
+        }
     }
 
     @Override

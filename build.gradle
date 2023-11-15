@@ -41,8 +41,9 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 group 'org.mangorage'
-//version "${BOT_VERSION}-c" + getVersionCode()
-version ""
+version "${BOT_VERSION}-c" + getVersionCode()
+//version ""
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -209,7 +210,7 @@ jar {
     }
 
     manifest {
-        attributes 'Main-Class': 'org.mangorage.mangobot.Main'
+        attributes 'Main-Class': 'org.mangorage.mangobot.LauncherMain'
     }
 }
 
