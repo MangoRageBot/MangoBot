@@ -39,5 +39,6 @@ public class Test {
     public static void main(String[] args) {
         System.out.println(getTotalTicksWithRate(256, 30));
         System.out.println(getEachUseDuration(256));
+
     }
 }
