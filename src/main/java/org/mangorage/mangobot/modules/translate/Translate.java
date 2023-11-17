@@ -38,7 +38,7 @@ public class Translate {
     private final Translator translator;
     private final LanguageDetector detector = LanguageDetectorBuilder
             .fromAllLanguages()
-            .withPreloadedLanguageModels()
+
             .build();
 
     public Translate(Core core) {

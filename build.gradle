@@ -178,6 +178,7 @@ publish {
 }
 
 tasks.register('publishAndRestartServer') {
+    dependsOn(runDatagen)
     dependsOn(publish)
     group = "bot tasks"
     description = "Publish and restart Bot server"
@@ -200,7 +201,6 @@ tasks.register('publishAndRestartServer') {
 }
 
 jar {
-    dependsOn(runDatagen)
     dependsOn configurations.internal
 
     from {
