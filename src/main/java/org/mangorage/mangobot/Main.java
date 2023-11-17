@@ -38,10 +38,11 @@ public class Main {
             System.out.println("Shutting down program!");
         }));
 
-        System.out.println("Ran Bot Main");
         VersionCommand.init();
         Actions.init();
         PluginLoader.load();
-        System.out.println("Finished Bot Main");
+
+        while (running.get()) {
+        }
     }
 }

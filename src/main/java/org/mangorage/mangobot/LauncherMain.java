@@ -37,6 +37,7 @@ import java.util.stream.Stream;
 
 public class LauncherMain {
     private static final String jarFile = ".jar";
+    public static URLClassLoader loader;
 
     private static void addJars(List<URL> urlList, Path directory) throws IOException {
         try (Stream<Path> files = Files.walk(directory)) {
@@ -73,27 +74,25 @@ public class LauncherMain {
             }
         });
 
+        ClassLoader oldCL = Thread.currentThread().getContextClassLoader().getParent();
 
-        Runnable runnable = () -> {
-            try (var classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), LauncherMain.class.getClassLoader().getParent())) {
-                ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
-                Thread.currentThread().setContextClassLoader(classLoader);
+        try (var classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), oldCL)) {
+            Thread.currentThread().setContextClassLoader(classLoader);
+            loader = classLoader;
 
-                try {
-                    Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", false, classLoader);
-                    Method method = mainClass.getDeclaredMethod("main", String[].class);
-                    method.invoke(null, (Object) args); // Pass through the args...
-                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                         InvocationTargetException exception) {
-                    throw new RuntimeException(exception);
-                } finally {
-                    System.err.println("Finished");
-                    Thread.currentThread().setContextClassLoader(oldCL);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            try {
+                Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", true, classLoader);
+                Method method = mainClass.getDeclaredMethod("main", String[].class);
+                method.invoke(null, (Object) args); // Pass through the args...
+            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                     InvocationTargetException exception) {
+                throw new RuntimeException(exception);
+            } finally {
+                System.err.println("Finished Running Launcher.");
+                Thread.currentThread().setContextClassLoader(oldCL);
             }
-        };
-        new Thread(runnable).start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

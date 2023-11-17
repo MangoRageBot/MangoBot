@@ -94,7 +94,9 @@ def libs = [
         GITHUB_API      : 'org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5',
         SLF4J_SIMPLE    : 'org.slf4j:slf4j-simple:2.0.9',
         REFLECTIONS: 'org.reflections:reflections:0.10.2',
-        LUA_JAVA   : 'org.luaj:luaj-jse:3.0.1'
+        LUA_JAVA   : 'org.luaj:luaj-jse:3.0.1',
+        DEEPL      : 'com.deepl.api:deepl-java:1.4.0',
+        LANGUAGE   : 'com.github.pemistahl:lingua:1.2.2'
 ]
 
 ext.globalLibs = libs
@@ -114,6 +116,8 @@ dependencies {
     implementation(libs.SLF4J_SIMPLE)
     implementation(libs.REFLECTIONS)
     implementation(libs.LUA_JAVA)
+    implementation(libs.DEEPL)
+    implementation(libs.LANGUAGE)
 
     // Core Libs
     implementation project(path: ':mangobotapi')

@@ -69,6 +69,7 @@ import org.mangorage.mangobot.modules.music.commands.QueueCommand;
 import org.mangorage.mangobot.modules.music.commands.StopCommand;
 import org.mangorage.mangobot.modules.music.commands.VolumeCommand;
 import org.mangorage.mangobot.modules.requestpaste.PasteRequestModule;
+import org.mangorage.mangobot.modules.translate.Translate;
 import org.mangorage.mangobot.modules.tricks.TrickCommand;
 import org.mangorage.mangobotapi.core.events.LoadEvent;
 import org.mangorage.mangobotapi.core.events.SaveEvent;
@@ -120,6 +121,10 @@ public class Core extends CorePlugin {
     public static final ISetting<String> MAPPINGS_VERSION = ConfigSetting.create(CONFIG, "MAPPINGS_VERSION", "empty");
     public static final ISetting<String> BOT_TOKEN = ConfigSetting.create(CONFIG, "BOT_TOKEN", "empty");
     public static final ISetting<String> PASTE_TOKEN = ConfigSetting.create(CONFIG, "PASTE_TOKEN", "empty");
+    public static final ISetting<String> DEEPL_TOKEN = ConfigSetting.create(CONFIG, "DEEPL_TOKEN", "empty");
+
+
+    private Translate translate = new Translate(this);
 
     public Core() {
         super(
@@ -143,6 +148,8 @@ public class Core extends CorePlugin {
                         .setAutoReconnect(true)
                         .build()
         );
+
+        translate.register();
 
         getJDA().addEventListener(new BotEventListener(this));
     }
@@ -229,7 +236,6 @@ public class Core extends CorePlugin {
 
         permRegistry.save();
         PasteRequestModule.register(getPluginBus());
-
     }
 
     @Override

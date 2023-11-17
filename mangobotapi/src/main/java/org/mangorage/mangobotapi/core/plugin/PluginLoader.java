@@ -40,7 +40,7 @@ public class PluginLoader {
     );
 
     public static void load() {
-        LogHelper.info("Loading addons...");
+        LogHelper.info("Loading plugins & addons...");
         Set<Class<?>> PLUGINS_CORE = new HashSet<>();
         Set<Class<?>> PLUGINS_ADDON = new HashSet<>();
 
@@ -67,7 +67,7 @@ public class PluginLoader {
         PLUGINS_CORE.forEach(PluginLoader::loadCore);
         PLUGINS_ADDON.forEach(PluginLoader::loadAddon);
 
-        LogHelper.info("Finished loading plugins...");
+        LogHelper.info("Finished loading plugins & addons...");
     }
 
     public static void loadCore(Class<?> cls) {
