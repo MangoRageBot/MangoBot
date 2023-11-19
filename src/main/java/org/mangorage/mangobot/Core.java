@@ -149,7 +149,7 @@ public class Core extends CorePlugin {
                         .build()
         );
 
-        translate.register();
+        // translate.register();
 
         getJDA().addEventListener(new BotEventListener(this));
     }
