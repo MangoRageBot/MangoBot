@@ -75,23 +75,27 @@ public class LauncherMain {
                 throw new RuntimeException(e);
             }
         });
-
         ClassLoader oldCL = Thread.currentThread().getContextClassLoader().getParent();
 
-        try (var classloader = new MangoClassloader(urls.toArray(new URL[urls.size()]), oldCL)) {
-            Thread.currentThread().setContextClassLoader(classloader);
-            loader = classloader;
+        try (var coreloader = new URLClassLoader(urls.toArray(new URL[urls.size()]), oldCL)) {
+            Thread.currentThread().setContextClassLoader(coreloader);
+            try (var classloader = new MangoClassloader(urls.toArray(new URL[urls.size()]), coreloader.getParent())) {
+                Thread.currentThread().setContextClassLoader(classloader);
+                loader = classloader;
 
-            try {
-                Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", true, classloader);
-                Method method = mainClass.getDeclaredMethod("main", String[].class);
-                method.invoke(null, (Object) args); // Pass through the args...
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                     InvocationTargetException exception) {
-                throw new RuntimeException(exception);
-            } finally {
-                System.err.println("Finished Running Launcher.");
-                Thread.currentThread().setContextClassLoader(oldCL);
+                try {
+                    Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", true, classloader);
+                    Method method = mainClass.getDeclaredMethod("main", String[].class);
+                    method.invoke(null, (Object) args); // Pass through the args...
+                } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                         InvocationTargetException exception) {
+                    throw new RuntimeException(exception);
+                } finally {
+                    System.err.println("Finished Running Launcher.");
+                    Thread.currentThread().setContextClassLoader(oldCL);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
