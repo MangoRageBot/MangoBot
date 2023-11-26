@@ -95,9 +95,10 @@ def libs = [
         SLF4J_SIMPLE    : 'org.slf4j:slf4j-simple:2.0.9',
         REFLECTIONS: 'org.reflections:reflections:0.10.2',
         LUA_JAVA   : 'org.luaj:luaj-jse:3.0.1',
-        DEEPL      : 'com.deepl.api:deepl-java:1.4.0',
-        LANGUAGE   : 'com.github.pemistahl:lingua:1.2.2'
+        ASM        : 'org.ow2.asm:asm:9.1',
+        ASM_TREE   : 'org.ow2.asm:asm-tree:9.2'
 ]
+
 
 ext.globalLibs = libs
 
@@ -116,8 +117,8 @@ dependencies {
     implementation(libs.SLF4J_SIMPLE)
     implementation(libs.REFLECTIONS)
     implementation(libs.LUA_JAVA)
-    implementation(libs.DEEPL)
-    implementation(libs.LANGUAGE)
+    implementation(libs.ASM)
+    implementation(libs.ASM_TREE)
 
     // Core Libs
     implementation project(path: ':mangobotapi')
@@ -178,10 +179,10 @@ publish {
 }
 
 tasks.register('publishAndRestartServer') {
-    dependsOn(runDatagen)
-    dependsOn(publish)
     group = "bot tasks"
     description = "Publish and restart Bot server"
+
+    dependsOn publish
 
     doLast {
         println("Restarting Server...")
@@ -200,7 +201,9 @@ tasks.register('publishAndRestartServer') {
     }
 }
 
+
 jar {
+    dependsOn runDatagen
     dependsOn configurations.internal
 
     from {
@@ -214,6 +217,14 @@ jar {
 
     manifest {
         attributes 'Main-Class': 'org.mangorage.mangobot.LauncherMain'
+    }
+
+    doLast {
+        copy {
+            from jar.outputs
+            into 'build/run/plugins'
+            rename { 'mangobot.jar' }
+        }
     }
 }
 

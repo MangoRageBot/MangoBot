@@ -22,6 +22,8 @@
 
 package org.mangorage.mangobot;
 
+import org.mangorage.mangobot.core.MangoClassloader;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -76,12 +78,12 @@ public class LauncherMain {
 
         ClassLoader oldCL = Thread.currentThread().getContextClassLoader().getParent();
 
-        try (var classLoader = new URLClassLoader(urls.toArray(new URL[urls.size()]), oldCL)) {
-            Thread.currentThread().setContextClassLoader(classLoader);
-            loader = classLoader;
+        try (var classloader = new MangoClassloader(urls.toArray(new URL[urls.size()]), oldCL)) {
+            Thread.currentThread().setContextClassLoader(classloader);
+            loader = classloader;
 
             try {
-                Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", true, classLoader);
+                Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", true, classloader);
                 Method method = mainClass.getDeclaredMethod("main", String[].class);
                 method.invoke(null, (Object) args); // Pass through the args...
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |

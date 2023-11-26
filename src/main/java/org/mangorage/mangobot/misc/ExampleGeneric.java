@@ -20,35 +20,10 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot;
+package org.mangorage.mangobot.misc;
 
-import org.mangorage.mangobot.misc.ExampleGeneric;
-import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
-import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
-import org.mangorage.mangobotapi.core.plugin.PluginLoader;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
-public class Main {
-    private static final AtomicBoolean running = new AtomicBoolean(false);
-    public static void main(String[] args) {
-        running.set(true);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            running.set(false);
-            System.out.println("Shutting down program!");
-        }));
-
-        VersionCommand.init();
-        Actions.init();
-        PluginLoader.load();
-
-
-        var test = new ExampleGeneric<Integer>() {
-        };
-        System.out.println(test.getType());
-
-        while (running.get()) {
-        }
+public abstract class ExampleGeneric<T> {
+    public final String getType() {
+        throw new RuntimeException("This will be implemented by a transformer");
     }
 }
