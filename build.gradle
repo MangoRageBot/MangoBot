@@ -154,7 +154,7 @@ tasks.register('runDatagen') {
     group "bot tasks"
     description "Runs the data generator"
 
-    doLast {
+    doFirst {
         String directory = "%s/src/main/resources/installerdata".formatted(getProjectDir())
 
         Datagen.generateDependenciesJson(
