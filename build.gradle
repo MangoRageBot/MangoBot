@@ -154,7 +154,7 @@ tasks.register('runDatagen') {
     group "bot tasks"
     description "Runs the data generator"
 
-    doFirst {
+    doLast {
         String directory = "%s/src/main/resources/installerdata".formatted(getProjectDir())
 
         Datagen.generateDependenciesJson(
@@ -205,6 +205,7 @@ tasks.register('publishAndRestartServer') {
 jar {
     dependsOn runDatagen
     dependsOn configurations.internal
+    mustRunAfter runDatagen
 
     from {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
