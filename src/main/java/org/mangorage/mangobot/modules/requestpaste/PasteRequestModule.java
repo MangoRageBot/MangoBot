@@ -33,12 +33,9 @@ import org.mangorage.mangobot.Core;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -55,21 +52,12 @@ public class PasteRequestModule {
         bus.addListener(DMessageRecievedEvent.class, PasteRequestModule::onMessage);
     }
 
-    private static GistFile getData(InputStream stream, String fileName, String extension) {
-        StringBuilder textBuilder = new StringBuilder();
-        try (Reader reader = new BufferedReader(new InputStreamReader
-                (stream, StandardCharsets.UTF_8))) {
-            int c = 0;
-            while ((c = reader.read()) != -1) {
-                textBuilder.append((char) c);
-            }
+    private static byte[] getData(InputStream stream) {
+        try {
+            return stream.readAllBytes();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return null;
         }
-        var result = new GistFile();
-        result.setContent(textBuilder.toString());
-        result.setFilename(fileName);
-        return result;
     }
 
     private static String getFileName(Message.Attachment attachment, int count) {
@@ -104,15 +92,24 @@ public class PasteRequestModule {
             HashMap<String, GistFile> FILES = new HashMap<>();
             attachments.forEach(attachment -> {
                 try {
+
+                    byte[] bytes = getData(attachment.getProxy().download().get());
+                    if (bytes == null) return;
+                    String content = new String(bytes, Charset.defaultCharset());
+                    if (!content.matches("\\A\\p{Print}+\\z")) return;
                     var fileName = getFileName(attachment, count.getAndAdd(1));
-                    FILES.put(fileName, getData(attachment.getProxy().download().get(), fileName, attachment.getFileExtension()));
+
+                    var gistFile = new GistFile();
+                    gistFile.setContent(content);
+                    gistFile.setFilename(fileName);
+
+                    FILES.put(fileName, gistFile);
                 } catch (ExecutionException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             });
 
             gist.setFiles(FILES);
-
 
             try {
                 var remote = service.createGist(gist);
@@ -123,6 +120,4 @@ public class PasteRequestModule {
 
         });
     }
-
-
 }
