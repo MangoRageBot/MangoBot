@@ -31,6 +31,7 @@ buildscript {
     }
 }
 
+def projectRootDir = project.projectDir.toPath()
 def getVersionCode = {
     def proc = 'git rev-list --count master'.execute()
     proc.waitFor()
@@ -206,11 +207,11 @@ tasks.register('setupInstaller') {
     description "Sets up the package.json for the installer"
     doLast {
         println("Copying over package.json")
-        def projectRootDir = project.projectDir.toPath()
         Path source = projectRootDir.resolve(Paths.get('installer/package.json'))
         Path destination = projectRootDir.resolve(Paths.get('build/run/installer/package.json'))
 
         try {
+            Files.createDirectories(destination)
             Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING)
             println "File copied successfully from ${source.toAbsolutePath()} to ${destination.toAbsolutePath()}"
         } catch (IOException e) {
