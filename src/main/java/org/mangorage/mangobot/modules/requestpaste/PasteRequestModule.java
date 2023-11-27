@@ -27,7 +27,6 @@ import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.GistService;
-import org.jetbrains.annotations.Nullable;
 import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.basicutils.misc.LazyReference;
 import org.mangorage.mangobot.Core;
@@ -47,14 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PasteRequestModule {
     private static final LazyReference<GitHubClient> GITHUB_CLIENT = LazyReference.create(() -> new GitHubClient().setOAuth2Token(Core.PASTE_TOKEN.get()));
-    private static final List<String> VALID_EXTENSIONS = List.of(
-            "txt",
-            "log",
-            "java",
-            "json",
-            "cfg"
-    );
-
     private static final List<String> GUILDS = List.of(
             "1129059589325852724",
             "834300742864601088"
@@ -62,11 +53,6 @@ public class PasteRequestModule {
 
     public static void register(IEventBus bus) {
         bus.addListener(DMessageRecievedEvent.class, PasteRequestModule::onMessage);
-    }
-
-
-    private static boolean validExtension(@Nullable String extension) {
-        return extension != null && VALID_EXTENSIONS.contains(extension);
     }
 
     private static GistFile getData(InputStream stream, String fileName, String extension) {
@@ -102,7 +88,7 @@ public class PasteRequestModule {
             if (!GUILDS.contains(dEvent.getGuild().getId())) return;
 
             var message = dEvent.getMessage();
-            var attachments = message.getAttachments().stream().filter(attachment -> validExtension(attachment.getFileExtension())).toList();
+            var attachments = message.getAttachments();
 
             if (attachments.isEmpty()) return;
 
