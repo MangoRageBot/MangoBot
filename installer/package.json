@@ -1,0 +1,11 @@
+{
+  "packageName": "mangobot",
+  "packageDest": "plugins/",
+  "maven": {
+    "repository": "https://s01.oss.sonatype.org/content/repositories/releases",
+    "groupId": "io.github.realmangorage",
+    "artifactId": "mangobot",
+    "version": "none",
+    "jar": ".jar"
+  }
+}

@@ -2,6 +2,11 @@ import com.mattmalec.pterodactyl4j.PteroBuilder
 import com.mattmalec.pterodactyl4j.client.entities.PteroClient
 import org.mangorage.installer.api.core.Datagen
 
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+
 buildscript {
     repositories {
         mavenLocal()
@@ -53,6 +58,7 @@ java {
 configurations {
     api.extendsFrom internal
 }
+
 
 repositories {
     mavenCentral()
@@ -132,18 +138,15 @@ dependencies {
     internal project(path: ':mangoutils')
 }
 
-tasks.register('runBot', JavaExec) {
+publish {
     group "bot tasks"
-    description "Runs the bot"
-
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'org.mangorage.mangobot.Main'
-    workingDir = file('build/run/')
 }
 
-tasks.register('runBotLauncher', JavaExec) {
+tasks.register('runBot', JavaExec) {
     group "bot tasks"
     description "Runs the built in Launcher."
+    dependsOn build
+    mustRunAfter build
 
     classpath = sourceSets.main.runtimeClasspath
     mainClass = 'org.mangorage.mangobot.LauncherMain'
@@ -174,15 +177,12 @@ tasks.register('runDatagen') {
     }
 }
 
-publish {
-    group "bot tasks"
-}
-
 tasks.register('publishAndRestartServer') {
-    group = "bot tasks"
-    description = "Publish and restart Bot server"
+    group "bot tasks"
+    description "Publish and restart Bot server"
 
     dependsOn publish
+    mustRunAfter publish
 
     doLast {
         println("Restarting Server...")
@@ -199,6 +199,37 @@ tasks.register('publishAndRestartServer') {
             }
         }
     }
+}
+
+tasks.register('setupInstaller') {
+    group "bot tasks"
+    description "Sets up the package.json for the installer"
+    doLast {
+        println("Copying over package.json")
+        def projectRootDir = project.projectDir.toPath()
+        Path source = projectRootDir.resolve(Paths.get('installer/package.json'))
+        Path destination = projectRootDir.resolve(Paths.get('build/run/installer/package.json'))
+
+        try {
+            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING)
+            println "File copied successfully from ${source.toAbsolutePath()} to ${destination.toAbsolutePath()}"
+        } catch (IOException e) {
+            println "Error copying file: ${e.message}"
+            e.printStackTrace()
+        }
+    }
+}
+
+tasks.register('runInstaller', JavaExec) {
+    group "bot tasks"
+    description "runs the installer to get everything configured"
+
+    dependsOn setupInstaller
+    mustRunAfter setupInstaller
+
+    classpath = files('installer/installer-1.0.1.jar')
+    mainClass = 'org.mangorage.installer.Installer'
+    workingDir = file('build/run/')
 }
 
 
