@@ -139,7 +139,7 @@ public class PasteRequestModule {
             if (a.getAttachments().isEmpty()) return;
             a.retrieveReactionUsers(EMOJI).queue(b -> {
                 b.stream().filter(user -> user.getId().equals(dEvent.getJDA().getSelfUser().getId())).findFirst().ifPresent(c -> {
-                    a.removeReaction(EMOJI).queue();
+                    a.clearReactions(EMOJI).queue();
                     createGists(a);
                 });
             });
