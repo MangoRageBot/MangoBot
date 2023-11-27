@@ -210,11 +210,12 @@ tasks.register('setupInstaller') {
     doLast {
         println("Copying over package.json")
         Path source = projectRootDir.resolve(Paths.get('installer/package.json'))
-        Path destination = projectRootDir.resolve(Paths.get('build/run/installer/package.json'))
+        Path destination = projectRootDir.resolve(Paths.get('build/run/installer'))
+        Path target = projectRootDir.resolve(Paths.get('build/run/installer/package.json'))
 
         try {
             Files.createDirectories(destination)
-            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING)
+            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
             println "File copied successfully from ${source.toAbsolutePath()} to ${destination.toAbsolutePath()}"
         } catch (IOException e) {
             println "Error copying file: ${e.message}"
