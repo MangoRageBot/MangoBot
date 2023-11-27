@@ -23,6 +23,7 @@
 package org.mangorage.mangobot.modules.requestpaste;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -31,6 +32,7 @@ import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.basicutils.misc.LazyReference;
 import org.mangorage.mangobot.Core;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
+import org.mangorage.mangobotapi.core.events.discord.DReactionEvent;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
 import java.io.IOException;
@@ -47,9 +49,11 @@ public class PasteRequestModule {
             "1129059589325852724",
             "834300742864601088"
     );
+    private static final Emoji EMOJI = Emoji.fromUnicode("\uD83D\uDCCB");
 
     public static void register(IEventBus bus) {
         bus.addListener(DMessageRecievedEvent.class, PasteRequestModule::onMessage);
+        bus.addListener(DReactionEvent.class, PasteRequestModule::onReact);
     }
 
     private static byte[] getData(InputStream stream) {
@@ -68,15 +72,12 @@ public class PasteRequestModule {
         return "%s_%s%s".formatted(fileNameNoExt, count, ext);
     }
 
-    public static void onMessage(DMessageRecievedEvent event) {
+    public static void createGists(Message msg) {
         TaskScheduler.getExecutor().execute(() -> {
-            var dEvent = event.get();
+            if (!msg.isFromGuild()) return;
+            if (!GUILDS.contains(msg.getGuildId())) return;
 
-            if (!dEvent.isFromGuild()) return;
-            if (!GUILDS.contains(dEvent.getGuild().getId())) return;
-
-            var message = dEvent.getMessage();
-            var attachments = message.getAttachments();
+            var attachments = msg.getAttachments();
 
             if (attachments.isEmpty()) return;
 
@@ -113,11 +114,36 @@ public class PasteRequestModule {
 
             try {
                 var remote = service.createGist(gist);
-                message.reply("gist -> %s".formatted(remote.getHtmlUrl())).setSuppressEmbeds(true).mentionRepliedUser(false).queue();
+                msg.reply("gist -> %s".formatted(remote.getHtmlUrl())).setSuppressEmbeds(true).mentionRepliedUser(false).queue();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
         });
+    }
+
+    public static void onMessage(DMessageRecievedEvent event) {
+        var dEvent = event.get();
+        if (!dEvent.getMessage().getAttachments().isEmpty())
+            dEvent.getMessage().addReaction(EMOJI).queue();
+    }
+
+    public static void onReact(DReactionEvent event) {
+        var dEvent = event.get();
+
+        if (!dEvent.isFromGuild()) return;
+        if (dEvent.getUser() == null) return;
+        if (dEvent.getUser().isBot()) return;
+
+        dEvent.retrieveMessage().queue(a -> {
+            if (a.getAttachments().isEmpty()) return;
+            a.retrieveReactionUsers(EMOJI).queue(b -> {
+                b.stream().filter(user -> user.getId().equals(dEvent.getJDA().getSelfUser().getId())).findFirst().ifPresent(c -> {
+                    a.removeReaction(EMOJI).queue();
+                    createGists(a);
+                });
+            });
+        });
+
     }
 }
