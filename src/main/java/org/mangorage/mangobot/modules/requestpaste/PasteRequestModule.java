@@ -35,7 +35,7 @@ import org.mangorage.mboteventbus.impl.IEventBus;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -95,8 +95,8 @@ public class PasteRequestModule {
 
                     byte[] bytes = getData(attachment.getProxy().download().get());
                     if (bytes == null) return;
-                    String content = new String(bytes, Charset.defaultCharset());
-                    if (!content.matches("\\A\\p{Print}+\\z")) return;
+                    String content = new String(bytes, StandardCharsets.UTF_8);
+
                     var fileName = getFileName(attachment, count.getAndAdd(1));
 
                     var gistFile = new GistFile();
