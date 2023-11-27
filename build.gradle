@@ -253,6 +253,8 @@ jar {
     }
 
     doLast {
+        Path output = projectRootDir.resolve(Paths.get('build/run/plugins'))
+        Files.createDirectories(output)
         copy {
             from jar.outputs
             into 'build/run/plugins'
