@@ -159,10 +159,12 @@ tasks.register('runDatagen') {
     description "Runs the data generator"
 
     doLast {
-        String directory = "%s/src/main/resources/installerdata".formatted(getProjectDir())
+        Path directory = projectRootDir.resolve("src/main/resources/installerdata")
+        String directoryUrl = directory.toAbsolutePath().toString()
+        Files.createDirectories(directory)
 
         Datagen.generateDependenciesJson(
-                "%s/src/main/resources/installerdata".formatted(getProjectDir()),
+                directoryUrl,
                 configurations.implementation.getDependencies().stream().map {
                     "%s:%s:%s".formatted(
                             it.getGroup(),
@@ -172,7 +174,7 @@ tasks.register('runDatagen') {
                 }.toList() as List<String>
         )
 
-        Datagen.generateIvySettingsXml(directory, getRepositories().stream().map {
+        Datagen.generateIvySettingsXml(directoryUrl, getRepositories().stream().map {
             it.getUrl().toString()
         }.toList() as List<String>)
     }
