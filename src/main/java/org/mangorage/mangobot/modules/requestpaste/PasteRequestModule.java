@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 public class PasteRequestModule {
     private static final LazyReference<GitHubClient> GITHUB_CLIENT = LazyReference.create(() -> new GitHubClient().setOAuth2Token(Core.PASTE_TOKEN.get()));
@@ -76,9 +75,19 @@ public class PasteRequestModule {
         return "%s_%s%s".formatted(fileNameNoExt, count, ext);
     }
 
+    private static double calculatePrintableCharacterConfidence(String input) {
+        // Count the number of printable characters
+        long printableCount = input.codePoints().filter(codePoint -> codePoint >= 0x20 && codePoint <= 0x7E).count();
+
+        // Calculate the ratio of printable characters to total characters
+        double confidence = (double) printableCount / input.length();
+
+        return confidence;
+    }
+
     private static boolean containsPrintableCharacters(String input) {
         // Use a regular expression to match all printable characters, including colon and semicolon
-        return Pattern.compile("[\\x20-\\x7E:;]+").matcher(input.substring(0, Math.min(input.length(), 5))).matches();
+        return calculatePrintableCharacterConfidence(input) > 0.6;
     }
 
     public static void createGists(Message msg) {
