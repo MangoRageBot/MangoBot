@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class PasteRequestModule {
     private static final LazyReference<GitHubClient> GITHUB_CLIENT = LazyReference.create(() -> new GitHubClient().setOAuth2Token(Core.PASTE_TOKEN.get()));
@@ -72,6 +73,11 @@ public class PasteRequestModule {
         return "%s_%s%s".formatted(fileNameNoExt, count, ext);
     }
 
+    private static boolean containsPrintableCharacters(String input) {
+        // Use a regular expression to match printable characters
+        return Pattern.compile("[\\x20-\\x7E\\d\\n\\r]+").matcher(input).matches();
+    }
+
     public static void createGists(Message msg) {
         TaskScheduler.getExecutor().execute(() -> {
             if (!msg.isFromGuild()) return;
@@ -97,7 +103,7 @@ public class PasteRequestModule {
                     byte[] bytes = getData(attachment.getProxy().download().get());
                     if (bytes == null) return;
                     String content = new String(bytes, StandardCharsets.UTF_8);
-
+                    if (!containsPrintableCharacters(content)) return;
                     var fileName = getFileName(attachment, count.getAndAdd(1));
 
                     var gistFile = new GistFile();
