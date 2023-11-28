@@ -78,7 +78,7 @@ public class PasteRequestModule {
 
     private static boolean containsPrintableCharacters(String input) {
         // Use a regular expression to match all printable characters, including colon and semicolon
-        return Pattern.compile("[\\x20-\\x7E:;]+").matcher(input).matches();
+        return Pattern.compile("[\\x20-\\x7E:;]+").matcher(input.substring(0, Math.min(input.length(), 5))).matches();
     }
 
     public static void createGists(Message msg) {
