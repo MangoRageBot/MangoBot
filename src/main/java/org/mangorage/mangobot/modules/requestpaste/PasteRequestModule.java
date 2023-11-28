@@ -41,6 +41,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
@@ -75,7 +76,7 @@ public class PasteRequestModule {
 
     private static boolean containsPrintableCharacters(String input) {
         // Use a regular expression to match printable characters
-        return Pattern.compile("[\\x20-\\x7E\\d\\n\\r]+").matcher(input).matches();
+        return Pattern.compile("[\\x20-\\x7E\\d\\r\\n]+").matcher(input).matches();
     }
 
     public static void createGists(Message msg) {
@@ -84,9 +85,7 @@ public class PasteRequestModule {
             if (!GUILDS.contains(msg.getGuildId())) return;
 
             var attachments = msg.getAttachments();
-
             if (attachments.isEmpty()) return;
-
 
             GitHubClient CLIENT = GITHUB_CLIENT.get();
             GistService service = new GistService(CLIENT);
@@ -130,8 +129,28 @@ public class PasteRequestModule {
 
     public static void onMessage(DMessageRecievedEvent event) {
         var dEvent = event.get();
-        if (!dEvent.getMessage().getAttachments().isEmpty())
-            dEvent.getMessage().addReaction(EMOJI).queue();
+        var message = dEvent.getMessage();
+        var attachments = message.getAttachments();
+        if (!attachments.isEmpty()) {
+            TaskScheduler.getExecutor().execute(() -> {
+                var suceeeded = new AtomicBoolean(false);
+                for (Message.Attachment attachment : attachments) {
+                    try {
+                        byte[] bytes = getData(attachment.getProxy().download().get());
+                        if (bytes == null) continue;
+                        String content = new String(bytes, StandardCharsets.UTF_8);
+                        if (containsPrintableCharacters(content)) {
+                            suceeeded.set(true);
+                            break;
+                        }
+                    } catch (InterruptedException | ExecutionException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                if (suceeeded.get()) message.addReaction(EMOJI).queue();
+            });
+        }
     }
 
     public static void onReact(DReactionEvent event) {
