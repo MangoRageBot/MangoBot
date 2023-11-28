@@ -60,7 +60,9 @@ public class PasteRequestModule {
 
     private static byte[] getData(InputStream stream) {
         try {
-            return stream.readAllBytes();
+            byte[] data = stream.readAllBytes();
+            stream.close();
+            return data;
         } catch (IOException e) {
             return null;
         }
@@ -75,8 +77,8 @@ public class PasteRequestModule {
     }
 
     private static boolean containsPrintableCharacters(String input) {
-        // Use a regular expression to match printable characters
-        return Pattern.compile("[\\x20-\\x7E\\d\\r\\n]+").matcher(input).matches();
+        // Use a regular expression to match all printable characters, including colon and semicolon
+        return Pattern.compile("[\\x20-\\x7E:;]+").matcher(input).matches();
     }
 
     public static void createGists(Message msg) {
