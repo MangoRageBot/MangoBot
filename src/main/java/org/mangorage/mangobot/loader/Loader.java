@@ -107,7 +107,6 @@ public class Loader {
 
         try (var classloader = new MangoClassloader(urls, oldCL)) {
             Thread.currentThread().setContextClassLoader(classloader);
-            classloader.transform();
 
             var clazz = "org.mangorage.mangobot.loader.CoreMain";
             var methodName = "main";

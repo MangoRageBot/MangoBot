@@ -22,6 +22,7 @@
 
 package org.mangorage.mangobot.loader;
 
+import org.mangorage.mangobot.core.classloader.MangoClassloader;
 import org.mangorage.mangobot.misc.ExampleGeneric;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
@@ -33,6 +34,8 @@ public class CoreMain {
     private static final AtomicBoolean running = new AtomicBoolean(false);
     public static void main(String[] args) {
         running.set(true);
+        if (Thread.currentThread().getContextClassLoader() instanceof MangoClassloader mangoClassloader)
+            mangoClassloader.transform();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             running.set(false);
