@@ -20,9 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot;
-
-import org.mangorage.mangobot.core.MangoClassloader;
+package org.mangorage.mangobot.loader;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -33,12 +31,10 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LauncherMain {
-    public static URLClassLoader loader;
+public class LauncherLoader {
 
     private static void addJars(List<URL> urlList, Path directory) throws IOException {
         try (Stream<Path> files = Files.walk(directory)) {
@@ -55,15 +51,6 @@ public class LauncherMain {
     }
 
     public static void main(String[] args) {
-
-        if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("-skipClassloading") || args[0].equalsIgnoreCase("-scl")) {
-                String[] mainArgs = args.length == 1 ? new String[]{} : Arrays.copyOfRange(args, 1, args.length);
-                Main.main(mainArgs);
-                return;
-            }
-        }
-
         List<URL> urls = new ArrayList<>();
         List<Path> directories = List.of(Path.of("libs/"), Path.of("plugins/"));
 
@@ -78,12 +65,11 @@ public class LauncherMain {
 
         ClassLoader oldCL = Thread.currentThread().getContextClassLoader().getParent();
 
-        try (var classloader = new MangoClassloader(urls.toArray(new URL[urls.size()]), oldCL)) {
+        try (var classloader = new URLClassLoader(urls.toArray(new URL[urls.size()]), oldCL)) {
             Thread.currentThread().setContextClassLoader(classloader);
-            loader = classloader;
 
             try {
-                Class<?> mainClass = Class.forName("org.mangorage.mangobot.Main", true, classloader);
+                Class<?> mainClass = Class.forName("org.mangorage.mangobot.loader.TransformerLoader", true, classloader);
                 Method method = mainClass.getDeclaredMethod("main", String[].class);
                 method.invoke(null, (Object) args); // Pass through the args...
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |

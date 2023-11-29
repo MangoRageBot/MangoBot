@@ -20,25 +20,35 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot;
+package org.mangorage.mangobot.loader;
 
+import org.mangorage.mangobot.misc.ExampleGeneric;
+import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
+import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
+import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Test {
-    public static final StackWalker WALKER = StackWalker.getInstance(Set.of(StackWalker.Option.values()));
-
-    public static int getTotalTicksWithRate(int rate, int seconds) {
-        return (rate / 2) * (20 * seconds);
-    }
-
-    public static int getEachUseDuration(int rate) {
-        return (rate / 2) * (20 * 30); // 20 ticks * 30 seconds
-    }
-
+public class CoreMain {
+    private static final AtomicBoolean running = new AtomicBoolean(false);
     public static void main(String[] args) {
-        System.out.println(getTotalTicksWithRate(256, 30));
-        System.out.println(getEachUseDuration(256));
+        running.set(true);
 
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            running.set(false);
+            System.out.println("Shutting down program!");
+        }));
+
+        VersionCommand.init();
+        Actions.init();
+        PluginLoader.load();
+
+
+        var test = new ExampleGeneric<Integer>() {
+        };
+        System.out.println(test.getType());
+
+        while (running.get()) {
+        }
     }
 }
