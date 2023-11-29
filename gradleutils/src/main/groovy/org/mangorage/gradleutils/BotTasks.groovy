@@ -61,7 +61,13 @@ class BotTasks {
 
             doLast {
                 println("Restarting Server...")
-                PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", project.secrets.getProperty("SERVER_TOKEN"));
+
+                def secrets = new Properties()
+                project.file("secrets.properties").withInputStream {
+                    secrets.load(it)
+                }
+
+                PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", secrets.get("SERVER_TOKEN"));
 
                 var server = client.retrieveServerByIdentifier("f32263f3").execute();
                 if (server != null) {
@@ -77,40 +83,3 @@ class BotTasks {
         }
     }
 }
-
-/*
-tasks.register('runBot', JavaExec) {
-    group "bot tasks"
-    description "Runs the built in Launcher."
-    dependsOn build
-    mustRunAfter build
-
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'org.mangorage.mangobot.loader.Loader'
-    workingDir = file('build/run/')
-}
-
-tasks.register('publishAndRestartServer') {
-    group "bot tasks"
-    description "Publish and restart Bot server"
-
-    dependsOn publish
-    mustRunAfter publish
-
-    doLast {
-        println("Restarting Server...")
-        PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", secrets.getProperty("SERVER_TOKEN"));
-
-        var server = client.retrieveServerByIdentifier("f32263f3").execute();
-        if (server != null) {
-            if (server.isSuspended()) {
-                println("Server is suspended, unsuspending...");
-                server.start().execute();
-            } else {
-                server.restart().execute();
-                println("Restarted Discord Bot Server.");
-            }
-        }
-    }
-}
- */

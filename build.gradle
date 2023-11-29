@@ -31,10 +31,6 @@ def getVersionCode = {
     return proc.text.trim()
 }
 
-def secrets = new Properties()
-file("secrets.properties").withInputStream { secrets.load(it) }
-
-
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
