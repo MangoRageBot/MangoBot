@@ -22,6 +22,8 @@
 
 package org.mangorage.mangobot.loader;
 
+import org.mangorage.mangobot.core.MangoClassloader;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,7 +36,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LauncherLoader {
+public class Loader {
+    public static final List<URL> URLS;
+
+    static {
+        List<URL> urls = new ArrayList<>();
+        List<Path> directories = List.of(Path.of("libs/"), Path.of("plugins/"));
+
+        directories.forEach(directory -> {
+            try {
+                addJars(urls, directory);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        URLS = urls;
+    }
 
     private static void addJars(List<URL> urlList, Path directory) throws IOException {
         try (Stream<Path> files = Files.walk(directory)) {
@@ -50,28 +67,26 @@ public class LauncherLoader {
         }
     }
 
-    public static void main(String[] args) {
-        List<URL> urls = new ArrayList<>();
-        List<Path> directories = List.of(Path.of("libs/"), Path.of("plugins/"));
-
-        directories.forEach(directory -> {
-            try {
-                addJars(urls, directory);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-
+    public static void next(String[] args, boolean useMangoloader) {
         ClassLoader oldCL = Thread.currentThread().getContextClassLoader().getParent();
+        var urls = URLS.toArray(new URL[URLS.size()]);
 
-        try (var classloader = new URLClassLoader(urls.toArray(new URL[urls.size()]), oldCL)) {
+        try (var classloader = useMangoloader ? new MangoClassloader(urls, oldCL) : new URLClassLoader(urls, oldCL)) {
             Thread.currentThread().setContextClassLoader(classloader);
 
+            var clazz = useMangoloader ? "org.mangorage.mangobot.loader.CoreMain" : "org.mangorage.mangobot.loader.Loader";
+            var methodName = useMangoloader ? "main" : "next";
+
+
             try {
-                Class<?> mainClass = Class.forName("org.mangorage.mangobot.loader.TransformerLoader", true, classloader);
-                Method method = mainClass.getDeclaredMethod("main", String[].class);
-                method.invoke(null, (Object) args); // Pass through the args...
+                Class<?> mainClass = Class.forName(clazz, true, classloader);
+                if (useMangoloader) {
+                    Method method = mainClass.getDeclaredMethod(methodName, String[].class);
+                    method.invoke(null, (Object) args); // Pass through the args...
+                } else {
+                    Method method = mainClass.getDeclaredMethod(methodName, String[].class, boolean.class);
+                    method.invoke(null, (Object) args, true); // Pass through the args...
+                }
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                      InvocationTargetException exception) {
                 throw new RuntimeException(exception);
@@ -82,5 +97,9 @@ public class LauncherLoader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void main(String[] args) {
+        next(args, false);
     }
 }
