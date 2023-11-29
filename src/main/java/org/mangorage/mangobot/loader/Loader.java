@@ -100,32 +100,6 @@ public class Loader {
     }
 
     public static void main(String[] args) {
-        //next(args, false);
-
-        ClassLoader oldCL = Thread.currentThread().getContextClassLoader().getParent();
-        var urls = URLS.toArray(new URL[URLS.size()]);
-
-        try (var classloader = new MangoClassloader(urls, oldCL)) {
-            Thread.currentThread().setContextClassLoader(classloader);
-
-            var clazz = "org.mangorage.mangobot.loader.CoreMain";
-            var methodName = "main";
-
-            try {
-                Class<?> mainClass = Class.forName(clazz, true, classloader);
-
-                Method method = mainClass.getDeclaredMethod(methodName, String[].class);
-                method.invoke(null, (Object) args); // Pass through the args...
-
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                     InvocationTargetException exception) {
-                throw new RuntimeException(exception);
-            } finally {
-                System.err.println("Finished Running Launcher.");
-                Thread.currentThread().setContextClassLoader(oldCL);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        next(args, false);
     }
 }

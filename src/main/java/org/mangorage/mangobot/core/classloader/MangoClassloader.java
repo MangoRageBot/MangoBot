@@ -30,10 +30,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class MangoClassloader extends URLClassLoader {
-    private Transformers transformers;
+    private Transformers transformers = new Transformers(this);
 
     public MangoClassloader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
+        transform();
     }
 
     public void transform() {
