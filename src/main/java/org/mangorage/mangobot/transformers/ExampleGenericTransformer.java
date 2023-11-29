@@ -22,7 +22,8 @@
 
 package org.mangorage.mangobot.transformers;
 
-import org.mangorage.mangobot.core.MangoClassloader;
+import org.mangorage.mangobot.core.classloader.ITransformer;
+import org.mangorage.mangobot.core.classloader.MangoClassloader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
@@ -34,7 +35,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class ExampleGenericTransformer implements MangoClassloader.ITransformer {
+public class ExampleGenericTransformer implements ITransformer {
     private static final String CLASS_TYPE = "org/mangorage/mangobot/misc/ExampleGeneric";
     private static final String FUNC_NAME = "getType";
     private static final String FUNC_DESC = "()Ljava/lang/String;";
