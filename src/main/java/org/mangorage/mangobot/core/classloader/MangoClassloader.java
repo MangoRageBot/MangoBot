@@ -30,7 +30,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class MangoClassloader extends URLClassLoader {
-    private Transformers transformers = new Transformers(this);
+    private final Transformers transformers = new Transformers(this);
 
     public MangoClassloader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
@@ -38,8 +38,6 @@ public class MangoClassloader extends URLClassLoader {
     }
 
     public void transform() {
-        if (transformers != null) return;
-        transformers = new Transformers(this);
         try {
             var transformConfigs = findResources(".mtransform");
             while (transformConfigs.hasMoreElements()) {
