@@ -1,0 +1,67 @@
+buildscript {
+    repositories {
+        mavenCentral()  // or any other repository where your JAR is hosted
+    }
+    dependencies {
+        classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
+    }
+}
+
+plugins {
+    id 'java-gradle-plugin'
+    id 'groovy'
+    id 'com.github.johnrengelman.shadow'
+}
+
+
+group = 'org.mangorage'
+version = '1.0.0'
+
+configurations {
+    shadow
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven {
+        url = uri("https://plugins.gradle.org/m2/")
+    }
+    maven {
+        url = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+    }
+    maven {
+        url = 'https://repo.mattmalec.com/repository/releases'
+    }
+}
+
+dependencies {
+
+    compileOnly 'org.apache.groovy:groovy:4.0.14'
+    compileOnly 'io.github.realmangorage:InstallerAPI:1.0.4'
+    compileOnly 'com.mattmalec:Pterodactyl4J:2.BETA_140'
+    compileOnly 'com.google.code.gson:gson:2.10.1'
+
+    shadow 'io.github.realmangorage:InstallerAPI:1.0.4'
+    shadow 'com.mattmalec:Pterodactyl4J:2.BETA_140'
+    shadow 'com.google.code.gson:gson:2.10.1'
+
+}
+
+gradlePlugin {
+    plugins {
+        gradleutils {
+            id = 'org.mangorage.gradleutils'
+            implementationClass = 'org.mangorage.gradleutils.GradleUtilsPlugin'
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}

@@ -1,11 +1,6 @@
-import com.mattmalec.pterodactyl4j.PteroBuilder
-import com.mattmalec.pterodactyl4j.client.entities.PteroClient
-import org.mangorage.installer.api.core.Datagen
-
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 
 buildscript {
     repositories {
@@ -25,9 +20,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'com.google.code.gson:gson:2.10.1'
-        classpath 'io.github.realmangorage:InstallerAPI:1.0.4'
-        classpath 'com.mattmalec:Pterodactyl4J:2.BETA_140'
+        classpath files('gradleutils/build/libs/gradleutils-1.0.0-all.jar')
     }
 }
 
@@ -45,6 +38,12 @@ file("secrets.properties").withInputStream { secrets.load(it) }
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
+
+Path path = projectRootDir.resolve(Path.of('gradleutils/build/libs/gradleutils-1.0.0-all.jar'))
+
+if (path.toFile().exists()) {
+    apply plugin: 'org.mangorage.gradleutils'
+}
 
 group 'org.mangorage'
 version "${BOT_VERSION}-c" + getVersionCode()
@@ -115,7 +114,6 @@ dependencies {
     runtimeOnly(libs.LOG4J_SLF4J_IMPL)
 
     // Libs for Bot
-
     implementation(libs.JDA)
     implementation(libs.LAVA_PLAYER)
     implementation(libs.GSON)
@@ -143,104 +141,14 @@ publish {
     group "bot tasks"
 }
 
-tasks.register('runBot', JavaExec) {
-    group "bot tasks"
-    description "Runs the built in Launcher."
-    dependsOn build
-    mustRunAfter build
-
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'org.mangorage.mangobot.loader.Loader'
-    workingDir = file('build/run/')
-}
-
-tasks.register('runDatagen') {
-    group "bot tasks"
-    description "Runs the data generator"
-
-    doLast {
-        Path directory = projectRootDir.resolve("src/main/resources/installerdata")
-        String directoryUrl = directory.toAbsolutePath().toString()
-        Files.createDirectories(directory)
-
-        Datagen.generateDependenciesJson(
-                directoryUrl,
-                configurations.implementation.getDependencies().stream().map {
-                    "%s:%s:%s".formatted(
-                            it.getGroup(),
-                            it.getName(),
-                            it.getVersion()
-                    )
-                }.toList() as List<String>
-        )
-
-        Datagen.generateIvySettingsXml(directoryUrl, getRepositories().stream().map {
-            it.getUrl().toString()
-        }.toList() as List<String>)
-    }
-}
-
-tasks.register('publishAndRestartServer') {
-    group "bot tasks"
-    description "Publish and restart Bot server"
-
-    dependsOn publish
-    mustRunAfter publish
-
-    doLast {
-        println("Restarting Server...")
-        PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", secrets.getProperty("SERVER_TOKEN"));
-
-        var server = client.retrieveServerByIdentifier("f32263f3").execute();
-        if (server != null) {
-            if (server.isSuspended()) {
-                println("Server is suspended, unsuspending...");
-                server.start().execute();
-            } else {
-                server.restart().execute();
-                println("Restarted Discord Bot Server.");
-            }
-        }
-    }
-}
-
-tasks.register('setupInstaller') {
-    group "bot tasks"
-    description "Sets up the package.json for the installer"
-    doLast {
-        println("Copying over package.json")
-        Path source = projectRootDir.resolve(Paths.get('installer/package.json'))
-        Path destination = projectRootDir.resolve(Paths.get('build/run/installer'))
-        Path target = projectRootDir.resolve(Paths.get('build/run/installer/package.json'))
-
-        try {
-            Files.createDirectories(destination)
-            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
-            println "File copied successfully from ${source.toAbsolutePath()} to ${destination.toAbsolutePath()}"
-        } catch (IOException e) {
-            println "Error copying file: ${e.message}"
-            e.printStackTrace()
-        }
-    }
-}
-
-tasks.register('runInstaller', JavaExec) {
-    group "bot tasks"
-    description "runs the installer to get everything configured"
-
-    dependsOn setupInstaller
-    mustRunAfter setupInstaller
-
-    classpath = files('installer/installer-1.0.1.jar')
-    mainClass = 'org.mangorage.installer.Installer'
-    workingDir = file('build/run/')
-}
-
-
 jar {
-    dependsOn runDatagen
+    var task = getTasksByName("runDatagen", false)
+    if (task != null) {
+        dependsOn task
+        mustRunAfter task
+    }
+
     dependsOn configurations.internal
-    mustRunAfter runDatagen
 
     from {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
