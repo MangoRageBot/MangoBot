@@ -42,9 +42,9 @@ class InstallerTasks {
 
             doLast {
                 println("Copying over package.json")
-                Path source = projectRootDir.resolve(Paths.get('installer/package.json'))
+                Path source = projectRootDir.resolve(Paths.get('installer/package.txt'))
                 Path destination = projectRootDir.resolve(Paths.get('build/run/installer'))
-                Path target = projectRootDir.resolve(Paths.get('build/run/installer/package.json'))
+                Path target = projectRootDir.resolve(Paths.get('build/run/installer/package.txt'))
 
                 try {
                     Files.createDirectories(destination)
