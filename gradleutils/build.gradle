@@ -37,13 +37,10 @@ repositories {
 }
 
 dependencies {
-
     compileOnly 'org.apache.groovy:groovy:4.0.14'
-    compileOnly 'io.github.realmangorage:InstallerAPI:1.0.4'
     compileOnly 'com.mattmalec:Pterodactyl4J:2.BETA_140'
     compileOnly 'com.google.code.gson:gson:2.10.1'
 
-    shadow 'io.github.realmangorage:InstallerAPI:1.0.4'
     shadow 'com.mattmalec:Pterodactyl4J:2.BETA_140'
     shadow 'com.google.code.gson:gson:2.10.1'
 
