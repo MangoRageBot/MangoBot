@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.classloader;
+package org.mangorage.mangobotapi.core.classloader;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Transformers {
+public class ClassTransformers {
     public static ClassNode getClassNode(byte[] classBytes) {
         ClassReader cr = new ClassReader(classBytes);
         ClassNode classNode = new ClassNode();
@@ -48,10 +48,10 @@ public class Transformers {
 
 
     private final HashMap<String, Class<?>> CLASSES = new HashMap<>(); // Transformed Class's
-    private final ArrayList<ITransformer> TRANSFORMERS = new ArrayList<>(); // Transformer's
+    private final ArrayList<IClassTransformer> TRANSFORMERS = new ArrayList<>(); // Transformer's
     private final ClassLoader loader;
 
-    public Transformers(ClassLoader loader) {
+    public ClassTransformers(ClassLoader loader) {
         this.loader = loader;
     }
 
@@ -59,7 +59,7 @@ public class Transformers {
         CLASSES.put(name, cool);
     }
 
-    public void add(ITransformer transformer) {
+    public void add(IClassTransformer transformer) {
         TRANSFORMERS.add(transformer);
     }
 
@@ -85,9 +85,9 @@ public class Transformers {
         ClassNode classNode = getClassNode(getClassBytes(name));
 
         AtomicReference<TransformerFlags> result = new AtomicReference<>(TransformerFlags.NO_REWRITE);
-        AtomicReference<ITransformer> _transformer = new AtomicReference<>();
+        AtomicReference<IClassTransformer> _transformer = new AtomicReference<>();
 
-        for (ITransformer transformer : TRANSFORMERS) {
+        for (IClassTransformer transformer : TRANSFORMERS) {
             result.set(transformer.transform(classNode, Type.getObjectType(name)));
             if (result.get() != TransformerFlags.NO_REWRITE) {
                 _transformer.set(transformer);

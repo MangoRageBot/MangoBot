@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.classloader;
+package org.mangorage.mangobotapi.core.classloader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class MangoClassloader extends URLClassLoader {
-    private Transformers transformers = new Transformers(this);
+    private ClassTransformers transformers = new ClassTransformers(this);
 
     public MangoClassloader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
@@ -49,8 +49,8 @@ public class MangoClassloader extends URLClassLoader {
                     while ((line = br.readLine()) != null) {
                         try {
                             var transformerClass = Class.forName(line);
-                            if (ITransformer.class.isAssignableFrom(transformerClass)) {
-                                transformers.add((ITransformer) transformerClass.getConstructor().newInstance());
+                            if (IClassTransformer.class.isAssignableFrom(transformerClass)) {
+                                transformers.add((IClassTransformer) transformerClass.getConstructor().newInstance());
                                 System.out.println("Found and loaded transformer %s".formatted(line));
                             }
                         } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |

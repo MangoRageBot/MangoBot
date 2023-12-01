@@ -25,13 +25,10 @@ package org.mangorage.mangobot;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
-import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import org.jetbrains.annotations.NotNull;
 import org.mangorage.basicutils.config.Config;
 import org.mangorage.basicutils.config.ConfigSetting;
 import org.mangorage.basicutils.config.ISetting;
@@ -149,17 +146,6 @@ public class Core extends CorePlugin {
         // translate.register();
 
         getJDA().addEventListener(new BotEventListener(this));
-    }
-
-    public static class Test implements EventListener {
-
-        /**
-         * @param event The Event to handle.
-         */
-        @Override
-        public void onEvent(@NotNull GenericEvent event) {
-            System.out.println(event);
-        }
     }
 
     @Override

@@ -20,10 +20,13 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.classloader;
+package org.mangorage.mangobotapi.core.classloader;
 
-public enum TransformerFlags {
-    NO_REWRITE,
-    SIMPLE_REWRITE,
-    FULL_REWRITE;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.ClassNode;
+
+public interface IClassTransformer {
+    TransformerFlags transform(ClassNode classNode, Type classType);
+
+    String getName();
 }

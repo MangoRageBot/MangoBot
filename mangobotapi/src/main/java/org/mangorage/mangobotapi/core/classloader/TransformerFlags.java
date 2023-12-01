@@ -20,23 +20,10 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package addon.example;
+package org.mangorage.mangobotapi.core.classloader;
 
-import org.mangorage.mangobotapi.core.plugin.PluginManager;
-import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
-import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
-import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
-
-import static addon.example.ExamplePlugin.ID;
-
-@Plugin(id = ID, type = Plugin.Type.ADDON)
-public class ExamplePlugin extends AddonPlugin {
-    public static final String ID = "exampleaddon";
-
-    public ExamplePlugin() {
-        super(ExamplePlugin.ID);
-        var corePlugin = PluginManager.getPlugin("mangobot", CorePlugin.class);
-
-        corePlugin.getCommandRegistry().addBasicCommand(new ExampleCommand());
-    }
+public enum TransformerFlags {
+    NO_REWRITE,
+    SIMPLE_REWRITE,
+    FULL_REWRITE;
 }

@@ -20,13 +20,29 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.classloader;
+package addon.example.transformers;
 
+import org.mangorage.mangobotapi.core.classloader.IClassTransformer;
+import org.mangorage.mangobotapi.core.classloader.TransformerFlags;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 
-public interface ITransformer {
-    TransformerFlags transform(ClassNode classNode, Type classType);
+public class ExampleAddonTransformer implements IClassTransformer {
+    /**
+     * @param classNode
+     * @param classType
+     * @return
+     */
+    @Override
+    public TransformerFlags transform(ClassNode classNode, Type classType) {
+        return TransformerFlags.NO_REWRITE;
+    }
 
-    String getName();
+    /**
+     * @return
+     */
+    @Override
+    public String getName() {
+        return null;
+    }
 }

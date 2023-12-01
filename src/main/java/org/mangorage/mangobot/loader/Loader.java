@@ -22,7 +22,7 @@
 
 package org.mangorage.mangobot.loader;
 
-import org.mangorage.mangobot.core.classloader.MangoClassloader;
+import org.mangorage.mangobotapi.core.classloader.MangoClassloader;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

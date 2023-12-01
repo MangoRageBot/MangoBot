@@ -30,6 +30,8 @@ dependencies {
     compileOnly(libs.JDA as String) // JDA
     compileOnly(libs.GSON as String) // GSON
     compileOnly(libs.LOG4J_CORE as String) // Log4J
+    compileOnly(libs.ASM as String) // ASM
+    compileOnly(libs.ASM_TREE as String) // ASM TREE
 }
 
 test {

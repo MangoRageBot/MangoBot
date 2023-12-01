@@ -163,7 +163,7 @@ jar {
         Files.createDirectories(output)
         copy {
             from jar.outputs
-            into 'build/run/plugins'
+            into output
             rename { 'mangobot.jar' }
         }
     }
