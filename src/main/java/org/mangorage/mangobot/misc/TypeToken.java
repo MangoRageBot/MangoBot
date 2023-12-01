@@ -20,13 +20,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.core.classloader;
+package org.mangorage.mangobot.misc;
 
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
+public class TypeToken {
+    private final String clazz;
 
-public interface ITransformer {
-    TransformerFlags transform(ClassNode classNode, Type classType);
+    public TypeToken(String clazz) {
+        this.clazz = clazz;
+    }
 
-    String getName();
+    public static TypeToken create(String s) {
+        return new TypeToken(s);
+    }
+
+    public String getClassType() {
+        return clazz;
+    }
+
+    /**
+     * Unsafe to call as the class may not exist.
+     *
+     * @return
+     * @throws ClassNotFoundException
+     */
+    public Class<?> getRealClass() throws ClassNotFoundException {
+        return Class.forName(clazz.replaceAll("/", "."));
+    }
 }

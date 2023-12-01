@@ -22,11 +22,8 @@
 
 package org.mangorage.mangobot.core.classloader;
 
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
-
-public interface ITransformer {
-    TransformerFlags transform(ClassNode classNode, Type classType);
-
-    String getName();
+public enum TransformerFlags {
+    NO_REWRITE,
+    SIMPLE_REWRITE,
+    FULL_REWRITE;
 }

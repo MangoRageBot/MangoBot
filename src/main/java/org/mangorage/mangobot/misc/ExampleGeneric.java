@@ -22,8 +22,9 @@
 
 package org.mangorage.mangobot.misc;
 
+
 public abstract class ExampleGeneric<T> {
-    public final String getType() {
+    public final TypeToken getType() {
         throw new RuntimeException("This will be implemented by a transformer");
     }
 }

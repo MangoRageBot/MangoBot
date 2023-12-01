@@ -67,7 +67,7 @@ class BotTasks {
                     secrets.load(it)
                 }
 
-                PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", secrets.get("SERVER_TOKEN"));
+                PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", secrets.get("SERVER_TOKEN") as String);
 
                 var server = client.retrieveServerByIdentifier("f32263f3").execute();
                 if (server != null) {

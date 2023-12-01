@@ -24,7 +24,6 @@ package org.mangorage.gradleutils
 
 import org.gradle.api.Project
 import org.gradle.api.tasks.JavaExec
-import org.mangorage.installer.api.core.Datagen
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -71,32 +70,5 @@ class InstallerTasks {
             mainClass = 'org.mangorage.installer.Installer'
             workingDir = project.file('build/run/')
         }
-
-        project.getTasks().register("runDatagen") {
-            setGroup(group)
-            setDescription("Runs the data generator")
-
-            doLast {
-                Path directory = projectRootDir.resolve("src/main/resources/installerdata")
-                String directoryUrl = directory.toAbsolutePath().toString()
-                Files.createDirectories(directory)
-
-                Datagen.generateDependenciesJson(
-                        directoryUrl,
-                        project.configurations.implementation.getDependencies().stream().map {
-                            "%s:%s:%s".formatted(
-                                    it.getGroup(),
-                                    it.getName(),
-                                    it.getVersion()
-                            )
-                        }.toList() as List<String>
-                )
-
-                Datagen.generateIvySettingsXml(directoryUrl, project.getRepositories().stream().map {
-                    it.getUrl().toString()
-                }.toList() as List<String>)
-            }
-        }
-
     }
 }

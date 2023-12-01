@@ -25,11 +25,13 @@ package org.mangorage.gradleutils
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.mangorage.gradleutils.java.Datagen
 
 class GradleUtilsPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         InstallerTasks.apply(project)
         BotTasks.apply(project)
+        Datagen.apply(project)
     }
 }

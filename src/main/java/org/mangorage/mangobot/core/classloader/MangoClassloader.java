@@ -30,7 +30,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 public class MangoClassloader extends URLClassLoader {
-    private final Transformers transformers = new Transformers(this);
+    private Transformers transformers = new Transformers(this);
 
     public MangoClassloader(URL[] urls, ClassLoader parent) {
         super(urls, parent);
@@ -110,9 +110,4 @@ public class MangoClassloader extends URLClassLoader {
         return super.defineClass(name, bytes, 0, bytes.length);
     }
 
-    public enum TransformerFlags {
-        NO_REWRITE,
-        SIMPLE_REWRITE,
-        FULL_REWRITE;
-    }
 }

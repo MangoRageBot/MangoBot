@@ -77,7 +77,6 @@ public class Loader {
             var clazz = useMangoloader ? "org.mangorage.mangobot.loader.CoreMain" : "org.mangorage.mangobot.loader.Loader";
             var methodName = useMangoloader ? "main" : "next";
 
-
             try {
                 Class<?> mainClass = Class.forName(clazz, true, classloader);
                 if (useMangoloader) {

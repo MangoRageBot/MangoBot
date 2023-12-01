@@ -43,7 +43,6 @@ if (path.toFile().exists()) {
 
 group 'org.mangorage'
 version "${BOT_VERSION}-c" + getVersionCode()
-//version ""
 
 java {
     toolchain {

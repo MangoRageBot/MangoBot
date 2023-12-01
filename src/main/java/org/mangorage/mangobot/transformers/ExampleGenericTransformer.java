@@ -23,7 +23,7 @@
 package org.mangorage.mangobot.transformers;
 
 import org.mangorage.mangobot.core.classloader.ITransformer;
-import org.mangorage.mangobot.core.classloader.MangoClassloader;
+import org.mangorage.mangobot.core.classloader.TransformerFlags;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.signature.SignatureReader;
@@ -37,12 +37,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ExampleGenericTransformer implements ITransformer {
     private static final String CLASS_TYPE = "org/mangorage/mangobot/misc/ExampleGeneric";
+    private static final String TYPE_TOKEN = "org/mangorage/mangobot/misc/TypeToken";
     private static final String FUNC_NAME = "getType";
-    private static final String FUNC_DESC = "()Ljava/lang/String;";
+    private static final String FUNC_DESC = "()Lorg/mangorage/mangobot/misc/TypeToken;";
 
 
     @Override
-    public MangoClassloader.TransformerFlags transform(ClassNode classNode, Type classType) {
+    public TransformerFlags transform(ClassNode classNode, Type classType) {
 
         if (CLASS_TYPE.equals(classNode.name)) {
             for (MethodNode mtd : classNode.methods) {
@@ -50,13 +51,14 @@ public class ExampleGenericTransformer implements ITransformer {
                     mtd.access &= ~Opcodes.ACC_FINAL;
                 }
             }
-            return MangoClassloader.TransformerFlags.SIMPLE_REWRITE;
+            return TransformerFlags.SIMPLE_REWRITE;
         } else if (CLASS_TYPE.equals(classNode.superName)) {
             AtomicReference<String> cls = new AtomicReference<>();
+            System.out.println(classNode.signature);
 
             SignatureReader reader = new SignatureReader(classNode.signature);
             reader.accept(new SignatureVisitor(Opcodes.ASM9) {
-                Deque<String> stack = new ArrayDeque<>();
+                final Deque<String> stack = new ArrayDeque<>();
 
                 @Override
                 public void visitClassType(final String name) {
@@ -80,14 +82,19 @@ public class ExampleGenericTransformer implements ITransformer {
                 throw new IllegalStateException("Could not find signature for GenericExample on " + classNode.name + " from " + classNode.signature);
 
             var mtd = classNode.visitMethod(Opcodes.ACC_PUBLIC, FUNC_NAME, FUNC_DESC, null, new String[0]);
-            mtd.visitLdcInsn(cls.get());
+
+            // Create and return a TypeToken
+            mtd.visitTypeInsn(Opcodes.NEW, TYPE_TOKEN);
+            mtd.visitInsn(Opcodes.DUP);
+            mtd.visitLdcInsn(cls.get());  // Load the class name
+            mtd.visitMethodInsn(Opcodes.INVOKESPECIAL, TYPE_TOKEN, "<init>", "(Ljava/lang/String;)V", false);
             mtd.visitInsn(Opcodes.ARETURN);
             mtd.visitEnd();
 
-            return MangoClassloader.TransformerFlags.FULL_REWRITE;
+            return TransformerFlags.FULL_REWRITE;
         }
 
-        return MangoClassloader.TransformerFlags.NO_REWRITE;
+        return TransformerFlags.NO_REWRITE;
     }
 
     @Override

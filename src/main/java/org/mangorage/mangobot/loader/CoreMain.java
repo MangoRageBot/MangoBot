@@ -27,11 +27,15 @@ import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CoreMain {
+    class a {
+    }
     private static final AtomicBoolean running = new AtomicBoolean(false);
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws ClassNotFoundException {
         running.set(true);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -44,9 +48,10 @@ public class CoreMain {
         PluginLoader.load();
 
 
-        var test = new ExampleGeneric<Integer>() {
+        ExampleGeneric<HashMap<Integer, HashMap<Integer, String>>> test = new ExampleGeneric<>() {
         };
-        System.out.println(test.getType());
+        System.out.println(test.getType().getClassType());
+        System.out.println(test.getType().getRealClass());
 
         while (running.get()) {
         }
