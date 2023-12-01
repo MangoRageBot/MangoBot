@@ -50,7 +50,7 @@ public class Datagen {
     public static String generate(List<String> repos, String group, String name, String version) {
         for (String repository : repos) {
             String url = repository + group.replace('.', '/') + "/" + name + "/" + version + "/" + name + "-" + version + ".jar";
-            System.out.println(url);
+            //System.out.println(url);
             if (isValidUrl(url)) {
                 return url;
             }
@@ -72,20 +72,27 @@ public class Datagen {
     }
 
 
-    public static void print(List<String> repos, ResolvedDependency dependency, Predicate<ModuleVersionIdentifier> checker, ArrayList<String> deps, ArrayList<ModuleVersionIdentifier> identifiers, ArrayList<String> urls) {
+    public static void getTransitiveDep(List<String> repos, ResolvedDependency dependency, Predicate<ModuleVersionIdentifier> checker, ArrayList<String> deps, ArrayList<ModuleVersionIdentifier> identifiers, ArrayList<String> urls) {
         var dep = dependency.getModule().getId();
         String id = dep.toString();
+
         if (!deps.contains(id) && checker.test(dep)) {
             deps.add(id);
             identifiers.add(dep);
             var result = generate(repos, dep.getGroup(), dep.getName(), dep.getVersion());
-            if (result != null) urls.add(result);
+            if (result != null) {
+                urls.add(result);
+            }
         }
+
         identifiers.add(dependency.getModule().getId());
-        if (!dependency.getChildren().isEmpty()) {
-            dependency.getChildren().forEach(a -> print(repos, a, checker, deps, identifiers, urls));
+
+        dependency.getChildren().forEach(a -> getTransitiveDep(repos, a, checker, deps, identifiers, urls));
+        if (dependency.getChildren().isEmpty()) {
+            var a = 1;
         }
     }
+
 
     private static List<String> getAllRepositories(Project project) {
         List<String> repositories = new ArrayList<>(mavenRepositories);
@@ -114,19 +121,19 @@ public class Datagen {
                 var idents = new ArrayList<ModuleVersionIdentifier>();
                 var urls = new ArrayList<String>();
 
-                project.getConfigurations().getByName("compileClasspath").getResolvedConfiguration().getFirstLevelModuleDependencies().forEach(a -> print(repos, a, (module) -> {
+                var conf = project.getConfigurations().getByName("runtimeClasspath");
+
+                conf.getResolvedConfiguration().getFirstLevelModuleDependencies().forEach(a -> getTransitiveDep(repos, a, (module) -> {
                     return !module.getGroup().contains("org.mangorage");
                 }, deps, idents, urls));
 
-                //deps.forEach(System.out::println);
+                deps.forEach(System.out::println);
                 System.out.printf("%s dependencies%n", deps.size());
                 System.out.println("Direct URL's");
                 //idents.forEach(System.out::println);
                 //urls.forEach(System.out::println);
 
                 var projectRootDir = project.getProjectDir().toPath();
-
-                // src/main/resources/installerdata
                 var depsFile = projectRootDir.resolve("src/main/resources/installerdata/deps.txt").toFile();
 
 

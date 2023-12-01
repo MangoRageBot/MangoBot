@@ -66,7 +66,8 @@ class InstallerTasks {
 
             mustRunAfter(project.getTasksByName("setupInstaller", false))
 
-            classpath = project.files('installer/installer-1.0.1.jar')
+            args("-launch")
+            classpath = project.files('installer/installer-1.1.0.jar')
             mainClass = 'org.mangorage.installer.Installer'
             workingDir = project.file('build/run/')
         }
