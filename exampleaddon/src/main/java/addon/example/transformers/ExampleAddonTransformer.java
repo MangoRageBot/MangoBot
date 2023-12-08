@@ -27,6 +27,9 @@ import org.mangorage.mangobotapi.core.classloader.TransformerFlags;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.ClassNode;
 
+/**
+ * Does nothing. Just to prove it can find and load transformers from addons
+ */
 public class ExampleAddonTransformer implements IClassTransformer {
     /**
      * @param classNode

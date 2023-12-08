@@ -44,6 +44,7 @@ import org.mangorage.mangobot.modules.basic.commands.PermissionCommand;
 import org.mangorage.mangobot.modules.basic.commands.PingCommand;
 import org.mangorage.mangobot.modules.basic.commands.PrefixCommand;
 import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
+import org.mangorage.mangobot.modules.developer.EchoCommand;
 import org.mangorage.mangobot.modules.developer.KickBotCommand;
 import org.mangorage.mangobot.modules.developer.RestartCommand;
 import org.mangorage.mangobot.modules.developer.RunCode;
@@ -184,7 +185,7 @@ public class Core extends CorePlugin {
         cmdRegistry.addBasicCommand(new RestartCommand());
         cmdRegistry.addBasicCommand(new SpeakCommand(this));
         cmdRegistry.addBasicCommand(new TerminateCommand());
-
+        cmdRegistry.addBasicCommand(new EchoCommand());
 
         // Music Commands
         cmdRegistry.addBasicCommand(new PlayCommand());

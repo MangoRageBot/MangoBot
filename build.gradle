@@ -37,9 +37,24 @@ apply plugin: 'maven-publish'
 
 Path path = projectRootDir.resolve(Path.of('gradleutils/build/libs/gradleutils-1.0.0-all.jar'))
 
+
 if (path.toFile().exists()) {
     apply plugin: 'org.mangorage.gradleutils'
+} else {
+    tasks.register("finishSetup", Exec) {
+        description = 'Restart the Gradle daemon'
+        group "bot tasks"
+        workingDir project.rootDir
+        dependsOn(":gradleutils:build")
+        mustRunAfter(":gradleutils:build")
+
+        doLast {
+            commandLine 'gradlew', '--reload'
+        }
+    }
+
 }
+
 
 group 'org.mangorage'
 version "${BOT_VERSION}-c" + getVersionCode()

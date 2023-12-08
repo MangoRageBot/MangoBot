@@ -24,7 +24,41 @@ package org.mangorage.mangobot.misc;
 
 
 public abstract class ExampleGeneric<T> {
+
+    private static final class ClonedExampleGeneric extends ExampleGeneric<Object> {
+
+        private final TypeToken typeToken;
+
+        private ClonedExampleGeneric(TypeToken typeToken) {
+            this.typeToken = typeToken;
+        }
+
+        @Override
+        protected TypeToken getTypeToken() {
+            return typeToken;
+        }
+    }
+
     public final TypeToken getType() {
-        throw new RuntimeException("This will be implemented by a transformer");
+        if (getTypeToken() == null)
+            throw new RuntimeException("This will be implemented by a transformer");
+        return getTypeToken();
+    }
+
+    protected TypeToken getTypeToken() {
+        return null;
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public String toString() {
+        return "ExampleGeneric[%s]".formatted(getType().getClassType());
+    }
+
+    @Override
+    public Object clone() {
+        return new ClonedExampleGeneric(getType());
     }
 }

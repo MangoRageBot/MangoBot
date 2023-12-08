@@ -63,5 +63,6 @@ shadowJar {
     configurations = [project.configurations.shadow]
 }
 
+
 jar.dependsOn(shadowJar)
 jar.mustRunAfter(shadowJar)

@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ExampleGenericTransformer implements IClassTransformer {
     private static final String CLASS_TYPE = "org/mangorage/mangobot/misc/ExampleGeneric";
+    private static final String CLONED_CLASS_TYPE = "org/mangorage/mangobot/misc/ExampleGeneric$ClonedExampleGeneric";
     private static final String TYPE_TOKEN = "org/mangorage/mangobot/misc/TypeToken";
     private static final String FUNC_NAME = "getType";
     private static final String FUNC_DESC = "()Lorg/mangorage/mangobot/misc/TypeToken;";
@@ -44,6 +45,7 @@ public class ExampleGenericTransformer implements IClassTransformer {
 
     @Override
     public TransformerFlags transform(ClassNode classNode, Type classType) {
+        if (CLONED_CLASS_TYPE.equals(classNode.name)) return TransformerFlags.NO_REWRITE;
 
         if (CLASS_TYPE.equals(classNode.name)) {
             for (MethodNode mtd : classNode.methods) {

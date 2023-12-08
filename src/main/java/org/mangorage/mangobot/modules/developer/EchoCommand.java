@@ -20,41 +20,45 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.loader;
+package org.mangorage.mangobot.modules.developer;
 
-import org.mangorage.mangobot.misc.ExampleGeneric;
-import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
-import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
-import org.mangorage.mangobotapi.core.plugin.PluginLoader;
+import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
+import org.mangorage.mangobotapi.core.commands.Arguments;
+import org.mangorage.mangobotapi.core.commands.CommandResult;
+import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.List;
 
-public class CoreMain {
-    class a {
+public class EchoCommand implements IBasicCommand {
+    private static final List<String> USERS = List.of("194596094200643584");
+
+    /**
+     * @param message
+     * @param args
+     * @return
+     */
+    @NotNull
+    @Override
+    public CommandResult execute(Message message, Arguments args) {
+        if (args.getArgs().length > 0)
+            message.getChannel().sendMessage(args.getFrom(0)).queue();
+        return CommandResult.PASS;
     }
-    private static final AtomicBoolean running = new AtomicBoolean(false);
 
-    public static void main(String[] args) throws ClassNotFoundException {
-        running.set(true);
+    /**
+     * @return
+     */
+    @Override
+    public String commandId() {
+        return "echo";
+    }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            running.set(false);
-            System.out.println("Shutting down program!");
-        }));
-
-        VersionCommand.init();
-        Actions.init();
-        PluginLoader.load();
-
-
-        ExampleGeneric<Integer> test = new ExampleGeneric<>() {
-        };
-        System.out.println(test);
-        System.out.println(test.clone());
-        System.out.println(test.getType().getClassType());
-        System.out.println(test.getType().getRealClass());
-
-        while (running.get()) {
-        }
+    /**
+     * @return
+     */
+    @Override
+    public List<String> allowedUsers() {
+        return USERS;
     }
 }
