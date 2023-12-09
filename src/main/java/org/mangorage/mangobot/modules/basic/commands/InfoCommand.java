@@ -101,7 +101,7 @@ public class InfoCommand implements IBasicCommand {
             }
         }
 
-        result.append("Guild Only").append(" -> ").append(commandType).append("\n");
+        result.append("Command Type").append(" -> ").append(commandType).append("\n");
         result.append("Ignore Case").append(" -> ").append(ignoreCase).append("\n");
 
         settings.apply(message.reply(result.toString())).queue();
