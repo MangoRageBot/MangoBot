@@ -32,11 +32,12 @@ public interface IBasicCommand extends ICommand<Message, BasicCommandEvent> {
         return (e) -> {
             if (isValidCommand(e.getCommand())) {
                 var message = e.getMessage();
-                var fromGuild = message.isFromGuild();
+                var guild = message.isFromGuild();
 
-                if (!fromGuild && isGuildOnly()) return;
-                if (fromGuild && !allowedGuilds().isEmpty() && !allowedGuilds().contains(message.getGuild().getId()))
-                    return;
+                if (!commandType().isAllowed(message)) return;
+
+                if (guild)
+                    if (!allowedGuilds().isEmpty() && !allowedGuilds().contains(message.getGuild().getId())) return;
                 if (!allowedUsers().isEmpty() && !allowedUsers().contains(message.getAuthor().getId())) return;
 
                 try {

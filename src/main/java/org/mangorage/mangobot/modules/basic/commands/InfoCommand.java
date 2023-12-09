@@ -65,7 +65,7 @@ public class InfoCommand implements IBasicCommand {
         List<String> aliases = command.commandAliases();
         var description = command.description();
         var usage = command.usage();
-        var isGuildOnly = command.isGuildOnly();
+        var commandType = command.commandType();
         var ignoreCase = command.ignoreCase();
         List<String> allowedGuilds = command.allowedGuilds();
         List<String> allowedUsers = command.allowedUsers();
@@ -101,7 +101,7 @@ public class InfoCommand implements IBasicCommand {
             }
         }
 
-        result.append("Guild Only").append(" -> ").append(isGuildOnly).append("\n");
+        result.append("Guild Only").append(" -> ").append(commandType).append("\n");
         result.append("Ignore Case").append(" -> ").append(ignoreCase).append("\n");
 
         settings.apply(message.reply(result.toString())).queue();

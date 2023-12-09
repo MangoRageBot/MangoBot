@@ -20,42 +20,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.modules.mappings;
+package org.mangorage.mangobotapi.core.commands;
+
 
 import net.dv8tion.jda.api.entities.Message;
-import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.Core;
-import org.mangorage.mangobotapi.core.commands.Arguments;
-import org.mangorage.mangobotapi.core.commands.CommandResult;
-import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.util.MessageSettings;
+import net.dv8tion.jda.api.interactions.Interaction;
 
-public class MCPCommand implements IBasicCommand {
+import java.util.function.Predicate;
 
-	
-	public MappingsManager manager;
-	public Core core;
+public enum CommandType {
+    BOTH(a -> true),
+    DM_ONLY(a -> !a),
+    GUILD_ONLY(a -> a);
 
-	public MCPCommand(MappingsManager mappings_manager,Core core) {
-		// TODO Auto-generated constructor stub
-	this.manager=mappings_manager;
-	this.core = core;
-	}
+    private final Predicate<Boolean> predicate;
 
+    CommandType(Predicate<Boolean> predicate) {
+        this.predicate = predicate;
+    }
 
-	@NotNull
-	@Override
-	public CommandResult execute(Message event, Arguments args) {
-		// TODO Auto-generated method stub
-		MessageSettings dMessage = core.getMessageSettings();
-		dMessage.apply(event.reply(manager.mcp(String.join(" ",args.getArgs())))).queue();
-		return CommandResult.PASS;
-	}
+    public boolean isAllowed(Message message) {
+        return predicate.test(message.isFromGuild());
+    }
 
-	@Override
-	public String commandId() {
-		// TODO Auto-generated method stub
-		return "mcp";
-	}
-
+    public boolean isAllowed(Interaction interaction) {
+        return predicate.test(interaction.isFromGuild());
+    }
 }

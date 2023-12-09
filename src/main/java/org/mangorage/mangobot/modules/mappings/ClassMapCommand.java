@@ -23,6 +23,7 @@
 package org.mangorage.mangobot.modules.mappings;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobot.Core;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
@@ -41,7 +42,8 @@ public class ClassMapCommand implements IBasicCommand {
         this.core = core;
 	}
 
-	
+
+	@NotNull
 	@Override
 	public CommandResult execute(Message event, Arguments args) {
 		// TODO Auto-generated method stub

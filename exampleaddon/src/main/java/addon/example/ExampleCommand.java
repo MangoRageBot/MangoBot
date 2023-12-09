@@ -23,6 +23,7 @@
 package addon.example;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
@@ -30,6 +31,7 @@ import org.mangorage.mangobotapi.core.registry.commands.AutoRegister;
 
 @AutoRegister.BasicCommand
 public class ExampleCommand implements IBasicCommand {
+    @NotNull
     @Override
     public CommandResult execute(Message message, Arguments args) {
         message.reply("This is an Example command! It works! From an Example Jar...").setSuppressedNotifications(true).mentionRepliedUser(false).queue();

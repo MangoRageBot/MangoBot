@@ -309,11 +309,6 @@ public class TrickCommand implements IBasicCommand {
         TrickScriptable.execute(scriptHandled.toString(), message, args);
     }
 
-    @Override
-    public boolean isGuildOnly() {
-        return true;
-    }
-
     private void removeTricksList(Message message) {
         if (PAGES.containsKey(message.getId())) {
             message.editMessage(createTricksString(PAGES.get(message.getId()))).setComponents().queue();

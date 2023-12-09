@@ -35,6 +35,10 @@ public interface ICommand<Type, EventClass> {
 
     String commandId();
 
+    default CommandType commandType() {
+        return CommandType.GUILD_ONLY;
+    }
+
     default boolean isValidCommand(String command) {
         boolean result = ignoreCase() ? command.equalsIgnoreCase(commandId()) : command.equals(commandId());
         return ignoreCase() ? result : commandAliases().contains(command) || result;
@@ -60,10 +64,6 @@ public interface ICommand<Type, EventClass> {
 
     default boolean ignoreCase() {
         return false;
-    }
-
-    default boolean isGuildOnly() {
-        return true;
     }
 
     default List<String> allowedGuilds() {

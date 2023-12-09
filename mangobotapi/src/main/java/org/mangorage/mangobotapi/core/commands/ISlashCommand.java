@@ -32,11 +32,13 @@ public interface ISlashCommand extends ICommand<SlashCommandInteraction, SlashCo
         return (e) -> {
             if (isValidCommand(e.getCommand())) {
                 var interaction = e.getInteraction();
-                var fromGuild = interaction.isFromGuild();
+                var guild = interaction.isFromGuild();
 
-                if (!fromGuild && isGuildOnly()) return;
-                if (fromGuild && !allowedGuilds().isEmpty() && !allowedGuilds().contains(interaction.getGuild().getId()))
-                    return;
+
+                if (!commandType().isAllowed(interaction)) return;
+
+                if (guild)
+                    if (!allowedGuilds().isEmpty() && !allowedGuilds().contains(interaction.getGuild().getId())) return;
                 if (!allowedUsers().isEmpty() && !allowedUsers().contains(interaction.getUser().getId())) return;
 
                 try {
