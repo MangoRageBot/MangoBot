@@ -22,13 +22,16 @@
 
 package org.mangorage.mangobot;
 
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import static org.mangorage.mangobot.core.BotPermissions.CUSTOM_VC_ADMIN;
+import static org.mangorage.mangobot.core.BotPermissions.MOD_MAIL;
+import static org.mangorage.mangobot.core.BotPermissions.PERMISSION_ADMIN;
+import static org.mangorage.mangobot.core.BotPermissions.PLAYING;
+import static org.mangorage.mangobot.core.BotPermissions.PREFIX_ADMIN;
+import static org.mangorage.mangobot.core.BotPermissions.TRICK_ADMIN;
+
+import java.util.EnumSet;
+import java.util.Scanner;
+
 import org.mangorage.basicutils.config.Config;
 import org.mangorage.basicutils.config.ConfigSetting;
 import org.mangorage.basicutils.config.ISetting;
@@ -73,9 +76,13 @@ import org.mangorage.mangobotapi.core.events.SaveEvent;
 import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
-import java.util.EnumSet;
-
-import static org.mangorage.mangobot.core.BotPermissions.*;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.hooks.AnnotatedEventManager;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 @Plugin(id = Core.ID)
 public class Core extends CorePlugin {
@@ -124,7 +131,7 @@ public class Core extends CorePlugin {
     public Core() {
         super(
                 Core.ID,
-                JDABuilder.createDefault(BOT_TOKEN.get())
+                JDABuilder.createDefault(getToken())
                         .setEnabledIntents(intents)
                         .enableCache(cacheFlags)
                         .setActivity(
@@ -144,6 +151,8 @@ public class Core extends CorePlugin {
                         .build()
         );
 
+        
+        
         // translate.register();
 
         getJDA().addEventListener(new BotEventListener(this));
@@ -237,4 +246,25 @@ public class Core extends CorePlugin {
     public void shutdownPost() {
 
     }
+    
+    public static String getToken() {
+    	if (BOT_TOKEN.get().equals("empty")||BOT_TOKEN.get().equals("")) {
+    		System.out.println("Empty bot token, replace the bot token with the one from discord in"+CONFIG.location+ " or by typing it in here if you are not in gradle:");
+    		Scanner scanner = new Scanner(System.in);
+           if(scanner.hasNext()) {
+    		String token = scanner.nextLine();
+            BOT_TOKEN.set(token);
+            scanner.close();
+            return token;
+           }else {
+        	   System.out.println("Blank response, this is expected from being run within Gradle. You need to put your token here "+CONFIG.location);
+          scanner.close();
+           return BOT_TOKEN.get();
+           }
+           
+    	}else {
+    		return BOT_TOKEN.get();
+    	}
+    }
+    
 }
