@@ -16,7 +16,6 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath files('gradleutils/build/libs/gradleutils-1.0.0-all.jar')
     }
 }
 
