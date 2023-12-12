@@ -20,40 +20,29 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.loader;
+package org.mangorage.basicutils.language;
 
-import org.mangorage.basicutils.language.LanguageHandler;
-import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
-import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
-import org.mangorage.mangobotapi.core.plugin.PluginLoader;
-import org.mangorage.mboteventbus.EventBus;
-import org.mangorage.mboteventbus.impl.IEventBus;
+import java.util.Collection;
+import java.util.HashMap;
 
-import java.util.concurrent.atomic.AtomicBoolean;
+public final class LanguageType {
+    private static final HashMap<String, LanguageType> LANGUAGES = new HashMap<>();
 
-public class CoreMain {
-    private static final IEventBus coreEventBus = EventBus.create();
-    private static final AtomicBoolean running = new AtomicBoolean(false);
-
-    static {
-        coreEventBus.startup();
+    public static LanguageType getLanguageType(String language) {
+        return LANGUAGES.computeIfAbsent(language, LanguageType::new);
     }
 
-    public static void main(String[] args) {
-        running.set(true);
+    public static Collection<LanguageType> getLanguages() {
+        return LANGUAGES.values();
+    }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            running.set(false);
-            System.out.println("Shutting down CoreMain!");
-        }));
+    private final String key;
 
-        VersionCommand.init();
-        Actions.init();
-        LanguageHandler.loadAll();
-        PluginLoader.load();
+    private LanguageType(String key) {
+        this.key = key;
+    }
 
-        while (running.get()) {
-        }
-        coreEventBus.shutdown();
+    public String getLanguageID() {
+        return key;
     }
 }
