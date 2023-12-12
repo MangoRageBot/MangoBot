@@ -24,7 +24,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 group = 'org.mangorage'
-version = '3.0.1'
+version = '3.0.2'
 
 configurations {
     shadow
@@ -65,10 +65,24 @@ shadowJar {
     configurations = [project.configurations.shadow]
 }
 
+jar {
+    dependsOn configurations.shadow
+
+    from {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        configurations.shadow.collect {
+            zipTree(it)
+        }
+    } {
+        exclude "META-INF/*.RSA", "META-INF/*.SF", "META-INF/*.DSA"
+    }
+}
+
+
 publishing {
 
     publications.register("gradleutils", MavenPublication) {
-        artifact shadowJar
+        artifact jar
 
         groupId = 'io.github.realmangorage'
         artifactId = 'gradleutils'
@@ -105,5 +119,3 @@ publishing {
 }
 
 
-jar.dependsOn(shadowJar)
-jar.mustRunAfter(shadowJar)

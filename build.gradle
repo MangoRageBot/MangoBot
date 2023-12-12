@@ -20,7 +20,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.0'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2'
     }
 }
 
