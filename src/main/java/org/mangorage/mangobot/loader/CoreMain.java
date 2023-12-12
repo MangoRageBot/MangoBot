@@ -32,6 +32,7 @@ import org.mangorage.mboteventbus.impl.IEventBus;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CoreMain {
+    private static final Object lock = new Object();
     private static final IEventBus coreEventBus = EventBus.create();
     private static final AtomicBoolean running = new AtomicBoolean(false);
 
@@ -44,7 +45,7 @@ public class CoreMain {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             running.set(false);
-            System.out.println("Shutting down CoreMain!");
+            System.out.println("Shutting down MangoLoader!");
         }));
 
         VersionCommand.init();
@@ -52,8 +53,14 @@ public class CoreMain {
         LanguageHandler.loadAll();
         PluginLoader.load();
 
-        while (running.get()) {
+        synchronized (lock) {
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
         coreEventBus.shutdown();
     }
 }
