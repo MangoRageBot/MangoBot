@@ -20,18 +20,19 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.gradleutils
+package org.mangorage.gradleutils;
 
+import org.gradle.api.Plugin;
+import org.gradle.api.Project;
 
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-import org.mangorage.gradleutils.java.Datagen
-
-class GradleUtilsPlugin implements Plugin<Project> {
+public class GradleUtilsPlugin implements Plugin<Project> {
+    /**
+     * @param project
+     */
     @Override
-    void apply(Project project) {
-        InstallerTasks.apply(project)
-        BotTasks.apply(project)
-        Datagen.apply(project)
+    public void apply(Project project) {
+        InstallerTasks.apply(project);
+        DatagenTask.apply(project);
+        BotTasks.apply(project);
     }
 }

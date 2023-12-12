@@ -20,7 +20,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath files('gradleutils/build/libs/gradleutils-1.0.0-all.jar')
+        classpath 'io.github.realmangorage:gradleutils:3.0.0'
     }
 }
 
@@ -34,27 +34,7 @@ def getVersionCode = {
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
-
-Path path = projectRootDir.resolve(Path.of('gradleutils/build/libs/gradleutils-1.0.0-all.jar'))
-
-
-if (path.toFile().exists()) {
-    apply plugin: 'org.mangorage.gradleutils'
-} else {
-    tasks.register("finishSetup", Exec) {
-        description = 'Restart the Gradle daemon'
-        group "bot tasks"
-        workingDir project.rootDir
-        dependsOn(":gradleutils:build")
-        mustRunAfter(":gradleutils:build")
-
-        doLast {
-            commandLine 'gradlew', '--reload'
-        }
-    }
-
-}
-
+apply plugin: 'gradleutils'
 
 group 'org.mangorage'
 version "${BOT_VERSION}-c" + getVersionCode()
@@ -191,10 +171,10 @@ publishing {
             pom {
                 name = 'MangoBot'
                 description = 'A discord bot used for many servers'
-                url = 'https://github.com/RealMangorage/MangoBot/'
+                url = 'https://github.com/MangoRageBot/MangoBot'
                 issueManagement {
                     system = 'github'
-                    url = 'https://github.com/RealMangorage/MangoBot/issues'
+                    url = 'https://github.com/MangoRageBot/MangoBot/issues'
                 }
                 developers {
                     developer {
@@ -207,7 +187,6 @@ publishing {
     }
     repositories {
         maven {
-            // change URLs to point to your repos, e.g. http://my.org/repo
             def releasesRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/releases/'
             def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl

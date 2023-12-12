@@ -1,18 +1,4 @@
 rootProject.name = 'mangobot'
-gradle.settingsEvaluated {
-    // Actions to perform after the settings script is evaluated
-    println "Gradle has finished loading and settings script has been evaluated."
-    //getProject().getByName(":gradleutils:build").getActions().get(0).execute()
-    gradle.afterProject {
-
-    }
-
-    gradle.buildFinished {
-        def task = gradle.getRootProject().findProject("gradleutils").getTasks().findByName("build")
-
-    }
-
-}
 
 include 'mangobotapi'
 include 'mboteventbus'

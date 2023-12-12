@@ -1,21 +1,31 @@
 buildscript {
     repositories {
-        mavenCentral()  // or any other repository where your JAR is hosted
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        maven {
+            url = uri("https://plugins.gradle.org/m2/")
+        }
+        maven {
+            url = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+        }
+        maven {
+            url = 'https://repo.mattmalec.com/repository/releases'
+        }
     }
+
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
+        classpath files('gradleutils/build/libs/gradleutils-1.0.0-all.jar')
     }
 }
 
-plugins {
-    id 'java-gradle-plugin'
-    id 'groovy'
-    id 'com.github.johnrengelman.shadow'
-}
-
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 group = 'org.mangorage'
-version = '1.0.0'
+version = '3.0.0'
 
 configurations {
     shadow
@@ -38,6 +48,8 @@ repositories {
 
 dependencies {
     compileOnly 'org.apache.groovy:groovy:4.0.14'
+    compileOnly gradleApi()
+
     compileOnly 'com.mattmalec:Pterodactyl4J:2.BETA_140'
     compileOnly 'com.google.code.gson:gson:2.10.1'
 
@@ -46,21 +58,51 @@ dependencies {
 
 }
 
-gradlePlugin {
-    plugins {
-        gradleutils {
-            id = 'org.mangorage.gradleutils'
-            implementationClass = 'org.mangorage.gradleutils.GradleUtilsPlugin'
-        }
-    }
-}
-
 test {
     useJUnitPlatform()
 }
 
 shadowJar {
     configurations = [project.configurations.shadow]
+}
+
+publishing {
+
+    publications.register("gradleutils", MavenPublication) {
+        artifact jar
+
+        groupId = 'io.github.realmangorage'
+        artifactId = 'gradleutils'
+
+        pom {
+            name = 'MangoBot GradleUtils'
+            description = 'The GradleUtils for my Discord Bot Project'
+            url = 'https://github.com/MangoRageBot/MangoBot'
+            issueManagement {
+                system = 'github'
+                url = 'https://github.com/MangoRageBot/MangoBot/issues'
+            }
+            developers {
+                developer {
+                    id = 'mangorage'
+                    name = 'MangoRage'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            group "io.github.mangorage"
+            credentials {
+                username = findProperty("mango.maven.username")
+                password = findProperty("mango.maven.password")
+            }
+        }
+    }
 }
 
 

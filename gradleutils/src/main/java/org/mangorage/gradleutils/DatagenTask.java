@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.gradleutils.java;
+package org.mangorage.gradleutils;
 
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.ModuleVersionIdentifier;
@@ -37,9 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class Datagen {
-
-
+public class DatagenTask {
     private static final List<String> mavenRepositories = List.of(
             "https://repo.maven.apache.org/maven2/",
             "https://repo1.maven.org/maven2/"
