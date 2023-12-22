@@ -38,7 +38,8 @@ public class BotTasks {
             task.setDependsOn(List.of(project.getTasksByName("build", false)));
             task.mustRunAfter(project.getTasksByName("build", false));
 
-            //task.setClasspath(project.getExtensions().getByType(SourceSet.class).getRuntimeClasspath());
+            task.classpath(project.getConfigurations().getByName("bot").getFiles());
+            task.setMain("org.mangorage.mangobot.loader.Loader");
             task.setWorkingDir(project.file("build/run/"));
         });
 

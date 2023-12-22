@@ -24,9 +24,12 @@ package org.mangorage.gradleutils;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.tasks.JavaExec;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.core.TaskRegistry;
 import org.mangorage.gradleutils.tasks.SetupInstallerTask;
+
+import java.util.List;
 
 public class GradleUtilsPlugin implements Plugin<Project> {
     private final Config config = new Config(this);
@@ -39,13 +42,23 @@ public class GradleUtilsPlugin implements Plugin<Project> {
     public GradleUtilsPlugin() {
         taskRegistry.register(t -> {
             t.register("setupInstaller", SetupInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
-            t.register("runInstaller", SetupInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
+            t.register("runInstaller", JavaExec.class, task -> {
+                task.setGroup(Constants.INSTALLER_TASKS_GROUP);
+                task.setDependsOn(List.of(task.getProject().getTasksByName("setupInstaller", false)));
+                task.mustRunAfter(task.getProject().getTasksByName("setupInstaller", false));
+                task.setWorkingDir(task.getProject().file("build/run/"));
+                task.classpath(task.getProject().getConfigurations().getByName("installer").getFiles());
+                task.setMain("org.mangorage.installer.Installer");
+            });
         });
     }
 
     @Override
     public void apply(Project project) {
         project.getConfigurations().create("installer", t -> {
+            t.setVisible(true);
+        });
+        project.getConfigurations().create("bot", t -> {
             t.setVisible(true);
         });
 
