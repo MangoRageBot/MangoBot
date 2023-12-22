@@ -84,7 +84,6 @@ public class MangoClassloader extends URLClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        System.out.println(name);
         if (transformers == null || transformers.empty())
             return super.findClass(name);
 

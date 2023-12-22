@@ -60,6 +60,7 @@ public class GradleUtilsPlugin implements Plugin<Project> {
         });
         project.getConfigurations().create("bot", t -> {
             t.setVisible(true);
+            t.extendsFrom(project.getConfigurations().getByName("implementation"));
         });
 
         project.getExtensions().add("MangoBotConfig", config);

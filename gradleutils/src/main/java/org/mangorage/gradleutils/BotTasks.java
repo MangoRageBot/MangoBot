@@ -23,7 +23,10 @@
 package org.mangorage.gradleutils;
 
 import org.gradle.api.Project;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.JavaExec;
+import org.gradle.jvm.tasks.Jar;
 
 import java.util.List;
 
@@ -32,11 +35,25 @@ public class BotTasks {
 
     public static void apply(Project project, GradleUtilsPlugin gradleUtilsPlugin) {
 
+        Jar jarTask = (Jar) project.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
+        project.getTasks().register("copyTask", Copy.class, copyTask -> {
+            copyTask.from(jarTask.getArchiveFile().get().getAsFile());
+            copyTask.into(project.getRootProject().getProjectDir().toPath().resolve("build/run/plugins"));
+            copyTask.rename(a -> {
+                return "plugin.jar";
+            });
+
+            // Execute the Copy task after the Jar task
+            copyTask.dependsOn(jarTask);
+            copyTask.mustRunAfter(jarTask);
+        });
+
+
         project.getTasks().register("runBot", JavaExec.class, task -> {
             task.setGroup(GROUP);
             task.setDescription("Runs the built in Launcher");
-            task.setDependsOn(List.of(project.getTasksByName("build", false)));
-            task.mustRunAfter(project.getTasksByName("build", false));
+            task.setDependsOn(List.of(project.getTasksByName("copyTask", false)));
+            task.mustRunAfter(project.getTasksByName("copyTask", false));
 
             task.classpath(project.getConfigurations().getByName("bot").getFiles());
             task.setMain("org.mangorage.mangobot.loader.Loader");

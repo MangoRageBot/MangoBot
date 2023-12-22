@@ -1,7 +1,3 @@
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.Paths
-
 buildscript {
     repositories {
         mavenLocal()
@@ -20,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2047'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2058'
     }
 }
 
@@ -118,6 +114,7 @@ println("Current Bot Version: ${version}")
 
 dependencies {
     installer('io.github.realmangorage:installer:2.0.1')
+    bot(sourceSets.main.output)
 
     runtimeOnly(libs.LOG4J_SLF4J_IMPL)
 
@@ -169,16 +166,6 @@ jar {
 
     manifest {
         attributes 'Main-Class': 'org.mangorage.mangobot.loader.Loader'
-    }
-
-    doLast {
-        Path output = projectRootDir.resolve(Paths.get('build/run/plugins'))
-        Files.createDirectories(output)
-        copy {
-            from jar.outputs
-            into output
-            rename { 'mangobot.jar' }
-        }
     }
 }
 
