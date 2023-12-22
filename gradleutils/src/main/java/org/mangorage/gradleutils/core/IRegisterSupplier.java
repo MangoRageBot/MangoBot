@@ -20,42 +20,11 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.modules.mappings;
-
-import net.dv8tion.jda.api.entities.Message;
-import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.CorePlugin;
-import org.mangorage.mangobotapi.core.commands.Arguments;
-import org.mangorage.mangobotapi.core.commands.CommandResult;
-import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.util.MessageSettings;
-
-public class VarMapCommand implements IBasicCommand {
-
-	
-	public MappingsManager manager;
-    public CorePlugin core;
-
-    public VarMapCommand(MappingsManager mappings_manager, CorePlugin core) {
-		// TODO Auto-generated constructor stub
-	this.manager=mappings_manager;
-	this.core = core;
-	}
+package org.mangorage.gradleutils.core;
 
 
-	@NotNull
-	@Override
-	public CommandResult execute(Message event, Arguments args) {
-		// TODO Auto-generated method stub
-		MessageSettings dMessage = core.getMessageSettings();
-		dMessage.apply(event.reply(manager.varmap(String.join(" ",args.getArgs())))).queue();
-		return CommandResult.PASS;
-	}
+import org.gradle.api.tasks.TaskContainer;
 
-	@Override
-	public String commandId() {
-		// TODO Auto-generated method stub
-		return "varmap";
-	}
-
+public interface IRegisterSupplier {
+    void register(TaskContainer tasks);
 }

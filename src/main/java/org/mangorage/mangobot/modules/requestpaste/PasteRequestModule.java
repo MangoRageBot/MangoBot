@@ -30,7 +30,7 @@ import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.GistService;
 import org.mangorage.basicutils.TaskScheduler;
 import org.mangorage.basicutils.misc.LazyReference;
-import org.mangorage.mangobot.Core;
+import org.mangorage.mangobot.CorePlugin;
 import org.mangorage.mangobotapi.core.events.discord.DMessageRecievedEvent;
 import org.mangorage.mangobotapi.core.events.discord.DReactionEvent;
 import org.mangorage.mboteventbus.impl.IEventBus;
@@ -45,7 +45,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PasteRequestModule {
-    private static final LazyReference<GitHubClient> GITHUB_CLIENT = LazyReference.create(() -> new GitHubClient().setOAuth2Token(Core.PASTE_TOKEN.get()));
+    private static final LazyReference<GitHubClient> GITHUB_CLIENT = LazyReference.create(() -> new GitHubClient().setOAuth2Token(CorePlugin.PASTE_TOKEN.get()));
     private static final List<String> GUILDS = List.of(
             "1129059589325852724",
             "834300742864601088"

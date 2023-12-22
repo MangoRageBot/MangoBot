@@ -41,8 +41,6 @@ public class DatagenTask {
     private static final List<String> mavenRepositories = List.of(
             "https://repo.maven.apache.org/maven2/",
             "https://repo1.maven.org/maven2/"
-            // Add additional Maven repositories as needed
-            // "https://another.maven.repo/"
     );
 
     public static String generate(List<String> repos, String group, String name, String version) {
@@ -110,7 +108,7 @@ public class DatagenTask {
         return repo.getUrl().toString().startsWith("file:/");
     }
 
-    public static void apply(Project project) {
+    public static void apply(Project project, GradleUtilsPlugin gradleUtilsPlugin) {
         project.getTasks().register("runDatagen", task -> {
             task.setGroup("bot tasks");
             task.doLast(action -> {

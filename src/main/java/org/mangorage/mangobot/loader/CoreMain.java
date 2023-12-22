@@ -37,6 +37,10 @@ public class CoreMain {
     private static final IEventBus coreEventBus = EventBus.create();
     private static final AtomicBoolean running = new AtomicBoolean(false);
 
+    public static IEventBus getCoreEventBus() {
+        return coreEventBus;
+    }
+
     static {
         coreEventBus.startup();
     }
@@ -48,6 +52,8 @@ public class CoreMain {
             running.set(false);
             System.out.println("Shutting down MangoLoader!");
         }));
+
+        new Object();
 
         VersionCommand.init();
         Actions.init();

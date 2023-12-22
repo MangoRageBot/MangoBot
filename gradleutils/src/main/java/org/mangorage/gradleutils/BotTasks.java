@@ -22,19 +22,15 @@
 
 package org.mangorage.gradleutils;
 
-import com.mattmalec.pterodactyl4j.PteroBuilder;
-import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.JavaExec;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 public class BotTasks {
     private static final String GROUP = "bot tasks";
 
-    public static void apply(Project project) {
+    public static void apply(Project project, GradleUtilsPlugin gradleUtilsPlugin) {
 
         project.getTasks().register("runBot", JavaExec.class, task -> {
             task.setGroup(GROUP);
@@ -45,39 +41,6 @@ public class BotTasks {
             //task.setClasspath(project.getExtensions().getByType(SourceSet.class).getRuntimeClasspath());
             task.setWorkingDir(project.file("build/run/"));
         });
-
-        project.getTasks().register("publishAndRestartServer", task -> {
-            task.setGroup(GROUP);
-            task.setDescription("Publish and restart Bot Server");
-            task.setDependsOn(List.of(project.getRootProject().getTasksByName("publish", false)));
-            task.mustRunAfter(project.getRootProject().getTasksByName("publish", false));
-
-            task.doLast(last -> {
-                System.out.println("Restarting Server...");
-
-                var secrets = new Properties();
-                try {
-                    var is = project.file("secrets.properties").toURI().toURL().openStream();
-                    secrets.load(is);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-                PteroClient client = PteroBuilder.createClient("https://panel.sodiumhosting.com/", (String) secrets.get("SERVER_TOKEN"));
-
-                var server = client.retrieveServerByIdentifier("f32263f3").execute();
-                if (server != null) {
-                    if (server.isSuspended()) {
-                        System.out.println("Server is suspended, unsuspending...");
-                        server.start().execute();
-                    } else {
-                        server.restart().execute();
-                        System.out.println("Restarted Discord Bot Server.");
-                    }
-                }
-            });
-        });
-
 
     }
 }

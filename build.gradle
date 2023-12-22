@@ -20,16 +20,19 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2.+'
     }
 }
 
 def projectRootDir = project.projectDir.toPath()
-def getVersionCode = {
+def getCommitNumber = {
     def proc = 'git rev-list --count master'.execute()
     proc.waitFor()
     return proc.text.trim()
 }
+
+def props = new Properties()
+file("secrets.properties").withInputStream { props.load(it) }
 
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
@@ -37,7 +40,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'gradleutils'
 
 group 'org.mangorage'
-version "${BOT_VERSION}-c" + getVersionCode()
+version "${BOT_VERSION}-c" + getCommitNumber()
 
 java {
     toolchain {
@@ -47,6 +50,19 @@ java {
 
 configurations {
     api.extendsFrom internal
+}
+
+
+MangoBotConfig {
+    setMainClass("test")
+    if (props != null && props.containsKey("SERVER_TOKEN")) {
+        enableRestartServerTask(
+                "f32263f3",
+                "https://panel.sodiumhosting.com/",
+                props.get("SERVER_TOKEN") as String,
+                null
+        )
+    }
 }
 
 
@@ -101,6 +117,8 @@ ext.globalLibs = libs
 println("Current Bot Version: ${version}")
 
 dependencies {
+    installer('io.github.realmangorage:installer:2.0.1')
+
     runtimeOnly(libs.LOG4J_SLF4J_IMPL)
 
     // Libs for Bot

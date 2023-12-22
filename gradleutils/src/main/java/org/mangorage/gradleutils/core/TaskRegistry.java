@@ -20,42 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.modules.mappings;
+package org.mangorage.gradleutils.core;
 
-import net.dv8tion.jda.api.entities.Message;
-import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.CorePlugin;
-import org.mangorage.mangobotapi.core.commands.Arguments;
-import org.mangorage.mangobotapi.core.commands.CommandResult;
-import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.util.MessageSettings;
+import org.gradle.api.Project;
+import org.mangorage.gradleutils.Config;
 
-public class VarMapCommand implements IBasicCommand {
+import java.util.ArrayList;
 
-	
-	public MappingsManager manager;
-    public CorePlugin core;
+public class TaskRegistry {
+    private final Config config;
+    private final ArrayList<IRegisterSupplier> registerSuppliers = new ArrayList<>();
 
-    public VarMapCommand(MappingsManager mappings_manager, CorePlugin core) {
-		// TODO Auto-generated constructor stub
-	this.manager=mappings_manager;
-	this.core = core;
-	}
+    public TaskRegistry(Config config) {
+        this.config = config;
+    }
 
+    public void register(IRegisterSupplier supplier) {
+        registerSuppliers.add(supplier);
+    }
 
-	@NotNull
-	@Override
-	public CommandResult execute(Message event, Arguments args) {
-		// TODO Auto-generated method stub
-		MessageSettings dMessage = core.getMessageSettings();
-		dMessage.apply(event.reply(manager.varmap(String.join(" ",args.getArgs())))).queue();
-		return CommandResult.PASS;
-	}
-
-	@Override
-	public String commandId() {
-		// TODO Auto-generated method stub
-		return "varmap";
-	}
-
+    public void apply(Project project) {
+        registerSuppliers.forEach(a -> a.register(project.getTasks()));
+    }
 }

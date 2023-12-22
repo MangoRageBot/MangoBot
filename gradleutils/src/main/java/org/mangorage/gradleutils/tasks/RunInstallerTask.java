@@ -20,42 +20,21 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.modules.mappings;
+package org.mangorage.gradleutils.tasks;
 
-import net.dv8tion.jda.api.entities.Message;
-import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.CorePlugin;
-import org.mangorage.mangobotapi.core.commands.Arguments;
-import org.mangorage.mangobotapi.core.commands.CommandResult;
-import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.util.MessageSettings;
+import org.gradle.api.tasks.JavaExec;
 
-public class VarMapCommand implements IBasicCommand {
+import javax.inject.Inject;
+import java.util.List;
 
-	
-	public MappingsManager manager;
-    public CorePlugin core;
-
-    public VarMapCommand(MappingsManager mappings_manager, CorePlugin core) {
-		// TODO Auto-generated constructor stub
-	this.manager=mappings_manager;
-	this.core = core;
-	}
-
-
-	@NotNull
-	@Override
-	public CommandResult execute(Message event, Arguments args) {
-		// TODO Auto-generated method stub
-		MessageSettings dMessage = core.getMessageSettings();
-		dMessage.apply(event.reply(manager.varmap(String.join(" ",args.getArgs())))).queue();
-		return CommandResult.PASS;
-	}
-
-	@Override
-	public String commandId() {
-		// TODO Auto-generated method stub
-		return "varmap";
-	}
-
+public abstract class RunInstallerTask extends JavaExec {
+    @Inject
+    public RunInstallerTask(String group) {
+        setGroup(group);
+        setDependsOn(List.of(getProject().getTasksByName("setupInstaller", false)));
+        mustRunAfter(getProject().getTasksByName("setupInstaller", false));
+        setWorkingDir(getProject().file("build/run/"));
+        classpath(getProject().getConfigurations().getByName("installer").getFiles());
+        setMain("org.mangorage.installer.Installer");
+    }
 }

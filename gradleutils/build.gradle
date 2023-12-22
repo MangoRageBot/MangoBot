@@ -23,8 +23,14 @@ apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
+def getCommitNumber = {
+    def proc = 'git rev-list --count master'.execute()
+    proc.waitFor()
+    return proc.text.trim()
+}
+
 group = 'org.mangorage'
-version = '3.0.2'
+version = '3.0.2.2045'
 
 configurations {
     shadow
@@ -51,10 +57,11 @@ dependencies {
 
     compileOnly 'com.mattmalec:Pterodactyl4J:2.BETA_140'
     compileOnly 'com.google.code.gson:gson:2.10.1'
+    compileOnly 'io.github.realmangorage:installer:2.0.0'
 
     shadow 'com.mattmalec:Pterodactyl4J:2.BETA_140'
     shadow 'com.google.code.gson:gson:2.10.1'
-
+    shadow 'io.github.realmangorage:installer:2.0.0'
 }
 
 test {
@@ -80,7 +87,6 @@ jar {
 
 
 publishing {
-
     publications.register("gradleutils", MavenPublication) {
         artifact jar
 

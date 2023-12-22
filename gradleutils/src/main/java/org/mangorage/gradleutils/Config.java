@@ -22,41 +22,34 @@
 
 package org.mangorage.gradleutils;
 
-import org.gradle.api.Plugin;
-import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.mangorage.gradleutils.core.Constants;
-import org.mangorage.gradleutils.core.TaskRegistry;
-import org.mangorage.gradleutils.tasks.SetupInstallerTask;
+import org.mangorage.gradleutils.tasks.RestartServerTask;
 
-public class GradleUtilsPlugin implements Plugin<Project> {
-    private final Config config = new Config(this);
-    private final TaskRegistry taskRegistry = new TaskRegistry(config);
+public class Config {
+    private final GradleUtilsPlugin plugin;
+    private String mainClass = "";
 
-    public TaskRegistry getTaskRegistry() {
-        return taskRegistry;
+    public Config(GradleUtilsPlugin plugin) {
+        this.plugin = plugin;
     }
 
-    public GradleUtilsPlugin() {
-        taskRegistry.register(t -> {
-            t.register("setupInstaller", SetupInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
-            t.register("runInstaller", SetupInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
+    public void enableRestartServerTask(String serverID, String serverURL, String serverToken, Task dependency) {
+        plugin.getTaskRegistry().register(tasks -> {
+            var clazz = dependency == null ? RestartServerTask.WithoutDep.class : RestartServerTask.class;
+            if (dependency == null)
+                tasks.register("restartServer", clazz, serverID, serverURL, serverToken, Constants.BOT_TASKS_GROUP);
+            if (dependency != null)
+                tasks.register("restartServer", clazz, serverID, serverURL, serverToken, Constants.BOT_TASKS_GROUP, dependency);
         });
     }
 
-    @Override
-    public void apply(Project project) {
-        project.getConfigurations().create("installer", t -> {
-            t.setVisible(true);
-        });
 
-        project.getExtensions().add("MangoBotConfig", config);
+    public void setMainClass(String value) {
+        this.mainClass = value;
+    }
 
-
-        project.afterEvaluate(a -> {
-            taskRegistry.apply(project);
-
-            DatagenTask.apply(project, this);
-            BotTasks.apply(project, this);
-        });
+    public String getMainClass() {
+        return mainClass;
     }
 }
