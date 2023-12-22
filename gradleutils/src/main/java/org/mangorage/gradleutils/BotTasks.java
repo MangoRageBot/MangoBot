@@ -28,6 +28,9 @@ import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.jvm.tasks.Jar;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 public class BotTasks {
@@ -55,9 +58,21 @@ public class BotTasks {
             task.setDependsOn(List.of(project.getTasksByName("copyTask", false)));
             task.mustRunAfter(project.getTasksByName("copyTask", false));
 
-            task.classpath(project.getConfigurations().getByName("bot").getFiles());
+            task.classpath(project.getConfigurations().getByName(gradleUtilsPlugin.getConfig().isCopyOverBot() ? "bot" : "botInternal").getFiles());
             task.setMain("org.mangorage.mangobot.loader.Loader");
             task.setWorkingDir(project.file("build/run/"));
+
+            if (gradleUtilsPlugin.getConfig().isCopyOverBot()) {
+                task.doFirst(t -> {
+                    project.getConfigurations().getByName("bot").getFiles().forEach(a -> {
+                        try {
+                            Files.copy(a.toPath(), project.getProjectDir().toPath().resolve("build/run/plugins/bot.jar"), StandardCopyOption.REPLACE_EXISTING);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                });
+            }
         });
 
     }

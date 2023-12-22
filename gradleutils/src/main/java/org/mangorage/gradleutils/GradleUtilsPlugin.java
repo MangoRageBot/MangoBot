@@ -39,6 +39,10 @@ public class GradleUtilsPlugin implements Plugin<Project> {
         return taskRegistry;
     }
 
+    public Config getConfig() {
+        return config;
+    }
+
     public GradleUtilsPlugin() {
         taskRegistry.register(t -> {
             t.register("setupInstaller", SetupInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
@@ -55,16 +59,22 @@ public class GradleUtilsPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project project) {
+        project.getExtensions().add("MangoBotConfig", config);
+
         project.getConfigurations().create("installer", t -> {
             t.setVisible(true);
         });
+
         project.getConfigurations().create("bot", t -> {
             t.setVisible(true);
-            t.extendsFrom(project.getConfigurations().getByName("implementation"));
+            t.setTransitive(false);
         });
 
-        project.getExtensions().add("MangoBotConfig", config);
-
+        project.getConfigurations().create("botInternal", t -> {
+            t.setVisible(true);
+            t.setTransitive(false);
+            t.extendsFrom(project.getConfigurations().getByName("implementation"));
+        });
 
         project.afterEvaluate(a -> {
             taskRegistry.apply(project);

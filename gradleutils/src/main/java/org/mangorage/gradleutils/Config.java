@@ -28,7 +28,7 @@ import org.mangorage.gradleutils.tasks.RestartServerTask;
 
 public class Config {
     private final GradleUtilsPlugin plugin;
-    private String mainClass = "";
+    private boolean copyOverBot = true;
 
     public Config(GradleUtilsPlugin plugin) {
         this.plugin = plugin;
@@ -45,11 +45,11 @@ public class Config {
     }
 
 
-    public void setMainClass(String value) {
-        this.mainClass = value;
+    public void disableCopyOverBot() {
+        this.copyOverBot = false;
     }
 
-    public String getMainClass() {
-        return mainClass;
+    public boolean isCopyOverBot() {
+        return this.copyOverBot;
     }
 }
