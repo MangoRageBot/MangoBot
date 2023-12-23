@@ -24,14 +24,13 @@ package org.mangorage.gradleutils;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.tasks.JavaExec;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.core.TaskRegistry;
 import org.mangorage.gradleutils.tasks.CopyTask;
 import org.mangorage.gradleutils.tasks.DatagenTask;
 import org.mangorage.gradleutils.tasks.RunBotTask;
+import org.mangorage.gradleutils.tasks.RunInstallerTask;
 
-import java.util.List;
 import java.util.Objects;
 
 public class GradleUtilsPlugin implements Plugin<Project> {
@@ -50,22 +49,7 @@ public class GradleUtilsPlugin implements Plugin<Project> {
         taskRegistry.register(t -> {
             t.register("copyTask", CopyTask.class, config);
             t.register("runBot", RunBotTask.class, config, Constants.BOT_TASKS_GROUP);
-            t.register("runInstaller", JavaExec.class, task -> {
-                task.setGroup(Constants.INSTALLER_TASKS_GROUP);
-                task.setDependsOn(List.of(task.getProject().getTasksByName("copyTask", false)));
-                task.mustRunAfter(task.getProject().getTasksByName("copyTask", false));
-
-                task.setWorkingDir(task.getProject().file("build/run/"));
-                task.classpath(task.getProject().getConfigurations().getByName("installer").getFiles());
-                task.setMain("org.mangorage.installer.Installer");
-
-                task.setArgs(List.of(
-                        "-manualJar",
-                        task.getProject().getRootDir().toPath().resolve("build/run/plugins/bot.jar").toString(),
-                        "-manualJarVersion",
-                        "1.0.0"
-                ));
-            });
+            t.register("runInstaller", RunInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
         });
     }
 
