@@ -165,29 +165,28 @@ jar {
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-            pom {
-                name = 'MangoBot'
-                description = 'A discord bot used for many servers'
-                url = 'https://github.com/MangoRageBot/MangoBot'
-                issueManagement {
-                    system = 'github'
-                    url = 'https://github.com/MangoRageBot/MangoBot/issues'
+    publications.register("mangobot", MavenPublication) {
+        artifact jar
+        pom {
+            name = 'MangoBot'
+            description = 'A discord bot used for many servers'
+            url = 'https://github.com/MangoRageBot/MangoBot'
+            issueManagement {
+                system = 'github'
+                url = 'https://github.com/MangoRageBot/MangoBot/issues'
+            }
+            developers {
+                developer {
+                    id = 'mangorage'
+                    name = 'MangoRage'
                 }
-                developers {
-                    developer {
-                        id = 'mangorage'
-                        name = 'MangoRage'
-                    }
-                }
-                dependencies {
-                    implementation lib.JDA
-                }
+            }
+            dependencies {
+                implementation libs.JDA
             }
         }
     }
+
     repositories {
         maven {
             def releasesRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/releases/'
