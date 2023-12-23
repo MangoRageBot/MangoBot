@@ -30,7 +30,6 @@ def getCommitNumber = {
 def props = new Properties()
 file("secrets.properties").withInputStream { props.load(it) }
 
-apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'gradleutils'
@@ -45,7 +44,7 @@ java {
 }
 
 configurations {
-    api.extendsFrom internal
+    implementation.extendsFrom internal
 }
 
 
@@ -132,9 +131,6 @@ dependencies {
     implementation(libs.ASM_TREE)
 
     // Core Libs
-    implementation project(path: ':mangobotapi')
-    implementation project(path: ':mboteventbus')
-    implementation project(path: ':mangoutils')
 
     testImplementation project(path: ':mangoutils')
 
@@ -166,7 +162,7 @@ jar {
 
 publishing {
     publications.register("mangobot", MavenPublication) {
-        from components.java
+        artifact jar
 
         pom {
             name = 'MangoBot'
@@ -182,16 +178,17 @@ publishing {
                     name = 'MangoRage'
                 }
             }
-        }
-        afterEvaluate {
-            pom.withXml {
-                asNode().dependencies.dependency.findAll { dep ->
-                    dep.groupId.text().contains('org.mangorage')
-                }.each { excludedDep ->
-                    excludedDep.parent().remove(excludedDep)
+            withXml {
+                def dependencies = asNode().appendNode('dependencies')
+                configurations.implementation.getDependencies().each {
+                    def dependency = dependencies.appendNode('dependency')
+                    dependency.appendNode('groupId', it.group)
+                    dependency.appendNode('artifactId', it.name)
+                    dependency.appendNode('version', it.version)
                 }
             }
         }
+
     }
 
     repositories {
