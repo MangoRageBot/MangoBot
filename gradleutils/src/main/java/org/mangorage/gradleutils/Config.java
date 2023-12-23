@@ -31,6 +31,7 @@ public class Config {
     private final GradleUtilsPlugin plugin;
     private boolean pluginDevMode = true;
     private Jar jarTask;
+    private Task releaseTask;
 
     public Config(GradleUtilsPlugin plugin) {
         this.plugin = plugin;
@@ -61,5 +62,13 @@ public class Config {
 
     public boolean isPluginDevMode() {
         return this.pluginDevMode;
+    }
+
+    public void setReleaseTask(Task task) {
+        this.releaseTask = task;
+    }
+
+    public Task getReleaseTask() {
+        return releaseTask;
     }
 }

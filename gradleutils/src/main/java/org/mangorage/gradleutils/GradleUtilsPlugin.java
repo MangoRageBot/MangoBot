@@ -28,6 +28,7 @@ import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.core.TaskRegistry;
 import org.mangorage.gradleutils.tasks.CopyTask;
 import org.mangorage.gradleutils.tasks.DatagenTask;
+import org.mangorage.gradleutils.tasks.ReleaseBotTask;
 import org.mangorage.gradleutils.tasks.RunBotTask;
 import org.mangorage.gradleutils.tasks.RunInstallerTask;
 
@@ -50,6 +51,8 @@ public class GradleUtilsPlugin implements Plugin<Project> {
             t.register("copyTask", CopyTask.class, config);
             t.register("runBot", RunBotTask.class, config, Constants.BOT_TASKS_GROUP);
             t.register("runInstaller", RunInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
+            if (config.getReleaseTask() != null)
+                t.register("release", ReleaseBotTask.class, config, Constants.BOT_TASKS_GROUP);
         });
     }
 
