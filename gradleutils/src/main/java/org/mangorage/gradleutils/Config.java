@@ -27,11 +27,13 @@ import org.gradle.jvm.tasks.Jar;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.tasks.RestartServerTask;
 
+import java.util.function.Supplier;
+
 public class Config {
     private final GradleUtilsPlugin plugin;
     private boolean pluginDevMode = true;
     private Jar jarTask;
-    private Task releaseTask;
+    private Supplier<Task> releaseTask = () -> null;
 
     public Config(GradleUtilsPlugin plugin) {
         this.plugin = plugin;
@@ -64,11 +66,11 @@ public class Config {
         return this.pluginDevMode;
     }
 
-    public void setReleaseTask(Task task) {
+    public void setReleaseTask(Supplier<Task> task) {
         this.releaseTask = task;
     }
 
     public Task getReleaseTask() {
-        return releaseTask;
+        return releaseTask.get();
     }
 }

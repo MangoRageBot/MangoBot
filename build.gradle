@@ -16,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2087'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2089'
     }
 }
 
@@ -51,7 +51,7 @@ configurations {
 MangoBotConfig {
     disableCopyOverBot()
     setJarTask(jar)
-    setReleaseTask(publishMangobotPublicationToMavenRepository)
+    setReleaseTask(() -> getTasks().getByName("publishMangobotPublicationToMavenRepository"))
     if (props != null && props.containsKey("SERVER_TOKEN")) {
         enableRestartServerTask(
                 "f32263f3",
