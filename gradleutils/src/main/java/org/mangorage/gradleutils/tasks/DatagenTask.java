@@ -20,12 +20,13 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.gradleutils;
+package org.mangorage.gradleutils.tasks;
 
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.ModuleVersionIdentifier;
 import org.gradle.api.artifacts.ResolvedDependency;
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository;
+import org.mangorage.gradleutils.GradleUtilsPlugin;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;

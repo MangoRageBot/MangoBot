@@ -28,6 +28,8 @@ import org.gradle.api.tasks.JavaExec;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.core.TaskRegistry;
 import org.mangorage.gradleutils.tasks.CopyTask;
+import org.mangorage.gradleutils.tasks.DatagenTask;
+import org.mangorage.gradleutils.tasks.RunBotTask;
 
 import java.util.List;
 import java.util.Objects;
@@ -47,6 +49,7 @@ public class GradleUtilsPlugin implements Plugin<Project> {
     public GradleUtilsPlugin() {
         taskRegistry.register(t -> {
             t.register("copyTask", CopyTask.class, config);
+            t.register("runBot", RunBotTask.class, config, Constants.BOT_TASKS_GROUP);
             t.register("runInstaller", JavaExec.class, task -> {
                 task.setGroup(Constants.INSTALLER_TASKS_GROUP);
                 task.setDependsOn(List.of(task.getProject().getTasksByName("copyTask", false)));
@@ -92,7 +95,6 @@ public class GradleUtilsPlugin implements Plugin<Project> {
             taskRegistry.apply(project);
 
             if (!config.isPluginDevMode()) DatagenTask.apply(project, this);
-            BotTasks.apply(project, this);
         });
     }
 }

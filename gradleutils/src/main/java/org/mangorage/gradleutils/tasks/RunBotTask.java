@@ -20,33 +20,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.gradleutils;
+package org.mangorage.gradleutils.tasks;
 
-import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.tasks.JavaExec;
+import org.mangorage.gradleutils.Config;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
-public class BotTasks {
-    private static final String GROUP = "bot tasks";
+public abstract class RunBotTask extends JavaExec {
+    @Inject
+    public RunBotTask(Config config, String group) {
+        setGroup(group);
+        setDescription("Runs the bot");
 
-    public static void apply(Project project, GradleUtilsPlugin gradleUtilsPlugin) {
-        project.getTasks().register("runBot", JavaExec.class, task -> {
-            task.setGroup(GROUP);
-            task.setDescription("Runs the built in Launcher");
+        ArrayList<Task> deps = new ArrayList<>();
+        deps.addAll(getProject().getTasksByName("copyTask", false));
+        deps.addAll(getProject().getTasksByName("runInstaller", false));
 
-            ArrayList<Task> deps = new ArrayList<>();
-            deps.addAll(project.getTasksByName("copyTask", false));
-            deps.addAll(project.getTasksByName("runInstaller", false));
+        setDependsOn(deps);
+        mustRunAfter(deps);
 
-            task.setDependsOn(deps);
-            task.mustRunAfter(deps);
-
-            task.classpath(project.getConfigurations().getByName(gradleUtilsPlugin.getConfig().isPluginDevMode() ? "bot" : "botInternal").getFiles());
-            task.setMain("org.mangorage.mangobot.loader.Loader");
-            task.setWorkingDir(project.file("build/run/"));
-        });
-
+        classpath(getProject().getConfigurations().getByName(config.isPluginDevMode() ? "bot" : "botInternal").getFiles());
+        setMain("org.mangorage.mangobot.loader.Loader");
+        setWorkingDir(getProject().file("build/run/"));
     }
 }
