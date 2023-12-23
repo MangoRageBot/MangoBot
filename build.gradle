@@ -16,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2083'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2086'
     }
 }
 
@@ -95,8 +95,8 @@ sourceSets {
 }
 
 def libs = [
-        JDA: 'net.dv8tion:JDA:5.0.0-beta.17',
-        LAVA_PLAYER     : 'dev.arbjerg:lavaplayer:2.0.2',
+        JDA        : 'net.dv8tion:JDA:5.0.0-beta.18',
+        LAVA_PLAYER: 'dev.arbjerg:lavaplayer:2.0.4',
         GSON            : 'com.google.code.gson:gson:2.10.1',
         LOG4J_CORE      : 'org.apache.logging.log4j:log4j-core:2.20.0',
         LOG4J_SLF4J_IMPL: 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0',
@@ -148,12 +148,6 @@ publish {
 }
 
 jar {
-    var task = getTasksByName("runDatagen", false)
-    if (task != null) {
-        dependsOn task
-        mustRunAfter task
-    }
-
     dependsOn configurations.internal
 
     from {

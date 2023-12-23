@@ -110,7 +110,7 @@ public class DatagenTask {
     }
 
     public static void apply(Project project, GradleUtilsPlugin gradleUtilsPlugin) {
-        project.getTasks().register("runDatagen", task -> {
+        var tp = project.getTasks().register("runDatagen", task -> {
             task.setGroup("bot tasks");
             task.doLast(action -> {
                 var repos = getAllRepositories(project);
@@ -157,5 +157,8 @@ public class DatagenTask {
             });
 
         });
+
+        gradleUtilsPlugin.getConfig().getJarTask().mustRunAfter(tp.get()); // runDatagen
+        gradleUtilsPlugin.getConfig().getJarTask().dependsOn(tp.get());
     }
 }
