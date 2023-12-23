@@ -27,9 +27,10 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.JavaExec;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.core.TaskRegistry;
-import org.mangorage.gradleutils.tasks.CopyBotPluginTask;
+import org.mangorage.gradleutils.tasks.CopyTask;
 
 import java.util.List;
+import java.util.Objects;
 
 public class GradleUtilsPlugin implements Plugin<Project> {
     private final Config config = new Config(this);
@@ -45,13 +46,16 @@ public class GradleUtilsPlugin implements Plugin<Project> {
 
     public GradleUtilsPlugin() {
         taskRegistry.register(t -> {
+            t.register("copyTask", CopyTask.class, config);
             t.register("runInstaller", JavaExec.class, task -> {
                 task.setGroup(Constants.INSTALLER_TASKS_GROUP);
-                task.setDependsOn(List.of(task.getProject().getTasksByName(config.isPluginDevMode() ? "CopyOverTask" : "copyTask", false)));
-                task.mustRunAfter(task.getProject().getTasksByName(config.isPluginDevMode() ? "CopyOverTask" : "copyTask", false));
+                task.setDependsOn(List.of(task.getProject().getTasksByName("copyTask", false)));
+                task.mustRunAfter(task.getProject().getTasksByName("copyTask", false));
+
                 task.setWorkingDir(task.getProject().file("build/run/"));
                 task.classpath(task.getProject().getConfigurations().getByName("installer").getFiles());
                 task.setMain("org.mangorage.installer.Installer");
+
                 task.setArgs(List.of(
                         "-manualJar",
                         task.getProject().getRootDir().toPath().resolve("build/run/plugins/bot.jar").toString(),
@@ -59,9 +63,6 @@ public class GradleUtilsPlugin implements Plugin<Project> {
                         "1.0.0"
                 ));
             });
-            if (config.isPluginDevMode()) {
-                t.register("CopyOverTask", CopyBotPluginTask.class);
-            }
         });
     }
 
@@ -85,9 +86,10 @@ public class GradleUtilsPlugin implements Plugin<Project> {
         });
 
         project.afterEvaluate(a -> {
+            Objects.requireNonNull(config.getJarTask(), "jarTask cannot be null!");
             taskRegistry.apply(project);
 
-            DatagenTask.apply(project, this);
+            if (!config.isPluginDevMode()) DatagenTask.apply(project, this);
             BotTasks.apply(project, this);
         });
     }

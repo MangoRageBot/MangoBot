@@ -23,12 +23,14 @@
 package org.mangorage.gradleutils;
 
 import org.gradle.api.Task;
+import org.gradle.jvm.tasks.Jar;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.tasks.RestartServerTask;
 
 public class Config {
     private final GradleUtilsPlugin plugin;
     private boolean pluginDevMode = true;
+    private Jar jarTask;
 
     public Config(GradleUtilsPlugin plugin) {
         this.plugin = plugin;
@@ -42,6 +44,14 @@ public class Config {
             if (dependency != null)
                 tasks.register("restartServer", clazz, serverID, serverURL, serverToken, Constants.BOT_TASKS_GROUP, dependency);
         });
+    }
+
+    public void setJarTask(Jar jar) {
+        this.jarTask = jar;
+    }
+
+    public Jar getJarTask() {
+        return jarTask;
     }
 
 
