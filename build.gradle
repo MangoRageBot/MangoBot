@@ -167,6 +167,7 @@ jar {
 publishing {
     publications.register("mangobot", MavenPublication) {
         from components.java
+
         pom {
             name = 'MangoBot'
             description = 'A discord bot used for many servers'
@@ -179,6 +180,15 @@ publishing {
                 developer {
                     id = 'mangorage'
                     name = 'MangoRage'
+                }
+            }
+        }
+        afterEvaluate {
+            pom.withXml {
+                asNode().dependencies.dependency.findAll { dep ->
+                    dep.groupId.text().contains('org.mangorage')
+                }.each { excludedDep ->
+                    excludedDep.parent().remove(excludedDep)
                 }
             }
         }
