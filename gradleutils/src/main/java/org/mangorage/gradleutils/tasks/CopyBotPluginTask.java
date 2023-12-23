@@ -20,36 +20,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.gradleutils;
+package org.mangorage.gradleutils.tasks;
 
-import org.gradle.api.Task;
-import org.mangorage.gradleutils.core.Constants;
-import org.mangorage.gradleutils.tasks.RestartServerTask;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.TaskAction;
 
-public class Config {
-    private final GradleUtilsPlugin plugin;
-    private boolean pluginDevMode = true;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
-    public Config(GradleUtilsPlugin plugin) {
-        this.plugin = plugin;
+// PluginDev or Internal Task
+public abstract class CopyBotPluginTask extends DefaultTask {
+    @Inject
+    public CopyBotPluginTask() {
     }
 
-    public void enableRestartServerTask(String serverID, String serverURL, String serverToken, Task dependency) {
-        plugin.getTaskRegistry().register(tasks -> {
-            var clazz = dependency == null ? RestartServerTask.WithoutDep.class : RestartServerTask.class;
-            if (dependency == null)
-                tasks.register("restartServer", clazz, serverID, serverURL, serverToken, Constants.BOT_TASKS_GROUP);
-            if (dependency != null)
-                tasks.register("restartServer", clazz, serverID, serverURL, serverToken, Constants.BOT_TASKS_GROUP, dependency);
+    @TaskAction
+    public void run() {
+        getProject().getConfigurations().getByName("bot").getFiles().forEach(a -> {
+            try {
+                Files.copy(a.toPath(), getProject().getProjectDir().toPath().resolve("build/run/plugins/bot.jar"), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
-    }
-
-
-    public void disableCopyOverBot() {
-        this.pluginDevMode = false;
-    }
-
-    public boolean isPluginDevMode() {
-        return this.pluginDevMode;
     }
 }

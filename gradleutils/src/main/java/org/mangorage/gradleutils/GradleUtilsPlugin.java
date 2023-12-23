@@ -27,7 +27,7 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.JavaExec;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.core.TaskRegistry;
-import org.mangorage.gradleutils.tasks.SetupInstallerTask;
+import org.mangorage.gradleutils.tasks.CopyBotPluginTask;
 
 import java.util.List;
 
@@ -45,15 +45,23 @@ public class GradleUtilsPlugin implements Plugin<Project> {
 
     public GradleUtilsPlugin() {
         taskRegistry.register(t -> {
-            t.register("setupInstaller", SetupInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
             t.register("runInstaller", JavaExec.class, task -> {
                 task.setGroup(Constants.INSTALLER_TASKS_GROUP);
-                task.setDependsOn(List.of(task.getProject().getTasksByName("setupInstaller", false)));
-                task.mustRunAfter(task.getProject().getTasksByName("setupInstaller", false));
+                task.setDependsOn(List.of(task.getProject().getTasksByName(config.isPluginDevMode() ? "CopyOverTask" : "copyTask", false)));
+                task.mustRunAfter(task.getProject().getTasksByName(config.isPluginDevMode() ? "CopyOverTask" : "copyTask", false));
                 task.setWorkingDir(task.getProject().file("build/run/"));
                 task.classpath(task.getProject().getConfigurations().getByName("installer").getFiles());
                 task.setMain("org.mangorage.installer.Installer");
+                task.setArgs(List.of(
+                        "-manualJar",
+                        task.getProject().getRootDir().toPath().resolve("build/run/plugins/bot.jar").toString(),
+                        "-manualJarVersion",
+                        "1.0.0"
+                ));
             });
+            if (config.isPluginDevMode()) {
+                t.register("CopyOverTask", CopyBotPluginTask.class);
+            }
         });
     }
 

@@ -23,6 +23,7 @@
 package org.mangorage.gradleutils;
 
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.JavaExec;
@@ -30,20 +31,25 @@ import org.gradle.jvm.tasks.Jar;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
+import java.util.ArrayList;
 
 public class BotTasks {
     private static final String GROUP = "bot tasks";
 
     public static void apply(Project project, GradleUtilsPlugin gradleUtilsPlugin) {
 
+        var config = gradleUtilsPlugin.getConfig();
         Jar jarTask = (Jar) project.getTasks().getByName(JavaPlugin.JAR_TASK_NAME);
         project.getTasks().register("copyTask", Copy.class, copyTask -> {
+            try {
+                Files.deleteIfExists(project.getRootProject().getProjectDir().toPath().resolve("build/run/plugins/%s".formatted(config.isPluginDevMode() ? "plugin.jar" : "bot.jar")));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             copyTask.from(jarTask.getArchiveFile().get().getAsFile());
             copyTask.into(project.getRootProject().getProjectDir().toPath().resolve("build/run/plugins"));
             copyTask.rename(a -> {
-                return "plugin.jar";
+                return config.isPluginDevMode() ? "plugin.jar" : "bot.jar";
             });
 
             // Execute the Copy task after the Jar task
@@ -55,24 +61,18 @@ public class BotTasks {
         project.getTasks().register("runBot", JavaExec.class, task -> {
             task.setGroup(GROUP);
             task.setDescription("Runs the built in Launcher");
-            task.setDependsOn(List.of(project.getTasksByName("copyTask", false)));
-            task.mustRunAfter(project.getTasksByName("copyTask", false));
 
-            task.classpath(project.getConfigurations().getByName(gradleUtilsPlugin.getConfig().isCopyOverBot() ? "bot" : "botInternal").getFiles());
+            ArrayList<Task> deps = new ArrayList<>();
+            if (gradleUtilsPlugin.getConfig().isPluginDevMode())
+                deps.addAll(project.getTasksByName("CopyOverTask", false));
+            deps.addAll(project.getTasksByName("copyTask", false));
+
+            task.setDependsOn(deps);
+            task.mustRunAfter(deps);
+
+            task.classpath(project.getConfigurations().getByName(gradleUtilsPlugin.getConfig().isPluginDevMode() ? "bot" : "botInternal").getFiles());
             task.setMain("org.mangorage.mangobot.loader.Loader");
             task.setWorkingDir(project.file("build/run/"));
-
-            if (gradleUtilsPlugin.getConfig().isCopyOverBot()) {
-                task.doFirst(t -> {
-                    project.getConfigurations().getByName("bot").getFiles().forEach(a -> {
-                        try {
-                            Files.copy(a.toPath(), project.getProjectDir().toPath().resolve("build/run/plugins/bot.jar"), StandardCopyOption.REPLACE_EXISTING);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                });
-            }
         });
 
     }

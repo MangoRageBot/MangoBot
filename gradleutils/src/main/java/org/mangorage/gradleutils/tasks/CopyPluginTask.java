@@ -22,40 +22,17 @@
 
 package org.mangorage.gradleutils.tasks;
 
-import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.Copy;
 import org.gradle.api.tasks.TaskAction;
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+// PluginDev Task
+public abstract class CopyPluginTask extends Copy {
+    public CopyPluginTask() {
 
-public abstract class SetupInstallerTask extends DefaultTask {
-
-    @Inject
-    public SetupInstallerTask(String group) {
-        setGroup(group);
-        setDescription("Restarts your server");
     }
 
     @TaskAction
     public void run() {
-        var projectRootDir = getProject().getProjectDir().toPath();
 
-        System.out.println("Copying over package.json");
-        Path source = projectRootDir.resolve(Paths.get("installer/package.txt"));
-        Path destination = projectRootDir.resolve(Paths.get("build/run/installer"));
-        Path target = projectRootDir.resolve(Paths.get("build/run/installer/package.txt"));
-
-        try {
-            Files.createDirectories(destination);
-            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-            System.out.println("File copied successfully from %s to %s".formatted(source, destination));
-        } catch (IOException e) {
-            System.out.println("Error copying file: %s".formatted(e.getMessage()));
-            e.printStackTrace();
-        }
     }
 }

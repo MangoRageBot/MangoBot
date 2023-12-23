@@ -16,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2068'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2078'
     }
 }
 
@@ -113,7 +113,7 @@ ext.globalLibs = libs
 println("Current Bot Version: ${version}")
 
 dependencies {
-    installer('io.github.realmangorage:installer:2.0.1')
+    installer('io.github.realmangorage:installer:2.0.3')
     botInternal(sourceSets.main.output)
 
     runtimeOnly(libs.LOG4J_SLF4J_IMPL)
