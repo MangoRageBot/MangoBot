@@ -30,7 +30,7 @@ def getCommitNumber = {
 }
 
 group = 'org.mangorage'
-version = '3.0.2-beta2081'
+version = '3.0.2-beta2082'
 
 configurations {
     shadow

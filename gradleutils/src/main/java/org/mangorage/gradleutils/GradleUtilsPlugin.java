@@ -74,16 +74,18 @@ public class GradleUtilsPlugin implements Plugin<Project> {
             t.setVisible(true);
         });
 
-        project.getConfigurations().create("bot", t -> {
+        var botCfg = project.getConfigurations().create("bot", t -> {
             t.setVisible(true);
             t.setTransitive(false);
         });
 
-        project.getConfigurations().create("botInternal", t -> {
+        var internal = project.getConfigurations().create("botInternal", t -> {
             t.setVisible(true);
             t.setTransitive(false);
             t.extendsFrom(project.getConfigurations().getByName("implementation"));
         });
+
+        project.getConfigurations().findByName("implementation").extendsFrom(botCfg);
 
         project.afterEvaluate(a -> {
             Objects.requireNonNull(config.getJarTask(), "jarTask cannot be null!");
