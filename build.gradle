@@ -166,7 +166,7 @@ jar {
 
 publishing {
     publications.register("mangobot", MavenPublication) {
-        artifact jar
+        from components.java
         pom {
             name = 'MangoBot'
             description = 'A discord bot used for many servers'
@@ -180,9 +180,6 @@ publishing {
                     id = 'mangorage'
                     name = 'MangoRage'
                 }
-            }
-            dependencies {
-                implementation libs.JDA
             }
         }
     }

@@ -4,4 +4,3 @@ include 'mangobotapi'
 include 'mboteventbus'
 include 'mangoutils'
 include 'gradleutils'
-
