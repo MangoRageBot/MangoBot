@@ -182,6 +182,9 @@ publishing {
                         name = 'MangoRage'
                     }
                 }
+                dependencies {
+                    implementation lib.JDA
+                }
             }
         }
     }
