@@ -40,9 +40,7 @@ public abstract class RunInstallerTask extends JavaExec {
 
         setArgs(List.of(
                 "-manualJar",
-                getProject().getRootDir().toPath().resolve("build/run/plugins/bot.jar").toString(),
-                "-manualJarVersion",
-                "1.0.0"
+                getProject().getRootDir().toPath().resolve("build/run/plugins/bot.jar").toString()
         ));
     }
 }
