@@ -49,7 +49,7 @@ public class DatagenTask {
             String url = repository + group.replace('.', '/') + "/" + name + "/" + version + "/" + name + "-" + version + ".jar";
             //System.out.println(url);
             if (isValidUrl(url)) {
-                return url;
+                return repository;
             }
         }
 
@@ -78,7 +78,7 @@ public class DatagenTask {
             identifiers.add(dep);
             var result = generate(repos, dep.getGroup(), dep.getName(), dep.getVersion());
             if (result != null) {
-                urls.add(result);
+                urls.add("%s %s %s %s %s-%s.jar".formatted(result, dep.getGroup(), dep.getName(), dep.getVersion(), dep.getName(), dep.getVersion()));
             }
         }
 
