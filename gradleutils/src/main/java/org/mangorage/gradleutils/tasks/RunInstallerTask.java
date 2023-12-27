@@ -25,22 +25,39 @@ package org.mangorage.gradleutils.tasks;
 import org.gradle.api.tasks.JavaExec;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 public abstract class RunInstallerTask extends JavaExec {
     @Inject
     public RunInstallerTask(String group) {
         setGroup(group);
-        setDependsOn(List.of(getProject().getTasksByName("copyTask", false)));
-        mustRunAfter(getProject().getTasksByName("copyTask", false));
+        setDependsOn(List.of(getProject().getTasksByName("setupPlugins", false)));
+        mustRunAfter(getProject().getTasksByName("setupPlugins", false));
 
         setWorkingDir(getProject().file("build/run/"));
         classpath(getProject().getConfigurations().getByName("installer").getFiles());
         setMain("org.mangorage.installer.Installer");
+    }
 
-        setArgs(List.of(
-                "-manualJar",
-                getProject().getRootDir().toPath().resolve("build/run/plugins/bot.jar").toString()
-        ));
+    /**
+     * @return
+     */
+    @Override
+    public List<String> getArgs() {
+        Path plugins = getProject().getRootDir().toPath().resolve("build/run/plugins");
+        StringBuilder builder = new StringBuilder();
+
+        for (File file : plugins.toFile().listFiles()) {
+            System.out.println(file.getName());
+            if (!file.isDirectory() && file.getName().contains(".jar"))
+                builder.append(file.toPath().toAbsolutePath()).append(";");
+        }
+
+        String args = builder.substring(0, builder.length() - 1);
+
+        setArgs(List.of("-manualJar", args));
+        return super.getArgs();
     }
 }

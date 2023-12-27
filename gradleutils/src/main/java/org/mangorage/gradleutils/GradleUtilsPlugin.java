@@ -31,6 +31,7 @@ import org.mangorage.gradleutils.tasks.DatagenTask;
 import org.mangorage.gradleutils.tasks.ReleaseBotTask;
 import org.mangorage.gradleutils.tasks.RunBotTask;
 import org.mangorage.gradleutils.tasks.RunInstallerTask;
+import org.mangorage.gradleutils.tasks.SetupPluginsTask;
 
 import java.util.Objects;
 
@@ -51,6 +52,7 @@ public class GradleUtilsPlugin implements Plugin<Project> {
             t.register("copyTask", CopyTask.class, config);
             t.register("runBot", RunBotTask.class, config, Constants.BOT_TASKS_GROUP);
             t.register("runInstaller", RunInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
+            t.register("setupPlugins", SetupPluginsTask.class);
             if (config.getReleaseTask() != null)
                 t.register("release", ReleaseBotTask.class, config, Constants.BOT_TASKS_GROUP);
         });
@@ -69,19 +71,29 @@ public class GradleUtilsPlugin implements Plugin<Project> {
             t.setTransitive(false);
         });
 
-        var internal = project.getConfigurations().create("botInternal", t -> {
+        project.getConfigurations().create("botInternal", t -> {
             t.setVisible(true);
             t.setTransitive(false);
             t.extendsFrom(project.getConfigurations().getByName("implementation"));
         });
 
-        project.getConfigurations().findByName("implementation").extendsFrom(botCfg);
+        var plugin = project.getConfigurations().create("plugin", t -> {
+            t.setVisible(true);
+            t.setTransitive(false);
+        });
+
+        var library = project.getConfigurations().create("library", t -> {
+            t.setVisible(true);
+            t.setTransitive(true);
+            t.setCanBeResolved(true);
+        });
+
+        project.getConfigurations().findByName("implementation").extendsFrom(botCfg, plugin, library);
 
         project.afterEvaluate(a -> {
             Objects.requireNonNull(config.getJarTask(), "jarTask cannot be null!");
             taskRegistry.apply(project);
-
-            if (!config.isPluginDevMode()) DatagenTask.apply(project, this);
+            DatagenTask.apply(project, this);
         });
     }
 }

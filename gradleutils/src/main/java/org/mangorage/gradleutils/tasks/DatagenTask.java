@@ -118,7 +118,7 @@ public class DatagenTask {
                 var idents = new ArrayList<ModuleVersionIdentifier>();
                 var urls = new ArrayList<String>();
 
-                var conf = project.getConfigurations().getByName("runtimeClasspath");
+                var conf = project.getConfigurations().getByName("library");
 
                 conf.getResolvedConfiguration().getFirstLevelModuleDependencies().forEach(a -> getTransitiveDep(repos, a, (module) -> {
                     return !module.getGroup().contains("org.mangorage");

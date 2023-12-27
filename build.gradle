@@ -16,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2093'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2101'
     }
 }
 
@@ -114,22 +114,24 @@ ext.globalLibs = libs
 println("Current Bot Version: ${version}")
 
 dependencies {
-    installer('io.github.realmangorage:installer:2.0.3')
+    installer('io.github.realmangorage:installer:2.1.1')
     botInternal(sourceSets.main.output)
+
+    plugin('io.github.realmangorage:mangobotaddon:1.0')
 
     runtimeOnly(libs.LOG4J_SLF4J_IMPL)
 
     // Libs for Bot
-    implementation(libs.JDA)
-    implementation(libs.LAVA_PLAYER)
-    implementation(libs.GSON)
-    implementation(libs.LOG4J_CORE)
-    implementation(libs.GITHUB_API)
-    implementation(libs.SLF4J_SIMPLE)
-    implementation(libs.REFLECTIONS)
-    implementation(libs.LUA_JAVA)
-    implementation(libs.ASM)
-    implementation(libs.ASM_TREE)
+    library(libs.JDA)
+    library(libs.LAVA_PLAYER)
+    library(libs.GSON)
+    library(libs.LOG4J_CORE)
+    library(libs.GITHUB_API)
+    library(libs.SLF4J_SIMPLE)
+    library(libs.REFLECTIONS)
+    library(libs.LUA_JAVA)
+    library(libs.ASM)
+    library(libs.ASM_TREE)
 
     // Core Libs
 
