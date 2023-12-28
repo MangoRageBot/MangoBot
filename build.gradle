@@ -16,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2103'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2106'
     }
 }
 
@@ -46,11 +46,6 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
-
-configurations {
-    implementation.extendsFrom internal
-}
-
 
 MangoBotConfig {
     disableCopyOverBot()
@@ -140,17 +135,17 @@ dependencies {
 
     testImplementation project(path: ':mangoutils')
 
-    internal project(path: ':mangobotapi')
-    internal project(path: ':mboteventbus')
-    internal project(path: ':mangoutils')
+    embedLibrary project(path: ':mangobotapi')
+    embedLibrary project(path: ':mboteventbus')
+    embedLibrary project(path: ':mangoutils')
 }
 
 jar {
-    dependsOn configurations.internal
+    dependsOn configurations.embedLibrary
 
     from {
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        configurations.internal.collect {
+        configurations.embedLibrary.collect {
             zipTree(it)
         }
     } {

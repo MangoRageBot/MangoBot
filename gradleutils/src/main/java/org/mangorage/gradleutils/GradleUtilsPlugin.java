@@ -88,8 +88,11 @@ public class GradleUtilsPlugin implements Plugin<Project> {
             t.setCanBeResolved(true);
         });
 
-        project.getConfigurations().findByName("implementation").extendsFrom(botCfg, plugin, library);
+        var embededLibrary = project.getConfigurations().create("embedLibrary", t -> {
+            t.setVisible(true);
+        });
 
+        project.getConfigurations().findByName("implementation").extendsFrom(botCfg, plugin, library, embededLibrary);
 
         project.afterEvaluate(a -> {
             Objects.requireNonNull(config.getJarTask(), "jarTask cannot be null!");
