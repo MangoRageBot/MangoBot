@@ -28,12 +28,9 @@ import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
-import org.mangorage.mboteventbus.EventBus;
-import org.mangorage.mboteventbus.impl.IEventBus;
 
 public abstract class CorePlugin extends AbstractPlugin {
     private final JDA JDA;
-    private final IEventBus pluginBus = EventBus.create();
     private final String COMMAND_PREFIX = "!";
     private final MessageSettings DEFAULT_MESSAGE_SETTINGS = MessageSettings.create().build();
     private final CommandRegistry commandRegistry = new CommandRegistry(this);
@@ -43,9 +40,6 @@ public abstract class CorePlugin extends AbstractPlugin {
     public CorePlugin(String id, JDA jda) {
         super(id);
         this.JDA = jda;
-
-
-        getPluginBus().startup();
 
         getPluginBus().addListener(10, StartupEvent.class, event -> {
             switch (event.phase()) {
@@ -78,10 +72,6 @@ public abstract class CorePlugin extends AbstractPlugin {
 
     public JDA getJDA() {
         return JDA;
-    }
-
-    public IEventBus getPluginBus() {
-        return pluginBus;
     }
 
     public CommandRegistry getCommandRegistry() {

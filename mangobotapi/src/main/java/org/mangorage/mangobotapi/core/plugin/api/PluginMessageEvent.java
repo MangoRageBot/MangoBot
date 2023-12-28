@@ -20,8 +20,32 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin;
+package org.mangorage.mangobotapi.core.plugin.api;
 
-// TODO: Work on making this...
-public class InterPluginComms {
+import org.mangorage.mboteventbus.base.Event;
+
+import java.util.function.Supplier;
+
+public final class PluginMessageEvent extends Event<PluginMessageEvent> {
+    private final AbstractPlugin origin;
+    private final String method;
+    private final Supplier<?> object;
+
+    PluginMessageEvent(AbstractPlugin origin, String method, Supplier<?> object) {
+        this.origin = origin;
+        this.method = method;
+        this.object = object;
+    }
+
+    public AbstractPlugin getOrigin() {
+        return origin;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public Supplier<?> getObject() {
+        return object;
+    }
 }
