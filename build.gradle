@@ -16,7 +16,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2101'
+        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2102'
     }
 }
 
@@ -35,7 +35,11 @@ apply plugin: 'maven-publish'
 apply plugin: 'gradleutils'
 
 group 'org.mangorage'
-version "${BOT_VERSION}-c" + getCommitNumber()
+version "%s.%s.%s".formatted(
+        1,
+        0,
+        getCommitNumber()
+)
 
 java {
     toolchain {

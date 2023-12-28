@@ -90,6 +90,7 @@ public class GradleUtilsPlugin implements Plugin<Project> {
 
         project.getConfigurations().findByName("implementation").extendsFrom(botCfg, plugin, library);
 
+
         project.afterEvaluate(a -> {
             Objects.requireNonNull(config.getJarTask(), "jarTask cannot be null!");
             taskRegistry.apply(project);

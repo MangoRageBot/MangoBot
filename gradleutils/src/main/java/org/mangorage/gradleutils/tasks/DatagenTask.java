@@ -47,7 +47,6 @@ public class DatagenTask {
     public static String generate(List<String> repos, String group, String name, String version) {
         for (String repository : repos) {
             String url = repository + group.replace('.', '/') + "/" + name + "/" + version + "/" + name + "-" + version + ".jar";
-            //System.out.println(url);
             if (isValidUrl(url)) {
                 return repository;
             }
@@ -85,9 +84,6 @@ public class DatagenTask {
         identifiers.add(dependency.getModule().getId());
 
         dependency.getChildren().forEach(a -> getTransitiveDep(repos, a, checker, deps, identifiers, urls));
-        if (dependency.getChildren().isEmpty()) {
-            var a = 1;
-        }
     }
 
 
@@ -125,10 +121,9 @@ public class DatagenTask {
                 }, deps, idents, urls));
 
                 deps.forEach(System.out::println);
+
                 System.out.printf("%s dependencies%n", deps.size());
                 System.out.println("Direct URL's");
-                //idents.forEach(System.out::println);
-                //urls.forEach(System.out::println);
 
                 var projectRootDir = project.getProjectDir().toPath();
                 var depsFile = projectRootDir.resolve("src/main/resources/installerdata/deps.txt").toFile();
