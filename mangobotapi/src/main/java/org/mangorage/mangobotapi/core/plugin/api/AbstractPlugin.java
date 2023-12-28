@@ -22,6 +22,8 @@
 
 package org.mangorage.mangobotapi.core.plugin.api;
 
+import java.nio.file.Path;
+
 public abstract class AbstractPlugin {
     private final String id;
 
@@ -31,5 +33,9 @@ public abstract class AbstractPlugin {
 
     public String getId() {
         return id;
+    }
+
+    public Path getPluginDirectory() {
+        return Path.of("plugins/%s/".formatted(getId())).toAbsolutePath();
     }
 }
