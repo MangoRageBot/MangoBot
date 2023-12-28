@@ -23,7 +23,6 @@
 package org.mangorage.mangobot.loader;
 
 import org.mangorage.basicutils.language.LanguageHandler;
-import org.mangorage.mangobot.modules.basic.commands.VersionCommand;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 import org.mangorage.mboteventbus.EventBus;
@@ -50,12 +49,9 @@ public class CoreMain {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             running.set(false);
-            System.out.println("Shutting down MangoLoader!");
+            System.out.println("Shutting down Mangoloader!");
         }));
 
-        new Object();
-
-        VersionCommand.init();
         Actions.init();
         LanguageHandler.loadAll();
         PluginLoader.load();
