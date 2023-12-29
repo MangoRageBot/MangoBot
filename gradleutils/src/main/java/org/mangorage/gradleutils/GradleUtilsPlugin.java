@@ -26,9 +26,10 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.mangorage.gradleutils.core.Constants;
 import org.mangorage.gradleutils.core.TaskRegistry;
+import org.mangorage.gradleutils.core.Version;
 import org.mangorage.gradleutils.tasks.CopyTask;
 import org.mangorage.gradleutils.tasks.DatagenTask;
-import org.mangorage.gradleutils.tasks.ReleaseBotTask;
+import org.mangorage.gradleutils.tasks.ReleaseTask;
 import org.mangorage.gradleutils.tasks.RunBotTask;
 import org.mangorage.gradleutils.tasks.RunInstallerTask;
 import org.mangorage.gradleutils.tasks.SetupPluginsTask;
@@ -53,8 +54,11 @@ public class GradleUtilsPlugin implements Plugin<Project> {
             t.register("runBot", RunBotTask.class, config, Constants.BOT_TASKS_GROUP);
             t.register("runInstaller", RunInstallerTask.class, Constants.INSTALLER_TASKS_GROUP);
             t.register("setupPlugins", SetupPluginsTask.class);
-            if (config.getReleaseTask() != null)
-                t.register("release", ReleaseBotTask.class, config, Constants.BOT_TASKS_GROUP);
+            if (config.getReleaseTask() != null) {
+                t.register("releaseMajor", ReleaseTask.class, config, Constants.BOT_TASKS_GROUP, Version.Type.MAJOR);
+                t.register("releaseMinor", ReleaseTask.class, config, Constants.BOT_TASKS_GROUP, Version.Type.MINOR);
+                t.register("releasePatch", ReleaseTask.class, config, Constants.BOT_TASKS_GROUP, Version.Type.PATCH);
+            }
         });
     }
 

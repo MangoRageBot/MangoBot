@@ -23,17 +23,32 @@
 package org.mangorage.gradleutils.tasks;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.TaskAction;
 import org.mangorage.gradleutils.Config;
+import org.mangorage.gradleutils.core.Version;
 
 import javax.inject.Inject;
+import java.nio.file.Path;
 import java.util.List;
 
-public abstract class ReleaseBotTask extends DefaultTask {
+public abstract class ReleaseTask extends DefaultTask {
+    private final Version.Type type;
     @Inject
-    public ReleaseBotTask(Config config, String group) {
-        var dep = List.of(config.getReleaseTask());
+    public ReleaseTask(Config config, String group, Version.Type type) {
+        this.type = type;
+        var dep = config.getReleaseTask();
         setGroup(group);
-        setDependsOn(dep);
-        setMustRunAfter(dep);
+        setFinalizedBy(List.of(dep));
+    }
+
+    @TaskAction
+    public void run() {
+        Version version = new Version(Path.of("version.txt"));
+        switch (type) {
+            case MAJOR -> version.bumpMajor();
+            case MINOR -> version.bumpMinor();
+            case PATCH -> version.bumpPatch();
+        }
+        getProject().setVersion(version.getValue());
     }
 }
