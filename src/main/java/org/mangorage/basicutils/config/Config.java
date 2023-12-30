@@ -25,10 +25,8 @@ package org.mangorage.basicutils.config;
 import org.mangorage.basicutils.misc.FileMonitor;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
@@ -46,22 +44,12 @@ public class Config {
     private final ConcurrentHashMap<String, String> ENTRIES = new ConcurrentHashMap<>();
 
 
-    public Config(String directory, String filename) {
-        this(directory, filename, false);
+    public Config(Path file) {
+        this(file, false);
     }
 
-    public Config(String directory, String filename, boolean autoReload) {
-        String dir = directory
-                .replaceAll("\\\\", "/")
-                .replaceFirst("\\.env$", "")
-                .replaceFirst("/$", "");
-
-        String location = dir + "/" + filename;
-        String lowerLocation = location.toLowerCase();
-
-        this.file = lowerLocation.startsWith("file:") || lowerLocation.startsWith("android.resource:")
-                ? Paths.get(URI.create(location))
-                : Paths.get(location);
+    public Config(Path file, boolean autoReload) {
+        this.file = file;
 
         try {
             load();
@@ -108,11 +96,15 @@ public class Config {
         ENTRIES.put(ID, value);
     }
 
+    public Path getFile() {
+        return file;
+    }
+
     public void save() {
         try {
             var writer = Files.newBufferedWriter(file);
-            ENTRIES.entrySet().stream().forEach(e -> {
-                var line = "%s=%s".formatted(e.getKey(), e.getValue());
+            ENTRIES.forEach((key, value) -> {
+                var line = "%s=%s".formatted(key, value);
                 try {
                     writer.write(line);
                     writer.newLine();

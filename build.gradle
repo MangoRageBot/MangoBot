@@ -20,13 +20,6 @@ buildscript {
     }
 }
 
-def projectRootDir = project.projectDir.toPath()
-def getCommitNumber = {
-    def proc = 'git rev-list --count master'.execute()
-    proc.waitFor()
-    return proc.text.trim()
-}
-
 def props = new Properties()
 file("secrets.properties").withInputStream { props.load(it) }
 
@@ -35,11 +28,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'gradleutils'
 
 group 'org.mangorage'
-version "%s.%s.%s".formatted(
-        1,
-        0,
-        getCommitNumber()
-)
+version "0.0.0"
 
 java {
     toolchain {
@@ -50,7 +39,7 @@ java {
 MangoBotConfig {
     disableCopyOverBot()
     setJarTask(jar)
-    //setReleaseTask(() -> getTasks().getByName("publishMangobotPublicationToMavenRepository"))
+    setReleaseTask(() -> getTasks().getByName("publishMangobotPublicationToMavenRepository"))
     if (props != null && props.containsKey("SERVER_TOKEN")) {
         enableRestartServerTask(
                 "f32263f3",
@@ -113,6 +102,10 @@ ext.globalLibs = libs
 println("Current Bot Version: ${version}")
 
 dependencies {
+    // For unit tests
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2' // For JUnit 5
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2' // For JUnit 5
+
     installer('io.github.realmangorage:installer:2.1.3')
     botInternal(sourceSets.main.output)
 
@@ -149,7 +142,7 @@ jar {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier 'sourcees'
+    classifier 'sources'
     from sourceSets.main.allSource
 }
 

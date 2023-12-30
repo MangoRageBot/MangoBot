@@ -20,23 +20,29 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobot.test.keys;
+package org.mangorage.mangobot.test.config;
 
-import java.awt.*;
-import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.mangorage.basicutils.config.Config;
+import org.mangorage.basicutils.config.ConfigSetting;
+import org.mangorage.basicutils.config.Transformers;
 
-public class KeyPress implements IRobotExecutable {
-    private final List<Integer> keys;
+import java.nio.file.Path;
 
-    public KeyPress(Integer... keys) {
-        this.keys = List.of(keys);
-    }
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public List<Integer> getKeys() {
-        return keys;
-    }
+public class ConfigTest {
+    @Test()
+    public void testConfigMain() {
+        Config config = new Config(Path.of("plugins/test.conf"));
 
-    public void execute(Robot robot) {
-        keys.forEach(robot::keyPress);
+        ConfigSetting<Integer> data = ConfigSetting.create(
+                config,
+                "test",
+                Transformers.INTEGER,
+                100
+        );
+        System.out.println(1);
+        assertEquals(10, 1);
     }
 }
