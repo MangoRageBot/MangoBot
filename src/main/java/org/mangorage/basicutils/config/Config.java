@@ -42,7 +42,8 @@ public class Config {
     public static final Pattern CONFIG_REGEX = Pattern.compile("^\\s*([\\w.\\-]+)\\s*(=)\\s*(['][^']*[']|[\"][^\"]*[\"]|[^#]*)?\\s*(#.*)?$");
 
     private final Path file;
-
+    public String location;
+    
     private final ConcurrentHashMap<String, String> ENTRIES = new ConcurrentHashMap<>();
 
 
@@ -57,6 +58,7 @@ public class Config {
                 .replaceFirst("/$", "");
 
         String location = dir + "/" + filename;
+        this.location=location;
         String lowerLocation = location.toLowerCase();
 
         this.file = lowerLocation.startsWith("file:") || lowerLocation.startsWith("android.resource:")
