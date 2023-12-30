@@ -22,9 +22,9 @@
 
 package org.mangorage.mangobotapi.core.registry.commands;
 
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
-import org.mangorage.mangobotapi.core.commands.ICommand;
 import org.mangorage.mangobotapi.core.commands.ISlashCommand;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.events.SlashCommandEvent;
@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 
-@SuppressWarnings({"rawtypes", "unchecked"})
 public class CommandRegistry {
 
     private final CorePlugin plugin;
@@ -61,20 +60,26 @@ public class CommandRegistry {
                 }
             });
 
-    private final CopyOnWriteArrayList<ICommand<?, ?>> COMMANDS = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<IBasicCommand> COMMANDS = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<ISlashCommand> SLASH_COMMANDS = new CopyOnWriteArrayList<>();
+
     public void addBasicCommand(IBasicCommand command) {
         BASIC_COMMAND_EVENT.addListener(command.getListener());
         COMMANDS.add(command);
     }
 
     public void addSlashCommand(ISlashCommand command) {
-        var updateAction = plugin.getJDA().updateCommands();
-        var commandData = Commands.slash(command.commandId(), command.description());
-        command.registerSubCommands(commandData);
-        updateAction.addCommands(commandData).queue();
         SLASH_COMMAND_EVENT.addListener(command.getListener());
+        SLASH_COMMANDS.add(command); // Implement this later..., for now just add the basic commands...
+    }
 
-        // COMMANDS.add(command); // Implement this later..., for now just add the basic commands...
+    public void registerSlashCommands() {
+        SLASH_COMMANDS.forEach(command -> {
+            var updateAction = plugin.getJDA().updateCommands();
+            var commandData = Commands.slash(command.commandId(), command.description());
+            command.registerSubCommands(commandData);
+            updateAction.addCommands(commandData).queue();
+        });
     }
 
     public void postBasicCommand(BasicCommandEvent event) {
@@ -85,8 +90,23 @@ public class CommandRegistry {
         SLASH_COMMAND_EVENT.post(event);
     }
 
-    public ICommand getCommand(String commandId) {
-        for (ICommand<?, ?> command : COMMANDS) {
+    public void postAutoCompleteEvent(CommandAutoCompleteInteractionEvent event) {
+        for (ISlashCommand slashCommand : SLASH_COMMANDS) {
+            slashCommand.onAutoCompleteEvent(event);
+        }
+    }
+
+    public IBasicCommand getCommand(String commandId) {
+        for (IBasicCommand command : COMMANDS) {
+            if (command.isValidCommand(commandId)) {
+                return command;
+            }
+        }
+        return null;
+    }
+
+    public ISlashCommand getSlashCommand(String commandId) {
+        for (ISlashCommand command : SLASH_COMMANDS) {
             if (command.isValidCommand(commandId)) {
                 return command;
             }

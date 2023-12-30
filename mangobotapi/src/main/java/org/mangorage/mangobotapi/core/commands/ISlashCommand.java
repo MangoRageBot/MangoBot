@@ -22,6 +22,8 @@
 
 package org.mangorage.mangobotapi.core.commands;
 
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.CommandAutoCompleteInteraction;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import org.mangorage.mangobotapi.core.events.SlashCommandEvent;
@@ -55,4 +57,10 @@ public interface ISlashCommand extends ICommand<SlashCommandInteraction, SlashCo
 
     default void registerSubCommands(SlashCommandData command) {
     }
+
+    default void onAutoCompleteEvent(CommandAutoCompleteInteractionEvent event) {
+        if (event.getName().equals(commandId())) onAutoCompleteEvent(event.getInteraction());
+    }
+
+    void onAutoCompleteEvent(CommandAutoCompleteInteraction interaction);
 }
