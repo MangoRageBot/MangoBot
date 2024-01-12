@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,11 @@
 
 package org.mangorage.mangobot.test.config;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mangorage.basicutils.config.Config;
 import org.mangorage.basicutils.config.ConfigSetting;
+import org.mangorage.basicutils.config.ISetting;
 import org.mangorage.basicutils.config.Transformers;
 
 import java.nio.file.Path;
@@ -32,17 +34,29 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ConfigTest {
-    @Test()
+    @Test
+    @DisplayName("Config Test")
     public void testConfigMain() {
-        Config config = new Config(Path.of("plugins/test.conf"));
+        Config config = new Config(Path.of("build/tests/test.conf"));
+        config.getFile().toFile().deleteOnExit();
 
-        ConfigSetting<Integer> data = ConfigSetting.create(
+        ISetting<Integer> data = ConfigSetting.create(
                 config,
                 "test",
                 Transformers.INTEGER,
                 100
         );
-        System.out.println(1);
-        assertEquals(10, 1);
+        data.set(100);
+        assertEquals(100, data.get());
+        data.set(10);
+
+        Config newConfig = new Config(config.getFile());
+        ISetting<Integer> newData = ConfigSetting.create(
+                config,
+                "test",
+                Transformers.INTEGER,
+                100
+        );
+        assertEquals(10, newData.get());
     }
 }

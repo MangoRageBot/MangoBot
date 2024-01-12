@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,12 +78,6 @@ public class Version {
             this.minor = version[1];
             this.patch = version[2];
         }
-    }
-
-    public static void main(String[] args) {
-        Version version = new Version(Path.of("version.txt"));
-        version.bumpPatch();
-        System.out.println(version.getValue());
     }
 
     public void bumpMajor() {

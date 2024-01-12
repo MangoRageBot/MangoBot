@@ -83,7 +83,7 @@ sourceSets {
 }
 
 def libs = [
-        JDA        : 'net.dv8tion:JDA:5.0.0-beta.18',
+        JDA: 'net.dv8tion:JDA:5.0.0-beta.19',
         LAVA_PLAYER: 'dev.arbjerg:lavaplayer:2.0.4',
         GSON            : 'com.google.code.gson:gson:2.10.1',
         LOG4J_CORE      : 'org.apache.logging.log4j:log4j-core:2.20.0',
@@ -98,8 +98,6 @@ def libs = [
 
 
 ext.globalLibs = libs
-
-println("Current Bot Version: ${version}")
 
 dependencies {
     // For unit tests
@@ -122,6 +120,13 @@ dependencies {
     library(libs.LUA_JAVA)
     library(libs.ASM)
     library(libs.ASM_TREE)
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    useJUnitPlatform()
 }
 
 jar {
