@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,12 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.registry.commands;
+package org.mangorage.jdautils.component;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
+/**
+ * This interface is used to prevent a class from getting created with {@link JDAUtilities#createComponent}
+ */
 
-public final class AutoRegister {
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(TYPE)
-    public @interface BasicCommand {
-    }
+public interface NoRegistry {
 }

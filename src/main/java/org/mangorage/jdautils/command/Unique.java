@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,31 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.util;
+package org.mangorage.jdautils.command;
 
-import javax.script.ScriptEngine;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Deprecated
-public class ScriptParser {
+public final class Unique {
 
-    public static ScriptEngine get() {
-        return null;
-    }
+    private static final Map<String, List<Object>> identifiers = new HashMap<>();
 
-    public static void init() {
+    /**
+     * Checks if the object is unique
+     *
+     * @param identifier   A collection identifier to check if all objects in this collection are unique
+     * @param object       The object to check
+     * @param errorMessage The error message to throw if the object is not unique
+     */
+    public static void checkUnique(String identifier, Object object, String errorMessage) {
+        if (identifiers.containsKey(identifier)) {
+            if (identifiers.get(identifier).contains(object))
+                throw new IllegalArgumentException(errorMessage);
+            identifiers.get(identifier).add(object);
+        } else {
+            identifiers.computeIfAbsent(identifier, k -> new ArrayList<>()).add(object);
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,17 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.registry.commands;
+package org.mangorage.jdautils.command;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
+import org.mangorage.jdautils.component.Component;
+import org.mangorage.jdautils.component.NoRegistry;
 
-public final class AutoRegister {
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(TYPE)
-    public @interface BasicCommand {
+/**
+ * <b>Internal use only</b><br>
+ * Used to register autocomplete listeners for command options
+ */
+
+public class OptionComponent extends Component implements NoRegistry {
+
+    public OptionComponent(String name) {
+        super(name);
+    }
+
+    protected void onCreate() {
+    }
+
+    protected void onRemove() {
     }
 }
