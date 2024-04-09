@@ -40,7 +40,7 @@ public final class CommandAlias {
      *
      * @param object
      * @param aliases
-     * @return
+     * @return {@link List<String>}
      */
 
     public static List<String> create(Object object, String... aliases) {
