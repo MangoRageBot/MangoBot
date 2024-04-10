@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,8 @@ package org.mangorage.gradleutils;
 import org.gradle.api.Task;
 import org.gradle.jvm.tasks.Jar;
 import org.mangorage.gradleutils.core.Constants;
+import org.mangorage.gradleutils.core.resolvers.Resolver;
+import org.mangorage.gradleutils.tasks.DatagenTask;
 import org.mangorage.gradleutils.tasks.RestartServerTask;
 
 import java.util.function.Supplier;
@@ -72,5 +74,9 @@ public class Config {
 
     public Task getReleaseTask() {
         return releaseTask.get();
+    }
+
+    public void addResolver(Resolver resolver) {
+        DatagenTask.add(resolver);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,8 @@ import org.gradle.api.artifacts.ModuleVersionIdentifier;
 import org.gradle.api.artifacts.ResolvedDependency;
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository;
 import org.mangorage.gradleutils.GradleUtilsPlugin;
+import org.mangorage.gradleutils.core.resolvers.ResolveDependency;
+import org.mangorage.gradleutils.core.resolvers.Resolver;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -44,9 +46,11 @@ public class DatagenTask {
             "https://repo1.maven.org/maven2/"
     );
 
-    public static String generate(List<String> repos, String group, String name, String version) {
+    private static final List<Resolver> resolvers = new ArrayList<>();
+
+    public static String generate(List<String> repos, String path) {
         for (String repository : repos) {
-            String url = repository + group.replace('.', '/') + "/" + name + "/" + version + "/" + name + "-" + version + ".jar";
+            String url = repository + path;
             if (isValidUrl(url)) {
                 return repository;
             }
@@ -61,10 +65,27 @@ public class DatagenTask {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("HEAD");
             int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK)
+                System.out.println(urlString);
+            else
+                System.out.println("Bad -> " + urlString);
             return responseCode == HttpURLConnection.HTTP_OK;
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public static ResolveDependency resolve(ResolveDependency preDep) {
+
+        for (Resolver resolver : resolvers) {
+            var result = resolver.resolve(preDep);
+            if (result.success()) {
+                System.out.println("Successfully resolved a dependency");
+                return result.dependency();
+            }
+        }
+
+        return preDep;
     }
 
 
@@ -75,9 +96,19 @@ public class DatagenTask {
         if (!deps.contains(id) && checker.test(dep)) {
             deps.add(id);
             identifiers.add(dep);
-            var result = generate(repos, dep.getGroup(), dep.getName(), dep.getVersion());
+
+            var groupID = dep.getGroup();
+            var nameID = dep.getName();
+            var versionID = dep.getVersion();
+
+
+            var resolved = resolve(ResolveDependency.of(groupID, nameID, versionID));
+
+            var path = resolved.groupID().replace('.', '/') + "/" + resolved.nameID() + "/" + resolved.versionID() + "/" + resolved.nameID2() + "-" + resolved.versionID2() + ".jar";
+            var result = generate(repos, path);
+
             if (result != null) {
-                urls.add("%s %s %s %s %s-%s.jar".formatted(result, dep.getGroup(), dep.getName(), dep.getVersion(), dep.getName(), dep.getVersion()));
+                urls.add("%s %s %s %s %s-%s.jar".formatted(result, resolved.groupID(), resolved.nameID(), resolved.versionID(), resolved.nameID2(), resolved.versionID2()));
             }
         }
 
@@ -123,7 +154,6 @@ public class DatagenTask {
                 deps.forEach(System.out::println);
 
                 System.out.printf("%s dependencies%n", deps.size());
-                System.out.println("Direct URL's");
 
                 var projectRootDir = project.getProjectDir().toPath();
                 var depsFile = projectRootDir.resolve("src/main/resources/installerdata/deps.txt").toFile();
@@ -155,5 +185,9 @@ public class DatagenTask {
 
         gradleUtilsPlugin.getConfig().getJarTask().mustRunAfter(tp.get()); // runDatagen
         gradleUtilsPlugin.getConfig().getJarTask().dependsOn(tp.get());
+    }
+
+    public static void add(Resolver resolver) {
+        resolvers.add(resolver);
     }
 }
