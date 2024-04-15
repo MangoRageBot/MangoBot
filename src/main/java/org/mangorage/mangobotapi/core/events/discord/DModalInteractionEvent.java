@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,18 +22,11 @@
 
 package org.mangorage.mangobotapi.core.events.discord;
 
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.mangorage.mangobotapi.core.events.WrapperEvent;
 
-public class DMessageRecievedEvent extends WrapperEvent<DMessageRecievedEvent, MessageReceivedEvent> {
-    private final boolean isCommand;
-
-    public DMessageRecievedEvent(MessageReceivedEvent object, boolean isCommand) {
+public class DModalInteractionEvent extends WrapperEvent<DModalInteractionEvent, ModalInteractionEvent> {
+    public DModalInteractionEvent(ModalInteractionEvent object) {
         super(object);
-        this.isCommand = isCommand;
-    }
-
-    public boolean isCommand() {
-        return isCommand;
     }
 }
