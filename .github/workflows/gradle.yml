@@ -24,7 +24,7 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.USERNAME }}  # Reference the secret\
           MAVEN_PASSWORD: ${{ secrets.PASSWORD }}  # Reference the secret\
-        run: ./gradlew publish -DskipTests
+        run: ./gradlew publishMangobotPublicationToMavenRepository -DskipTests
 
   restart: # Restart Bot
     runs-on: ubuntu-latest
