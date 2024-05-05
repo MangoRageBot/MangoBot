@@ -42,15 +42,24 @@ buildscript {
     }
 }
 
-def props = new Properties()
-file("secrets.properties").withInputStream { props.load(it) }
-
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 apply plugin: 'gradleutils'
 
 group 'org.mangorage'
-version "0.0.0"
+version = '10.0.' + getGitVersion()
+
+def getGitVersion() {
+    def result = "git rev-list HEAD --count".execute().text.trim()
+    if (result.empty) {
+        throw new RuntimeException("Failed to retrieve commit count")
+    } else {
+        def commitCount = result.toInteger()
+        // Use the commitCount variable further in your script
+        return commitCount;
+    }
+}
+
 
 java {
     toolchain {
@@ -62,14 +71,16 @@ MangoBotConfig {
     disableCopyOverBot()
     setJarTask(jar)
     setReleaseTask(() -> getTasks().getByName("publishMangobotPublicationToMavenRepository"))
-    if (props != null && props.containsKey("SERVER_TOKEN")) {
+
+    if (System.getenv().containsKey("SERVER_TOKEN") && System.getenv().containsKey("SERVER_ID")) {
         enableRestartServerTask(
-                "f32263f3",
+                System.getenv("SERVER_ID") as String,
                 "https://panel.sodiumhosting.com/",
-                props.get("SERVER_TOKEN") as String,
+                System.getenv("SERVER_TOKEN") as String,
                 null
         )
     }
+
 }
 
 
@@ -190,13 +201,13 @@ publishing {
 
     repositories {
         maven {
-            def releasesRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/releases/'
-            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            url = "https://s01.oss.sonatype.org/content/repositories/releases/"
             group "io.github.realmangorage"
+
             credentials {
-                username = findProperty("mango.maven.username")
-                password = findProperty("mango.maven.password")
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
             }
         }
     }
