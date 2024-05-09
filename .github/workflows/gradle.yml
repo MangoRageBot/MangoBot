@@ -29,27 +29,3 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.USERNAME }}  # Reference the secret\
           MAVEN_PASSWORD: ${{ secrets.PASSWORD }}  # Reference the secret\
         run: ./gradlew publishMangobotPublicationToMavenRepository -DskipTests
-
-  restart: # Restart Bot
-    runs-on: ubuntu-latest
-    needs: Publish
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 17
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-
-      - name: Fix gradlew permissions (optional)
-        run: chmod +x gradlew
-
-      - name: Restart
-        env:
-          SERVER_ID: ${{ secrets.SERVER_ID }}  # Reference the secret\
-          SERVER_TOKEN: ${{ secrets.SERVER_TOKEN }}  # Reference the secret\
-        run: ./gradlew restartServer
