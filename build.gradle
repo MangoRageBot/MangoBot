@@ -200,9 +200,7 @@ publishing {
 
     repositories {
         maven {
-
-            url = "https://s01.oss.sonatype.org/content/repositories/releases/"
-            group "io.github.realmangorage"
+            url = "https://maven.minecraftforge.net/"
 
             credentials {
                 username = System.getenv("MAVEN_USERNAME")
