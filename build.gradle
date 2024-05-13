@@ -29,7 +29,7 @@ buildscript {
             url = uri("https://plugins.gradle.org/m2/")
         }
         maven {
-            url = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+            url = "https://maven.minecraftforge.net/"
         }
         maven {
             url = 'https://repo.mattmalec.com/repository/releases'
@@ -38,13 +38,13 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'io.github.realmangorage:gradleutils:3.0.2-beta2109'
+        classpath 'org.mangorage:MangoBotGradle:4.0.5'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
-apply plugin: 'gradleutils'
+apply plugin: 'MangoBotGradle'
 
 group 'org.mangorage'
 version = '10.0.' + getGitVersion()
