@@ -60,12 +60,12 @@ def getGitVersion() {
     }
 }
 
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(22)
     }
 }
+
 tasks.withType(JavaCompile) {
     options.compilerArgs += "--enable-preview"
 }
@@ -120,27 +120,23 @@ sourceSets {
 }
 
 dependencies {
-    // For unit tests
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2' // For JUnit 5
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2' // For JUnit 5
 
     installer('org.mangorage:installer:3.0.24')
     botInternal(sourceSets.main.output)
 
-    runtimeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.20.0')
+    runtimeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.23.1')
 
     // Libs for Bot
-    library('net.dv8tion:JDA:5.0.0-beta.19')
-
+    library('net.dv8tion:JDA:5.0.0-beta.24')
     library('com.google.code.gson:gson:2.10.1')
+
     library('org.luaj:luaj-jse:3.0.1')
+    library('org.apache.logging.log4j:log4j-core:2.23.1')
 
-    library('org.apache.logging.log4j:log4j-core:2.20.0')
-    library('org.slf4j:slf4j-simple:2.0.9')
-
+    library('org.slf4j:slf4j-simple:2.0.13')
     library('org.reflections:reflections:0.10.2')
-    //library('org.ow2.asm:asm:9.+')
-    //library('org.ow2.asm:asm-tree:9.+')
 }
 
 test {
