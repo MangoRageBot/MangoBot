@@ -29,3 +29,16 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.USERNAME }}  # Reference the secret
           MAVEN_PASSWORD: ${{ secrets.PASSWORD }}  # Reference the secret
         run: ./gradlew publishMangobotPublicationToMavenRepository -DskipTests
+  regen:
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Regen
+        env:
+          WH_TOKEN: ${{ secrets.WH_TOKEN }}
+        run: |
+          curl --header "Authorization: Basic $WH_TOKEN" --header "Content-Type: application/json" --request POST --data "{\"group\": \"org.mangorage\", \"artifact\": \"mangobot\"}" https://webhooks.minecraftforge.net/hooks/regen
