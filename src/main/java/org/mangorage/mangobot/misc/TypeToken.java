@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,8 @@
 
 package org.mangorage.mangobot.misc;
 
-public class TypeToken {
-    private final String clazz;
+public interface TypeToken {
+    String getType();
 
-    public TypeToken(String clazz) {
-        this.clazz = clazz;
-    }
-
-    public static TypeToken create(String s) {
-        return new TypeToken(s);
-    }
-
-    public String getClassType() {
-        return clazz;
-    }
-
-    /**
-     * Unsafe to call as the class may not exist.
-     *
-     * @return
-     * @throws ClassNotFoundException
-     */
-    public Class<?> getRealClass() throws ClassNotFoundException {
-        return Class.forName(clazz.replaceAll("/", "."));
-    }
+    Class<?> getTypeClass();
 }

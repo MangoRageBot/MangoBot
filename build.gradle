@@ -63,8 +63,15 @@ def getGitVersion() {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(22)
     }
+}
+tasks.withType(JavaCompile) {
+    options.compilerArgs += "--enable-preview"
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += "--enable-preview"
 }
 
 MangoBotConfig {
@@ -117,7 +124,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2' // For JUnit 5
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2' // For JUnit 5
 
-    installer('org.mangorage:installer:3.0.22')
+    installer('org.mangorage:installer:3.0.24')
     botInternal(sourceSets.main.output)
 
     runtimeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.20.0')
@@ -132,8 +139,8 @@ dependencies {
     library('org.slf4j:slf4j-simple:2.0.9')
 
     library('org.reflections:reflections:0.10.2')
-    library('org.ow2.asm:asm:9.1')
-    library('org.ow2.asm:asm-tree:9.2')
+    //library('org.ow2.asm:asm:9.+')
+    //library('org.ow2.asm:asm-tree:9.+')
 }
 
 test {
@@ -161,7 +168,7 @@ jar {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier 'sources'
+    setArchiveClassifier('sources')
     from sourceSets.main.allSource
 }
 

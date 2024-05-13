@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,10 +20,30 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.classloader;
+package org.mangorage.mangobot.misc;
 
-public interface IClassTransformer {
-    TransformResult transform(byte[] classData);
+public class TypeTokenImpl implements TypeToken {
+    private final String key;
+    private final Class<?> clz;
 
-    String getName();
+    public TypeTokenImpl(String key) {
+        this.key = key;
+        Class<?> clzTemp = null;
+        try {
+            clzTemp = Class.forName(key.replaceFirst("L", "").replaceAll("/", "\\."));
+        } catch (Exception e) {
+        }
+
+        this.clz = clzTemp;
+    }
+
+    @Override
+    public String getType() {
+        return key;
+    }
+
+    @Override
+    public Class<?> getTypeClass() {
+        return clz;
+    }
 }

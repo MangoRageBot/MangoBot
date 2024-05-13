@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,8 +22,5 @@
 
 package org.mangorage.mangobotapi.core.classloader;
 
-public interface IClassTransformer {
-    TransformResult transform(byte[] classData);
-
-    String getName();
+public record TransformResult(byte[] classData, TransformerFlags flag) {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,12 @@
 
 package org.mangorage.mangobotapi.core.classloader;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ClassTransformers {
-    public static ClassNode getClassNode(byte[] classBytes) {
-        ClassReader cr = new ClassReader(classBytes);
-        ClassNode classNode = new ClassNode();
-        cr.accept(classNode, 0);
-        return classNode;
-    }
-
-    public static byte[] getClassBytes(ClassNode classNode) {
-        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
-        classNode.accept(cw);
-        return cw.toByteArray();
-    }
 
 
     private final HashMap<String, Class<?>> CLASSES = new HashMap<>(); // Transformed Class's
@@ -82,22 +65,22 @@ public class ClassTransformers {
     }
 
     public byte[] transform(String name) {
-        ClassNode classNode = getClassNode(getClassBytes(name));
+        byte[] originalClassData = getClassBytes(name);
 
-        AtomicReference<TransformerFlags> result = new AtomicReference<>(TransformerFlags.NO_REWRITE);
+        AtomicReference<TransformResult> result = new AtomicReference<>(TransformerFlags.NO_REWRITE.of(originalClassData));
         AtomicReference<IClassTransformer> _transformer = new AtomicReference<>();
 
         for (IClassTransformer transformer : TRANSFORMERS) {
-            result.set(transformer.transform(classNode, Type.getObjectType(name)));
-            if (result.get() != TransformerFlags.NO_REWRITE) {
+            result.set(transformer.transform(originalClassData));
+            if (result.get().flag() != TransformerFlags.NO_REWRITE) {
                 _transformer.set(transformer);
                 break;
             }
         }
 
-        if (result.get() != TransformerFlags.NO_REWRITE && _transformer.get() != null) {
+        if (result.get().flag() != TransformerFlags.NO_REWRITE && _transformer.get() != null) {
             System.out.println("%s Transformed %s".formatted(_transformer.get().getName(), name));
-            return getClassBytes(classNode);
+            return result.get().classData();
         }
 
         return null;

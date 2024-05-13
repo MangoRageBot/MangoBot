@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,43 +22,12 @@
 
 package org.mangorage.mangobot.misc;
 
+public abstract class Example<T> {
+    public Example() {
 
-public abstract class ExampleGeneric<T> {
-
-    private static final class ClonedExampleGeneric extends ExampleGeneric<Object> {
-
-        private final TypeToken typeToken;
-
-        private ClonedExampleGeneric(TypeToken typeToken) {
-            this.typeToken = typeToken;
-        }
-
-        @Override
-        protected TypeToken getTypeToken() {
-            return typeToken;
-        }
     }
 
-    public final TypeToken getType() {
-        if (getTypeToken() == null)
-            throw new RuntimeException("This will be implemented by a transformer");
-        return getTypeToken();
-    }
-
-    protected TypeToken getTypeToken() {
-        return null;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public String toString() {
-        return "ExampleGeneric[%s]".formatted(getType().getClassType());
-    }
-
-    @Override
-    public Object clone() {
-        return new ClonedExampleGeneric(getType());
+    public final TypeToken getTypeToken() {
+        throw new IllegalStateException("This should be transformed...");
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
 package org.mangorage.mangobot.loader;
 
 import org.mangorage.basicutils.language.LanguageHandler;
+import org.mangorage.mangobot.misc.Example;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 import org.mangorage.mboteventbus.EventBus;
@@ -55,8 +56,12 @@ public class CoreMain {
         LanguageHandler.loadAll();
         PluginLoader.load();
 
-        latch.await();
+        System.out.println("Testing Class Transformers");
+        Example<Integer> a = new Example<>() {
+        };
+        System.out.println(a.getTypeToken().getType());
 
+        latch.await();
         coreEventBus.shutdown();
     }
 }

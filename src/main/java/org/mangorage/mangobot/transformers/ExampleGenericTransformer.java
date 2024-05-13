@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,85 +22,99 @@
 
 package org.mangorage.mangobot.transformers;
 
+import org.mangorage.mangobot.misc.TypeToken;
+import org.mangorage.mangobot.misc.TypeTokenImpl;
+import org.mangorage.mangobotapi.core.classloader.ClassFileUtils;
 import org.mangorage.mangobotapi.core.classloader.IClassTransformer;
+import org.mangorage.mangobotapi.core.classloader.TransformResult;
 import org.mangorage.mangobotapi.core.classloader.TransformerFlags;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.signature.SignatureReader;
-import org.objectweb.asm.signature.SignatureVisitor;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.lang.classfile.ClassFile;
+import java.lang.classfile.ClassModel;
+import java.lang.classfile.CodeElement;
+import java.lang.classfile.MethodModel;
+import java.lang.classfile.attribute.SignatureAttribute;
+import java.lang.constant.MethodTypeDesc;
+import java.lang.reflect.AccessFlag;
 import java.util.concurrent.atomic.AtomicReference;
 
+
+@SuppressWarnings("preview")
 public class ExampleGenericTransformer implements IClassTransformer {
-    private static final String CLASS_TYPE = "org/mangorage/mangobot/misc/ExampleGeneric";
-    private static final String CLONED_CLASS_TYPE = "org/mangorage/mangobot/misc/ExampleGeneric$ClonedExampleGeneric";
-    private static final String TYPE_TOKEN = "org/mangorage/mangobot/misc/TypeToken";
-    private static final String FUNC_NAME = "getType";
-    private static final String FUNC_DESC = "()Lorg/mangorage/mangobot/misc/TypeToken;";
+    private static final String EXAMPLE_CLASS = "org/mangorage/mangobot/misc/Example";
+    private static final String GET_TYPE_TOKEN_METHOD = "getTypeToken";
 
 
     @Override
-    public TransformerFlags transform(ClassNode classNode, Type classType) {
-        if (CLONED_CLASS_TYPE.equals(classNode.name)) return TransformerFlags.NO_REWRITE;
+    public TransformResult transform(byte[] preData) {
+        ClassFile file = ClassFile.of();
+        ClassModel classModel = file.parse(preData);
 
-        if (CLASS_TYPE.equals(classNode.name)) {
-            for (MethodNode mtd : classNode.methods) {
-                if (FUNC_NAME.equals(mtd.name) && FUNC_DESC.equals(mtd.desc)) {
-                    mtd.access &= ~Opcodes.ACC_FINAL;
-                }
-            }
-            return TransformerFlags.SIMPLE_REWRITE;
-        } else if (CLASS_TYPE.equals(classNode.superName)) {
-            AtomicReference<String> cls = new AtomicReference<>();
-            System.out.println(classNode.signature);
 
-            SignatureReader reader = new SignatureReader(classNode.signature);
-            reader.accept(new SignatureVisitor(Opcodes.ASM9) {
-                final Deque<String> stack = new ArrayDeque<>();
+        byte[] data = null;
 
-                @Override
-                public void visitClassType(final String name) {
-                    stack.push(name);
-                }
-
-                @Override
-                public void visitInnerClassType(final String name) {
-                    stack.push(stack.pop() + '$' + name);
-                }
-
-                @Override
-                public void visitEnd() {
-                    var val = stack.pop();
-                    if (!stack.isEmpty() && CLASS_TYPE.equals(stack.peek()))
-                        cls.set(val);
-                }
+        if (classModel.thisClass().name().stringValue().equals(EXAMPLE_CLASS)) {
+            data = file.build(classModel.thisClass().asSymbol(), cb -> {
+                classModel.forEachElement(e -> {
+                    if (e instanceof MethodModel me) {
+                        if (!me.methodName().stringValue().equals(GET_TYPE_TOKEN_METHOD)) {
+                            cb.with(e);
+                        } else {
+                            cb.withMethod(me.methodName(), me.methodType(), ClassFileUtils.getMethodFlagsInt(AccessFlag.PUBLIC), a -> {
+                                a.withCode(cbb -> {
+                                    for (CodeElement element : me.code().get().elementList()) {
+                                        cbb.with(element);
+                                    }
+                                });
+                            });
+                        }
+                    } else {
+                        cb.with(e);
+                    }
+                });
             });
+        } else if (classModel.superclass().get().name().stringValue().startsWith(EXAMPLE_CLASS)) {
+            AtomicReference<String> type = new AtomicReference<>();
+            data = file.build(classModel.thisClass().asSymbol(), cb -> {
+                classModel.forEachElement(e -> {
+                    if (e instanceof MethodModel me) {
+                        if (!me.methodName().stringValue().equals(GET_TYPE_TOKEN_METHOD)) {
+                            cb.with(e);
+                        }
+                    } else {
+                        cb.with(e);
+                    }
 
-            if (cls.get() == null)
-                throw new IllegalStateException("Could not find signature for GenericExample on " + classNode.name + " from " + classNode.signature);
+                    if (e instanceof SignatureAttribute s) {
+                        type.set(ClassFileUtils.parseSignature(s.signature().stringValue()));
+                    }
+                });
 
-            var mtd = classNode.visitMethod(Opcodes.ACC_PUBLIC, FUNC_NAME, FUNC_DESC, null, new String[0]);
-
-            // Create and return a TypeToken
-            mtd.visitTypeInsn(Opcodes.NEW, TYPE_TOKEN);
-            mtd.visitInsn(Opcodes.DUP);
-            mtd.visitLdcInsn(cls.get());  // Load the class name
-            mtd.visitMethodInsn(Opcodes.INVOKESPECIAL, TYPE_TOKEN, "<init>", "(Ljava/lang/String;)V", false);
-            mtd.visitInsn(Opcodes.ARETURN);
-            mtd.visitEnd();
-
-            return TransformerFlags.FULL_REWRITE;
+                cb.withMethodBody(GET_TYPE_TOKEN_METHOD, ClassFileUtils.getMethodDesc(TypeToken.class), ClassFileUtils.getMethodFlagsInt(AccessFlag.PUBLIC, AccessFlag.FINAL), mcb -> {
+                    mcb
+                            .aload(0)
+                            .new_(ClassFileUtils.getClassName(TypeTokenImpl.class))
+                            .dup()
+                            .ldc(type.get())
+                            .invokespecial(ClassFileUtils.getClassName(TypeTokenImpl.class), "<init>", MethodTypeDesc.ofDescriptor("(Ljava/lang/String;)V"))
+                            .areturn();
+                });
+            });
         }
 
-        return TransformerFlags.NO_REWRITE;
+
+        if (data != null) {
+            return TransformerFlags.FULL_REWRITE.of(data);
+        }
+
+        return TransformerFlags.NO_REWRITE.of(preData);
     }
 
+    /**
+     * @return
+     */
     @Override
     public String getName() {
-        return "ExampleGenericTransformer";
+        return "Example Generic Transformer";
     }
 }

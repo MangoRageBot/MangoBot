@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,4 +26,8 @@ public enum TransformerFlags {
     NO_REWRITE,
     SIMPLE_REWRITE,
     FULL_REWRITE;
+
+    public TransformResult of(byte[] classData) {
+        return new TransformResult(classData, this);
+    }
 }
