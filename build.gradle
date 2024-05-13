@@ -70,7 +70,6 @@ java {
 MangoBotConfig {
     disableCopyOverBot()
     setJarTask(jar)
-    setReleaseTask(() -> getTasks().getByName("publishMangobotPublicationToMavenRepository"))
 
     if (System.getenv().containsKey("SERVER_TOKEN") && System.getenv().containsKey("SERVER_ID")) {
         enableRestartServerTask(
