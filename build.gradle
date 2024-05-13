@@ -129,7 +129,7 @@ dependencies {
     runtimeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.23.1')
 
     // Libs for Bot
-    library('net.dv8tion:JDA:5.0.0-beta.19')
+    library('net.dv8tion:JDA:5.0.0-beta.24')
     library('com.google.code.gson:gson:2.10.1')
 
     library('org.luaj:luaj-jse:3.0.1')
