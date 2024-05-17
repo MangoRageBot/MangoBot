@@ -37,6 +37,7 @@ public class PermissionRegistry {
     private final HashMap<String, BasicPermission> PERMISSIONS = new HashMap<>();
 
     private final DataHandler<BasicPermission> PERMISSION_DATA_HANDLER = DataHandler.create()
+            .path("data")
             .build(BasicPermission.class);
 
     public PermissionRegistry(CorePlugin plugin) {
