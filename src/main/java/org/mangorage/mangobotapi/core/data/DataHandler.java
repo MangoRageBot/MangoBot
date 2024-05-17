@@ -89,6 +89,29 @@ public class DataHandler<T extends IFileNameResolver> {
         }
     }
 
+    public void delete(Path rootDirectory, T... objects) {
+        if (objects.length == 0) return;
+        Path resolved = rootDirectory.resolve(path).toAbsolutePath();
+
+        if (isFile) {
+            try {
+                Files.deleteIfExists(resolved);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            for (T object : objects) {
+                var fn = object.resolve();
+                var filePath = resolved.resolve(fn.path()).resolve(fn.name() + ".json").toAbsolutePath();
+                try {
+                    Files.deleteIfExists(filePath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
     public List<T> load(Path rootDirectory) {
         ArrayList<T> list = new ArrayList<>();
         Path resolved = rootDirectory.resolve(path).toAbsolutePath();
