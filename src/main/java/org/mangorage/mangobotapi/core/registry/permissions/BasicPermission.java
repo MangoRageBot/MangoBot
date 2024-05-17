@@ -27,7 +27,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
-import org.mangorage.mangobotapi.core.data.IEmptyFileNameResolver;
+import org.mangorage.mangobotapi.core.data.FileName;
+import org.mangorage.mangobotapi.core.data.IFileNameResolver;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +43,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 // TODO: Have DataHandler handle data for this.
 
-public class BasicPermission implements IEmptyFileNameResolver {
+public class BasicPermission implements IFileNameResolver {
     public static BasicPermission create(String id) {
         return new BasicPermission(id);
     }
@@ -138,6 +139,14 @@ public class BasicPermission implements IEmptyFileNameResolver {
 
     public void addPermission(Permission permission) {
         DISCORD_PERMISSIONS.add(permission);
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public FileName resolve() {
+        return new FileName(id, "permissions");
     }
 
 
