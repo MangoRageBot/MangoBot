@@ -40,12 +40,19 @@ public class CoreMain {
         return coreEventBus;
     }
 
+    private static boolean isDev = false;
+
+    public static boolean isDevMode() {
+        return isDev;
+    }
+
     static {
         coreEventBus.startup();
     }
 
     public static void main(String[] args) throws InterruptedException {
         running.set(true);
+        System.out.println("Supplied Args -> " + args);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             running.set(false);
