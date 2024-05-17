@@ -30,6 +30,7 @@ import org.mangorage.mboteventbus.EventBus;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -41,10 +42,15 @@ public class CoreMain {
         return coreEventBus;
     }
 
+    private static List<String> args;
     private static boolean isDev = false;
 
     public static boolean isDevMode() {
         return isDev;
+    }
+
+    public static List<String> getArgs() {
+        return args;
     }
 
     static {
@@ -54,6 +60,12 @@ public class CoreMain {
     public static void main(String[] args) throws InterruptedException {
         running.set(true);
         System.out.println("Supplied Args -> " + Arrays.toString(args));
+        CoreMain.args = List.of(args);
+        for (String arg : args) {
+            if (arg.contains("--dev")) {
+                isDev = true;
+            }
+        }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             running.set(false);
