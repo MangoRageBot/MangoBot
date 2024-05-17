@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
 package org.mangorage.mangobotapi.core.plugin.api;
 
 import net.dv8tion.jda.api.JDA;
+import org.mangorage.mangobot.loader.CoreMain;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
@@ -83,7 +84,7 @@ public abstract class CorePlugin extends AbstractPlugin {
     }
 
     public String getCommandPrefix() {
-        return COMMAND_PREFIX;
+        return CoreMain.isDevMode() ? "dev" + COMMAND_PREFIX : COMMAND_PREFIX;
     }
 
     public MessageSettings getMessageSettings() {

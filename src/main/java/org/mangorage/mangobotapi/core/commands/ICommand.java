@@ -23,7 +23,6 @@
 package org.mangorage.mangobotapi.core.commands;
 
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangobot.loader.CoreMain;
 import org.mangorage.mboteventbus.impl.IEvent;
 
 import java.util.List;
@@ -41,14 +40,8 @@ public interface ICommand<Type, EventClass> {
     }
 
     default boolean isValidCommand(String command) {
-        var cmdID = CoreMain.isDevMode() ? "dev" + commandId() : commandId();
-        var cmdAliases = !CoreMain.isDevMode() ? commandAliases() : commandAliases()
-                .stream()
-                .map(old -> "dev" + old)
-                .toList();
-
-        boolean result = ignoreCase() ? command.equalsIgnoreCase(cmdID) : command.equals(cmdID);
-        return ignoreCase() ? result : cmdAliases.contains(command) || result;
+        boolean result = ignoreCase() ? command.equalsIgnoreCase(commandId()) : command.equals(commandId());
+        return ignoreCase() ? result : commandAliases().contains(command) || result;
     }
 
     default List<String> commandAliases() {
