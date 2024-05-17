@@ -29,6 +29,7 @@ import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 import org.mangorage.mboteventbus.EventBus;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -52,7 +53,7 @@ public class CoreMain {
 
     public static void main(String[] args) throws InterruptedException {
         running.set(true);
-        System.out.println("Supplied Args -> " + args);
+        System.out.println("Supplied Args -> " + Arrays.toString(args));
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             running.set(false);
