@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import org.mangorage.mangobotapi.core.data.IEmptyFileNameResolver;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 // TODO: Have DataHandler handle data for this.
 
-public class BasicPermission {
+public class BasicPermission implements IEmptyFileNameResolver {
     public static BasicPermission create(String id) {
         return new BasicPermission(id);
     }

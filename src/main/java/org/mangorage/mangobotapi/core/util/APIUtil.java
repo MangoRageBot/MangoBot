@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,29 @@ public class APIUtil {
         }
          **/
         return true;
+    }
+
+    public static List<Path> scanDirectory(File directory, int maxDepth) {
+        return scanDirectory(directory, 0, maxDepth);
+    }
+
+    private static List<Path> scanDirectory(File directory, int currentDepth, int maxDepth) {
+        List<Path> paths = new ArrayList<>();
+        if (currentDepth > maxDepth) {
+            return paths;
+        }
+
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                paths.add(file.toPath());
+                if (file.isDirectory()) {
+                    paths.addAll(scanDirectory(file, currentDepth + 1, maxDepth));
+                }
+            }
+        }
+
+        return paths;
     }
 
     @SuppressWarnings("all")

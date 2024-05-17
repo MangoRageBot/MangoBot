@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,24 +36,15 @@ public class PermissionRegistry {
     private final CorePlugin plugin;
     private final HashMap<String, BasicPermission> PERMISSIONS = new HashMap<>();
 
-    private final DataHandler<BasicPermission> PERMISSION_DATA_HANDLER;
-
+    private final DataHandler<BasicPermission> PERMISSION_DATA_HANDLER = DataHandler.create()
+            .build(BasicPermission.class);
 
     public PermissionRegistry(CorePlugin plugin) {
         this.plugin = plugin;
-        PERMISSION_DATA_HANDLER = DataHandler.create(
-                (perm) -> {
-                    PERMISSIONS.get(perm.getId()).NODES.putAll(perm.NODES);
-                },
-                BasicPermission.class,
-                "plugins/%s/data/permissions/".formatted(plugin.getId()),
-                DataHandler.Properties.create()
-                        .useExposeAnnotation()
-                        .useDefaultFileNamePredicate()
-                        .setFileName("permissions.json")
-        );
+        PERMISSION_DATA_HANDLER.load(plugin.getPluginDirectory()).forEach(bp -> {
+            PERMISSIONS.put(bp.getId(), bp);
+        });
     }
-
 
     public BasicPermission getPermission(String id) {
         return PERMISSIONS.get(id);
@@ -73,6 +64,6 @@ public class PermissionRegistry {
     }
 
     public void save(BasicPermission permission) {
-        PERMISSION_DATA_HANDLER.save(permission, permission.getId());
+        PERMISSION_DATA_HANDLER.save(plugin.getPluginDirectory(), permission);
     }
 }
