@@ -25,7 +25,8 @@ package org.mangorage.mangobotapi.core.events.discord;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import org.mangorage.mangobotapi.core.events.WrapperEvent;
 
-public class DModalInteractionEvent extends WrapperEvent<DModalInteractionEvent, ModalInteractionEvent> {
+@Deprecated(forRemoval = true)
+public class DModalInteractionEvent extends WrapperEvent<ModalInteractionEvent> {
     public DModalInteractionEvent(ModalInteractionEvent object) {
         super(object);
     }

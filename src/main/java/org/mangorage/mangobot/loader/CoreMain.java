@@ -26,7 +26,7 @@ import org.mangorage.basicutils.language.LanguageHandler;
 import org.mangorage.mangobot.misc.Example;
 import org.mangorage.mangobotapi.core.modules.buttonactions.Actions;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
-import org.mangorage.mboteventbus.EventBus;
+import org.mangorage.mboteventbus.base.EventBus;
 import org.mangorage.mboteventbus.impl.IEventBus;
 
 import java.util.Arrays;

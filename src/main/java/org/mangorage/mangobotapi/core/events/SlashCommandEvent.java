@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ package org.mangorage.mangobotapi.core.events;
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 
-public class SlashCommandEvent extends CommandEvent<SlashCommandEvent> {
+public class SlashCommandEvent extends CommandEvent {
 
     private final SlashCommandInteraction interaction;
 

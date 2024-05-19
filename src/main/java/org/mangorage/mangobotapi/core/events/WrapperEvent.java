@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,17 +23,17 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-import org.mangorage.mboteventbus.base.Event;
+import org.mangorage.mboteventbus.base.GenericEvent;
 
-// Generic !
-public abstract class WrapperEvent<T, X> extends Event<T> {
-    private final X object;
+public abstract class WrapperEvent<T> extends GenericEvent<T> {
+    private final T object;
 
-    public WrapperEvent(X object) {
+    public WrapperEvent(T object) {
+        super((Class<T>) object.getClass());
         this.object = object;
     }
 
-    public X get() {
+    public T get() {
         return object;
     }
 }

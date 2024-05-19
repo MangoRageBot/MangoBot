@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,34 +22,14 @@
 
 package org.mangorage.mboteventbus.base;
 
-import org.mangorage.mboteventbus.impl.IEvent;
-import org.mangorage.mboteventbus.impl.IEventListener;
+public class GenericEvent<T> extends Event {
+    private final Class<T> tClass;
 
-public class EventListener<T> implements IEventListener<T> {
-    private final IEvent<T> eventListener;
-    private final int priority;
-    private final boolean recieveCancelled;
-
-    public EventListener(int priority, boolean recieveCancelled, IEvent<T> eventListener) {
-        this.recieveCancelled = recieveCancelled;
-        this.priority = priority;
-        this.eventListener = eventListener;
+    public GenericEvent(Class<T> tClass) {
+        this.tClass = tClass;
     }
 
-    @Override
-    public void invoke(T event) {
-        eventListener.indirectInvoke(event);
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public int getPriority() {
-        return priority;
-    }
-
-    public boolean canRecieveCancelled() {
-        return recieveCancelled;
+    public Class<T> getGenericType() {
+        return tClass;
     }
 }

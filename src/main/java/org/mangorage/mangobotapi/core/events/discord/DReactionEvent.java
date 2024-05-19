@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,8 @@ package org.mangorage.mangobotapi.core.events.discord;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import org.mangorage.mangobotapi.core.events.WrapperEvent;
 
-public class DReactionEvent extends WrapperEvent<DReactionEvent, MessageReactionAddEvent> {
+@Deprecated(forRemoval = true)
+public class DReactionEvent extends WrapperEvent<MessageReactionAddEvent> {
     public DReactionEvent(MessageReactionAddEvent object) {
         super(object);
     }

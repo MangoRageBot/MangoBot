@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,83 +22,5 @@
 
 package org.mangorage.mboteventbus.base;
 
-import org.mangorage.mboteventbus.impl.IEvent;
-
-/**
- * When overriding seenPhase()
- * Make sure to call IPhase.super.seenPhase() first always!
- */
-
-public abstract class Event<EventType> implements ICancellable, IResult, IPhase, IEvent<EventType> {
-    private boolean cancelled = false;
-    private Result result = Result.DEFAULT;
-    private int phase = 0;
-
-
-    public boolean isCancellable() {
-        return false;
-    }
-
-    public boolean hasResult() {
-        return false;
-    }
-
-    public boolean hasPhase() {
-        return false;
-    }
-
-
-    /**
-     * @param cancel
-     */
-    @Override
-    public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public int getPhase() {
-        return phase;
-    }
-
-    /**
-     * @param priority
-     * @return
-     */
-    @Override
-    public boolean seenPhase(int priority) {
-        return phase == priority;
-    }
-
-    /**
-     * @param result
-     */
-    @Override
-    public void setResult(Result result) {
-        this.result = result;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public Result getResult() {
-        return result;
-    }
-
-    @Override
-    public void indirectInvoke(EventType event) {
-        // Do nothing!
-    }
+public class Event {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ import org.mangorage.mboteventbus.base.Event;
 
 import java.util.function.Supplier;
 
-public final class PluginMessageEvent extends Event<PluginMessageEvent> {
+public final class PluginMessageEvent extends Event {
     private final AbstractPlugin origin;
     private final String method;
     private final Supplier<?> object;

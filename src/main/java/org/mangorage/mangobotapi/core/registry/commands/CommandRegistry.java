@@ -25,8 +25,6 @@ package org.mangorage.mangobotapi.core.registry.commands;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
-import org.mangorage.mboteventbus.base.EventHolder;
-import org.mangorage.mboteventbus.impl.IEventListener;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -40,23 +38,16 @@ public final class CommandRegistry {
         this.plugin = plugin;
     }
 
-    private final EventHolder<BasicCommandEvent> BASIC_COMMAND_EVENT = EventHolder.create(
-            BasicCommandEvent.class,
-            (i) -> (e) -> {
-                for (IEventListener<BasicCommandEvent> listener : i) {
-                    listener.invoke(e);
-                }
-            });
 
     private final CopyOnWriteArrayList<IBasicCommand> COMMANDS = new CopyOnWriteArrayList<>();
 
     public void addBasicCommand(IBasicCommand command) {
-        BASIC_COMMAND_EVENT.addListener(command.getListener());
+        plugin.getPluginBus().addListener(10, BasicCommandEvent.class, command.getListener());
         COMMANDS.add(command);
     }
 
     public void postBasicCommand(BasicCommandEvent event) {
-        BASIC_COMMAND_EVENT.post(event);
+        plugin.getPluginBus().post(event);
     }
 
     public IBasicCommand getCommand(String commandId) {

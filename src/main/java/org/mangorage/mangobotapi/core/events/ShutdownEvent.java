@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ package org.mangorage.mangobotapi.core.events;
 
 import org.mangorage.mboteventbus.base.Event;
 
-public class ShutdownEvent extends Event<ShutdownEvent> {
+public class ShutdownEvent extends Event {
     private final Phase phase;
 
     public ShutdownEvent(Phase phase) {

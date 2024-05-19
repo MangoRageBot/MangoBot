@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,11 @@ package org.mangorage.mangobotapi.core.commands;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
-import org.mangorage.mboteventbus.impl.IEvent;
+
+import java.util.function.Consumer;
 
 public interface IBasicCommand extends ICommand<Message, BasicCommandEvent> {
-    default IEvent<BasicCommandEvent> getListener() {
+    default Consumer<BasicCommandEvent> getListener() {
         return (e) -> {
             if (isValidCommand(e.getCommand())) {
                 var message = e.getMessage();

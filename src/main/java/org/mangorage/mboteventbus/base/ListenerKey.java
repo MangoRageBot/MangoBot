@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,43 +22,12 @@
 
 package org.mangorage.mboteventbus.base;
 
-import org.mangorage.mboteventbus.impl.IEvent;
-
-public class EventBuilder<T> {
-    private final Class<T> classType;
-    private final IEvent<T> event;
-    private Integer priority = null;
-    private boolean recieveCancelled = false;
-
-    public EventBuilder(Class<T> type, IEvent<T> event) {
-        this.event = event;
-        this.classType = type;
+public record ListenerKey(Class<?> eventClass, Class<?> genericClass) {
+    public static ListenerKey of(Class<?> eventClass) {
+        return new ListenerKey(eventClass, null);
     }
 
-    public EventBuilder<T> setPriority(int priority) {
-        this.priority = priority;
-        return this;
+    public static ListenerKey ofGeneric(Class<?> eventClass, Class<?> genericClass) {
+        return new ListenerKey(eventClass, genericClass);
     }
-
-    public EventBuilder<T> setRecieveCancelled(boolean recieveCancelled) {
-        this.recieveCancelled = recieveCancelled;
-        return this;
-    }
-
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public boolean canRecieveCanclled() {
-        return recieveCancelled;
-    }
-
-    public Class<T> getClassType() {
-        return classType;
-    }
-
-    public IEvent<T> getEvent() {
-        return event;
-    }
-
 }

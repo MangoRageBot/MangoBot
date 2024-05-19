@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,18 @@
 
 package org.mangorage.mboteventbus.impl;
 
-
 import org.mangorage.mboteventbus.base.Event;
-import org.mangorage.mboteventbus.base.EventBuilder;
+import org.mangorage.mboteventbus.base.GenericEvent;
+
+import java.util.function.Consumer;
 
 public interface IEventBus {
-    <T extends Event<T>> void addListener(Class<T> type, IEvent<T> event);
+    <T extends Event> void addListener(int priority, Class<T> eventClass, Consumer<T> eventConsumer);
 
-    <T extends Event<T>> void addListener(int priority, Class<T> type, IEvent<T> event);
+    <G, T extends GenericEvent<G>> void addGenericListener(int priority, Class<G> genericClass, Class<T> genericEvent, Consumer<T> genericEventListener);
 
-    <T extends Event<T>> void addListener(int priority, Class<T> type, boolean recieveCancelled, IEvent<T> event);
-
-    <T extends Event<T>> void addListener(EventBuilder<T> builder);
-
-    void register(Object object);
-
-    <T extends Event<T>> boolean post(T event);
-
+    void post(Event event);
     void startup();
-
     void shutdown();
+
 }

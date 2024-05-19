@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,14 +20,25 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mboteventbus.impl;
+package org.mangorage.mangobotapi.core.events;
 
-public interface IEvent<T> {
+import org.mangorage.mboteventbus.base.GenericEvent;
+
+public class DiscordEvent<T> extends GenericEvent<T> {
+    private final T instance;
+
+    public DiscordEvent(Class<T> tClass, T instance) {
+        super(tClass);
+        this.instance = instance;
+    }
+
     /**
-     * Only call this from {@link IEventListener <T>}
-     * Don't ever call it from {@link IEvent <T>} directly, as nothing will occur.
+     * Not ideal. Use {@link DiscordEvent#DiscordEvent(Class, Object)}  DiscordEvent}
      *
-     * @param event
+     * @param instance
      */
-    void indirectInvoke(T event);
+    @SuppressWarnings("unchecked")
+    public DiscordEvent(T instance) {
+        this((Class<T>) instance.getClass(), instance);
+    }
 }

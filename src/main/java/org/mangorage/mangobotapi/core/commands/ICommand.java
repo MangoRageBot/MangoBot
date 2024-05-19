@@ -23,15 +23,16 @@
 package org.mangorage.mangobotapi.core.commands;
 
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mboteventbus.impl.IEvent;
+import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface ICommand<Type, EventClass> {
     @NotNull
     CommandResult execute(Type message, Arguments args);
 
-    IEvent<EventClass> getListener();
+    Consumer<BasicCommandEvent> getListener();
 
     String commandId();
 
