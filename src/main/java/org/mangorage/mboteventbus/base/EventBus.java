@@ -63,23 +63,13 @@ public final class EventBus implements IEventBus {
 
     }
 
-    /**
-     *
-     */
     @Override
     public void startup() {
 
     }
 
-    /**
-     *
-     */
     @Override
     public void shutdown() {
 
-    }
-
-    public static void main(String[] args) {
-        EventBus bus = new EventBus();
     }
 }

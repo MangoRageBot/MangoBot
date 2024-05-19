@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,46 +20,37 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.util;
+package org.mangorage.mangobotapi.core.modules.action;
 
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
-import org.mangorage.basicutils.misc.Lockable;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
-public class MessageSettings {
-    public static Builder create() {
-        return new Builder();
+public class TrashButtonAction extends ButtonAction {
+
+    public TrashButtonAction() {
+        super("trash", "trash");
     }
 
-    public MessageSettings(Builder builder) {
+    public Button createForUser(User user) {
+        return create(ButtonStyle.SECONDARY, user.getId());
     }
 
-    @Deprecated(forRemoval = true)
-    public MessageCreateAction withDeletion(MessageCreateAction action, User user) {
-        return action;
-    }
+    @Override
+    public boolean onClick(ButtonInteractionEvent event) {
+        if (event.getId().startsWith(getId() + ":")) {
+            var list = event.getId().split(":");
+            var clicked = event.getUser().getId();
+            var msg = event.getMessage();
 
-    public MessageCreateAction withButton(MessageCreateAction action, Button button) {
-        return action.addActionRow(button);
-    }
-
-    public MessageCreateAction apply(MessageCreateAction action) {
-        return action.mentionRepliedUser(false).setSuppressedNotifications(true);
-    }
-
-    public static class Builder {
-        private final Lockable lockable = new Lockable();
-
-        private Builder self() {
-            if (lockable.isLocked())
-                throw new IllegalStateException("Unable to get self() as this builder has been built!");
-            return this;
+            if (list[1].equals(clicked)) {
+                msg.delete().queue();
+                event.deferReply(true).setContent("Deleted Message!").queue();
+            } else {
+                event.deferReply(true).setContent("No permission to delete message!").queue();
+            }
         }
-
-        public MessageSettings build() {
-            lockable.lock();
-            return new MessageSettings(this);
-        }
+        return false;
     }
 }

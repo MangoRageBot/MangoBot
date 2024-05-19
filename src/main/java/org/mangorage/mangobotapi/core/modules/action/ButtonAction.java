@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,31 +20,40 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.modules.buttonactions;
+package org.mangorage.mangobotapi.core.modules.action;
 
-public class Actions {
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
+import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
 
-    public static void init() {
+public abstract class ButtonAction {
+    private final String id;
+    private final String label;
+
+    public ButtonAction(String id, String label) {
+        this.id = id;
+        this.label = label;
     }
 
-    public record Trash(String userID) {
+    public String getId() {
+        return id;
     }
 
-    public static final ButtonActions.PermanentButtonAction<Trash> TRASH = ButtonActions.registerPermanent("trash",
-            Actions.Trash.class,
-            (interaction, data) -> {
-                var iUser = interaction.getUser();
-                var iMessage = interaction.getMessage();
+    public String getLabel() {
+        return label;
+    }
 
-                if (iUser.getId().equals(data.userID())) {
-                    iMessage.delete().queue();
-                    return true;
-                }
+    public Button create(ButtonStyle style, String additionalData) {
+        return new ButtonImpl(id + ":" + additionalData, label, style, false, null);
+    }
 
-                interaction.reply("No Permission!").setEphemeral(true).queue();
+    public boolean onClick(ButtonInteractionEvent event) {
+        if (event.getId().equals(id)) {
+            event.reply("Clicked %s button!".formatted(id)).queue();
+            return true;
+        }
 
-                return false;
-            },
-            (data) -> new Trash(data[0])
-    );
+        return false;
+    }
 }
