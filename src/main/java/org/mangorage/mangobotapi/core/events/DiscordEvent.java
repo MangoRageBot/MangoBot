@@ -41,4 +41,8 @@ public class DiscordEvent<T> extends GenericEvent<T> {
     public DiscordEvent(T instance) {
         this((Class<T>) instance.getClass(), instance);
     }
+
+    public T getInstance() {
+        return instance;
+    }
 }
