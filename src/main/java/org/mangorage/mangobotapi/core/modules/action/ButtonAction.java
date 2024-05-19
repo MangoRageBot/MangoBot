@@ -49,7 +49,7 @@ public abstract class ButtonAction {
     }
 
     public boolean onClick(ButtonInteractionEvent event) {
-        if (event.getInteraction().getComponent().getId().equals(id)) {
+        if (event.getComponent().getId().equals(id)) {
             event.reply("Clicked %s button!".formatted(id)).queue();
             return true;
         }

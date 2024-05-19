@@ -39,8 +39,8 @@ public class TrashButtonAction extends ButtonAction {
 
     @Override
     public boolean onClick(ButtonInteractionEvent event) {
-        if (event.getInteraction().getComponent().getId().startsWith(getId() + ":")) {
-            var list = event.getId().split(":");
+        if (event.getComponent().getId().startsWith(getId() + ":")) {
+            var list = event.getComponent().getId().split(":");
             var clicked = event.getUser().getId();
             var msg = event.getMessage();
 
