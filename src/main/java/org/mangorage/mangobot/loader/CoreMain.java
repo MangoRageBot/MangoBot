@@ -24,7 +24,6 @@ package org.mangorage.mangobot.loader;
 
 import org.mangorage.basicutils.language.LanguageHandler;
 import org.mangorage.mangobot.misc.Example;
-import org.mangorage.mangobotapi.core.modules.action.Actions;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 import org.mangorage.mboteventbus.base.EventBus;
 import org.mangorage.mboteventbus.impl.IEventBus;
@@ -72,7 +71,6 @@ public class CoreMain {
             System.out.println("Shutting down Mangoloader!");
         }));
 
-        Actions.init();
         LanguageHandler.loadAll();
         PluginLoader.load();
 
