@@ -23,10 +23,9 @@
 package org.mangorage.mangobotapi.core.events.discord;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.mangorage.mangobotapi.core.events.WrapperEvent;
+import org.mangorage.mangobotapi.core.events.DiscordEvent;
 
-@Deprecated(forRemoval = true)
-public class DMessageReceivedEvent extends WrapperEvent<MessageReceivedEvent> {
+public class DMessageReceivedEvent extends DiscordEvent<MessageReceivedEvent> {
     private final boolean isCommand;
 
     public DMessageReceivedEvent(MessageReceivedEvent object, boolean isCommand) {
