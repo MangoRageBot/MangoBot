@@ -23,10 +23,10 @@
 package org.mangorage.mboteventbus.base;
 
 import org.mangorage.mboteventbus.impl.IEventBus;
+import org.mangorage.mboteventbus.impl.IListenerList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -35,17 +35,21 @@ public final class EventBus implements IEventBus {
         return new EventBus();
     }
 
-    public record ListenerKey(Class<?> eventClass, Class<?> genericClass) {
+    private record ListenerKey(Class<?> eventClass, Class<?> genericClass) {
     }
 
-    private final Map<ListenerKey, List<Consumer<? extends Event>>> LISTENERS = new HashMap<>();
+    private final Map<ListenerKey, IListenerList<? extends Event>> LISTENERS = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public <T extends Event> void addListener(int priority, Class<T> eventClass, Consumer<T> eventConsumer) {
-        LISTENERS.computeIfAbsent(new ListenerKey(eventClass, null), a -> new ArrayList<>()).add(eventConsumer);
+        IListenerList<T> list = (IListenerList<T>) LISTENERS.computeIfAbsent(new ListenerKey(eventClass, null), a -> new ListenerListImpl<>(new ArrayList<>()));
+        list.add(eventConsumer, "default", priority);
     }
 
+    @SuppressWarnings("unchecked")
     public <G, T extends GenericEvent<G>> void addGenericListener(int priority, Class<G> genericClass, Class<T> genericEvent, Consumer<T> genericEventListener) {
-        LISTENERS.computeIfAbsent(new ListenerKey(genericEvent, genericClass), a -> new ArrayList<>()).add(genericEventListener);
+        IListenerList<T> list = (IListenerList<T>) LISTENERS.computeIfAbsent(new ListenerKey(genericEvent, genericClass), a -> new ListenerListImpl<>(new ArrayList<>()));
+        list.add(genericEventListener, "default", priority);
     }
 
     public void post(Event event) {
@@ -55,12 +59,7 @@ public final class EventBus implements IEventBus {
 
         var listeners = LISTENERS.get(new ListenerKey(event.getClass(), genericType));
         if (listeners != null)
-            listeners.forEach(l -> {
-                @SuppressWarnings("unchecked")
-                Consumer<Event> listener = (Consumer<Event>) l;
-                listener.accept(event);
-            });
-
+            listeners.accept(event);
     }
 
     @Override
