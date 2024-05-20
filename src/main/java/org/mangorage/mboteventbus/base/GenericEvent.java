@@ -22,7 +22,7 @@
 
 package org.mangorage.mboteventbus.base;
 
-public class GenericEvent<T> extends Event {
+public abstract class GenericEvent<T> extends Event {
     private final Class<T> tClass;
 
     public GenericEvent(Class<T> tClass) {

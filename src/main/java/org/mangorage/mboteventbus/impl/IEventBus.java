@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 public interface IEventBus {
     <T extends Event> void addListener(int priority, Class<T> eventClass, Consumer<T> eventConsumer);
 
-    <G, T extends GenericEvent<G>> void addGenericListener(int priority, Class<G> genericClass, Class<T> genericEvent, Consumer<T> genericEventListener);
+    <T extends GenericEvent<? extends G>, G> void addGenericListener(int priority, Class<G> genericClass, Class<T> genericEvent, Consumer<T> genericEventListener);
 
     void post(Event event);
     void startup();

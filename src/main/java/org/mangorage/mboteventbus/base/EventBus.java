@@ -26,8 +26,8 @@ import org.mangorage.mboteventbus.impl.IEventBus;
 import org.mangorage.mboteventbus.impl.IListenerList;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public final class EventBus implements IEventBus {
@@ -38,15 +38,15 @@ public final class EventBus implements IEventBus {
     private record ListenerKey(Class<?> eventClass, Class<?> genericClass) {
     }
 
-    private final Map<ListenerKey, IListenerList<? extends Event>> LISTENERS = new HashMap<>();
+    private final Map<ListenerKey, IListenerList<? extends Event>> LISTENERS = new ConcurrentHashMap<>();
 
     public <T extends Event> void addListener(int priority, Class<T> eventClass, Consumer<T> eventConsumer) {
         IListenerList<T> list = (IListenerList<T>) getListenerList(eventClass, null);
         list.register(eventConsumer, "default", priority);
     }
 
-    public <G, T extends GenericEvent<G>> void addGenericListener(int priority, Class<G> genericClass, Class<T> genericEvent, Consumer<T> genericEventListener) {
-        IListenerList<T> list = (IListenerList<T>) getListenerList(genericEvent, genericClass);
+    public <T extends GenericEvent<? extends G>, G> void addGenericListener(int priority, Class<G> genericClassFilter, Class<T> eventType, Consumer<T> genericEventListener) {
+        IListenerList<T> list = (IListenerList<T>) getListenerList(eventType, genericClassFilter);
         list.register(genericEventListener, "default", priority);
     }
 
@@ -62,11 +62,8 @@ public final class EventBus implements IEventBus {
 
     @SuppressWarnings("unchecked")
     private IListenerList<?> getListenerList(Class<?> eventClass, Class<?> genericClass) {
-        if (genericClass != null) {
-            return LISTENERS.computeIfAbsent(new ListenerKey(eventClass, genericClass), e -> new ListenerListImpl<Event>(new ArrayList<>(), null));
-        }
-
-        var list = LISTENERS.get(eventClass);
+        var key = new ListenerKey(eventClass, genericClass);
+        var list = LISTENERS.get(key);
         if (list != null) {
             return list;
         }
@@ -74,7 +71,10 @@ public final class EventBus implements IEventBus {
         if (eventClass == Object.class)
             return null;
 
-        return LISTENERS.computeIfAbsent(new ListenerKey(eventClass, null), e -> new ListenerListImpl<>(new ArrayList<>(), getListenerList(eventClass.getSuperclass(), null)));
+        if (eventClass == Event.class && genericClass != null)
+            return null;
+
+        return LISTENERS.computeIfAbsent(key, e -> new ListenerListImpl<>(new ArrayList<>(), getListenerList(eventClass.getSuperclass(), genericClass)));
     }
 
     @Override
@@ -89,16 +89,45 @@ public final class EventBus implements IEventBus {
 
 
     public static class MyEvent extends Event {
+        public MyEvent() {
+            //super(Integer.class);
+        }
     }
+
+    public static class MyBetterEvent extends MyEvent {
+    }
+
+    public static class MyCrazyEvent extends MyBetterEvent {
+    }
+
 
     public static void main(String[] args) {
         IEventBus bus = create();
+
+
+//        bus.addGenericListener(10, Integer.class, MyEvent.class, e -> {
+//            System.out.println("Sweet -> " + e.getClass());
+//        });
+//
+        bus.addGenericListener(10, Integer.class, GenericEvent.class, e -> {
+            System.out.println("Generic -> " + e.getClass());
+
+        });
 
         bus.addListener(10, Event.class, e -> {
             System.out.println(e.getClass());
         });
 
-        bus.post(new Event());
+        bus.addListener(10, MyEvent.class, e -> {
+            System.out.println("Sweeet! -> " + e.getClass());
+        });
+
+        bus.post(new MyBetterEvent());
         bus.post(new MyEvent());
+        bus.post(new MyCrazyEvent());
+        bus.post(new GenericEvent<>(Integer.class) {
+        });
+
+        System.out.println("END");
     }
 }
