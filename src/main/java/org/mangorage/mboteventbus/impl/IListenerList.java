@@ -29,5 +29,5 @@ import java.util.function.Consumer;
 public interface IListenerList<T> {
     void accept(Event event);
 
-    void add(Consumer<T> eventConsumer, String name, int priority);
+    void register(Consumer<T> eventConsumer, String name, int priority);
 }

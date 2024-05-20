@@ -40,16 +40,14 @@ public final class EventBus implements IEventBus {
 
     private final Map<ListenerKey, IListenerList<? extends Event>> LISTENERS = new HashMap<>();
 
-    @SuppressWarnings("unchecked")
     public <T extends Event> void addListener(int priority, Class<T> eventClass, Consumer<T> eventConsumer) {
-        IListenerList<T> list = (IListenerList<T>) LISTENERS.computeIfAbsent(new ListenerKey(eventClass, null), a -> new ListenerListImpl<>(new ArrayList<>()));
-        list.add(eventConsumer, "default", priority);
+        IListenerList<T> list = (IListenerList<T>) getListenerList(eventClass, null);
+        list.register(eventConsumer, "default", priority);
     }
 
-    @SuppressWarnings("unchecked")
     public <G, T extends GenericEvent<G>> void addGenericListener(int priority, Class<G> genericClass, Class<T> genericEvent, Consumer<T> genericEventListener) {
-        IListenerList<T> list = (IListenerList<T>) LISTENERS.computeIfAbsent(new ListenerKey(genericEvent, genericClass), a -> new ListenerListImpl<>(new ArrayList<>()));
-        list.add(genericEventListener, "default", priority);
+        IListenerList<T> list = (IListenerList<T>) getListenerList(genericEvent, genericClass);
+        list.register(genericEventListener, "default", priority);
     }
 
     public void post(Event event) {
@@ -57,9 +55,26 @@ public final class EventBus implements IEventBus {
         if (event instanceof GenericEvent<?> genericEvent)
             genericType = genericEvent.getGenericType();
 
-        var listeners = LISTENERS.get(new ListenerKey(event.getClass(), genericType));
+        var listeners = getListenerList(event.getClass(), genericType);
         if (listeners != null)
             listeners.accept(event);
+    }
+
+    @SuppressWarnings("unchecked")
+    private IListenerList<?> getListenerList(Class<?> eventClass, Class<?> genericClass) {
+        if (genericClass != null) {
+            return LISTENERS.computeIfAbsent(new ListenerKey(eventClass, genericClass), e -> new ListenerListImpl<Event>(new ArrayList<>(), null));
+        }
+
+        var list = LISTENERS.get(eventClass);
+        if (list != null) {
+            return list;
+        }
+
+        if (eventClass == Object.class)
+            return null;
+
+        return LISTENERS.computeIfAbsent(new ListenerKey(eventClass, null), e -> new ListenerListImpl<>(new ArrayList<>(), getListenerList(eventClass.getSuperclass(), null)));
     }
 
     @Override
@@ -70,5 +85,20 @@ public final class EventBus implements IEventBus {
     @Override
     public void shutdown() {
 
+    }
+
+
+    public static class MyEvent extends Event {
+    }
+
+    public static void main(String[] args) {
+        IEventBus bus = create();
+
+        bus.addListener(10, Event.class, e -> {
+            System.out.println(e.getClass());
+        });
+
+        bus.post(new Event());
+        bus.post(new MyEvent());
     }
 }

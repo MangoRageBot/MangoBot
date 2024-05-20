@@ -29,9 +29,11 @@ import java.util.function.Consumer;
 
 public class ListenerListImpl<T> implements IListenerList<T> {
     private final List<Listener<T>> backingList;
+    private final IListenerList<?> parent;
 
-    public ListenerListImpl(List<Listener<T>> backingList) {
+    public ListenerListImpl(List<Listener<T>> backingList, IListenerList<?> parent) {
         this.backingList = backingList;
+        this.parent = parent;
     }
 
     /**
@@ -42,6 +44,7 @@ public class ListenerListImpl<T> implements IListenerList<T> {
         backingList.stream()
                 .sorted()
                 .forEach(e -> e.consumer().accept((T) event));
+        if (parent != null) parent.accept(event);
     }
 
     /**
@@ -50,7 +53,7 @@ public class ListenerListImpl<T> implements IListenerList<T> {
      * @param priority
      */
     @Override
-    public void add(Consumer<T> eventConsumer, String name, int priority) {
+    public void register(Consumer<T> eventConsumer, String name, int priority) {
         backingList.add(new Listener<>(priority, name, eventConsumer));
     }
 }
