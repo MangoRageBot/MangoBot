@@ -22,5 +22,5 @@
 
 package org.mangorage.mboteventbus.base;
 
-public abstract class Event {
+public class Event {
 }

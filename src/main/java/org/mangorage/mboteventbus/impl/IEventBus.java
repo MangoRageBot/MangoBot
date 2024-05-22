@@ -32,7 +32,7 @@ public interface IEventBus {
 
     <T extends GenericEvent<? extends G>, G> void addGenericListener(int priority, Class<G> genericClass, Class<T> genericEvent, Consumer<T> genericEventListener);
 
-    void post(Event event);
+    <T extends Event> void post(T event);
     void startup();
     void shutdown();
 

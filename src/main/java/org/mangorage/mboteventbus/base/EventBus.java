@@ -25,9 +25,10 @@ package org.mangorage.mboteventbus.base;
 import org.mangorage.mboteventbus.impl.IEventBus;
 import org.mangorage.mboteventbus.impl.IListenerList;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
 public final class EventBus implements IEventBus {
@@ -39,47 +40,52 @@ public final class EventBus implements IEventBus {
     }
 
     private final Map<ListenerKey, IListenerList<? extends Event>> LISTENERS = new ConcurrentHashMap<>();
+    private final Semaphore writeLock = new Semaphore(1, true);
 
-
-    @SuppressWarnings("unchecked")
     public <T extends Event> void addListener(int priority, Class<T> eventClass, Consumer<T> eventConsumer) {
-        IListenerList<T> list = (IListenerList<T>) getListenerList(eventClass, null);
+        IListenerList<T> list = getListenerList(eventClass, null);
         if (list == null) return;
-        list.register(eventConsumer, "default", priority);
+        list.register(eventConsumer, "default -> " + eventClass, priority);
     }
 
-
-    @SuppressWarnings("unchecked")
     public <T extends GenericEvent<? extends G>, G> void addGenericListener(int priority, Class<G> genericClassFilter, Class<T> eventType, Consumer<T> genericEventListener) {
-        IListenerList<T> list = (IListenerList<T>) getListenerList(eventType, genericClassFilter);
+        IListenerList<T> list = getListenerList(eventType, genericClassFilter);
         if (list == null) return;
-        list.register(genericEventListener, "default", priority);
+        list.register(genericEventListener, "default -> " + eventType + " -> " + genericClassFilter, priority);
     }
 
-    public void post(Event event) {
+    public <T extends Event> void post(T event) {
         Class<?> genericType = null;
         if (event instanceof GenericEvent<?> genericEvent)
             genericType = genericEvent.getGenericType();
 
-        var listeners = getListenerList(event.getClass(), genericType);
-        if (listeners != null)
-            listeners.accept(event);
+        writeLock.acquireUninterruptibly();
+        IListenerList<T> listeners = getListenerList(getEventClass(event), genericType);
+        writeLock.release();
+        if (listeners != null) listeners.accept(event);
     }
 
-    private IListenerList<?> getListenerList(Class<?> eventClass, Class<?> genericClass) {
+    @SuppressWarnings("unchecked")
+    private <T extends Event> Class<T> getEventClass(T event) {
+        return (Class<T>) event.getClass();
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Event> IListenerList<T> getListenerList(Class<T> eventClass, Class<?> genericClass) {
+        var list = getListenerListInternal(eventClass, genericClass);
+        return list == null ? null : (IListenerList<T>) list;
+    }
+
+    @SuppressWarnings("unchecked")
+    private IListenerList<?> getListenerListInternal(Class<?> eventClass, Class<?> genericClass) {
         var key = new ListenerKey(eventClass, genericClass);
         var list = LISTENERS.get(key);
-        if (list != null) {
-            return list;
-        }
+        if (list != null) return list;
 
-        if (eventClass == Object.class)
+        if (eventClass == Object.class || eventClass == Event.class && genericClass != null)
             return null;
 
-        if (eventClass == Event.class && genericClass != null)
-            return null;
-
-        return LISTENERS.computeIfAbsent(key, e -> new ListenerListImpl<>(new ArrayList<>(), getListenerList(eventClass.getSuperclass(), genericClass)));
+        return LISTENERS.computeIfAbsent(key, e -> new ListenerListImpl<>(new CopyOnWriteArrayList<>(), (IListenerList<Event>) getListenerListInternal(eventClass.getSuperclass(), genericClass)));
     }
 
     @Override
@@ -90,49 +96,5 @@ public final class EventBus implements IEventBus {
     @Override
     public void shutdown() {
 
-    }
-
-
-    public static class MyEvent extends Event {
-        public MyEvent() {
-            //super(Integer.class);
-        }
-    }
-
-    public static class MyBetterEvent extends MyEvent {
-    }
-
-    public static class MyCrazyEvent extends MyBetterEvent {
-    }
-
-
-    public static void main(String[] args) {
-        IEventBus bus = create();
-
-
-//        bus.addGenericListener(10, Integer.class, MyEvent.class, e -> {
-//            System.out.println("Sweet -> " + e.getClass());
-//        });
-//
-        bus.addGenericListener(10, Integer.class, GenericEvent.class, e -> {
-            System.out.println("Generic -> " + e.getClass());
-
-        });
-
-        bus.addListener(10, Event.class, e -> {
-            System.out.println(e.getClass());
-        });
-
-        bus.addListener(10, MyEvent.class, e -> {
-            System.out.println("Sweeet! -> " + e.getClass());
-        });
-
-        bus.post(new MyBetterEvent());
-        bus.post(new MyEvent());
-        bus.post(new MyCrazyEvent());
-        bus.post(new GenericEvent<>(Integer.class) {
-        });
-
-        System.out.println("END");
     }
 }

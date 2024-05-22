@@ -26,37 +26,51 @@ import org.mangorage.mangobot.test.misc.TimedTest;
 import org.mangorage.mboteventbus.base.Event;
 import org.mangorage.mboteventbus.base.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class EventBusTest {
 
     public static class MyEvent extends Event {
     }
 
+    public static class MyOther extends MyEvent {
+    }
 
-    public static void main(String[] args) {
+
+    public static final ExecutorService ex = Executors.newWorkStealingPool();
+
+
+    public static void main(String[] args) throws InterruptedException {
         var bus = EventBus.create();
 
         var registration = TimedTest.of(() -> {
-            for (int i = 0; i < 10000; i++) {
+            for (int i = 0; i < 1000; i++) {
                 bus.addListener(10, Event.class, e -> {
                 });
-                bus.addListener(10, MyEvent.class, e -> {
+                bus.addListener(10, MyOther.class, e -> {
                 });
             }
         });
 
+        long amount = 100000;
         var post = TimedTest.of(() -> {
-            bus.post(new MyEvent());
+            for (int i = 0; i < amount; i++) {
+                bus.post(new MyOther());
+                bus.post(new Event());
+            }
         });
 
-        System.out.println("Registration time for 1 listener -> " + registration.getResult());
-        long total = 0;
-        long amount = 10000;
+        List<MyEvent> myEvents = new ArrayList<>();
+        for (int i = 0; i < amount; i++)
+            myEvents.add(new MyEvent());
 
-        for (int i = 0; i < amount; i++) {
-            var result = post.getResult();
-            System.out.println("Post time for Post #%s -> ".formatted(i) + result);
-            total += result;
-        }
-        System.out.println("AVG -> " + total / amount);
+        myEvents.stream().parallel().forEach(bus::post);
+
+        System.out.println("Registration time for 1 listener -> " + registration.getResult());
+        System.out.println("AVG -> " + post.getResult() / amount);
+        var a = 1;
     }
 }

@@ -22,18 +22,16 @@
 
 package org.mangorage.mboteventbus.impl;
 
-import org.mangorage.mboteventbus.base.Event;
 import org.mangorage.mboteventbus.base.Listener;
 
 import java.util.function.Consumer;
 
 public interface IListenerList<T> {
-    void accept(Event event);
+    void accept(T event);
     void register(Consumer<T> eventConsumer, String name, int priority);
 
     Listener<T>[] getListeners();
-
     void invalidate();
 
-    void addChild(IListenerList<?> child);
+    void addChild(IListenerList<T> child);
 }
