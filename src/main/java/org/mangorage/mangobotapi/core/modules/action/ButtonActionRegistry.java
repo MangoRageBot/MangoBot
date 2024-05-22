@@ -24,18 +24,25 @@ package org.mangorage.mangobotapi.core.modules.action;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class ButtonActionRegistry {
-    private final List<ButtonAction> ACTIONS = new ArrayList<>();
+    private final Set<ButtonAction> ACTIONS = new HashSet<>();
     private final Map<Class<?>, ButtonAction> ACTIONS_BY_MAP = new HashMap<>();
+    private final Set<String> ACTIONS_REGISTERED = new HashSet<>();
 
     public void register(ButtonAction buttonAction) {
+        if (ACTIONS.contains(buttonAction) || ACTIONS_BY_MAP.containsKey(buttonAction.getClass()))
+            throw new IllegalStateException("Cannot register Button Action %s due to already being registered".formatted(buttonAction.getId()));
+        if (ACTIONS_REGISTERED.contains(buttonAction.getId()))
+            throw new IllegalStateException("Cannot register Button Action %s due to a Button Action with Similar Id being present".formatted(buttonAction.getId()));
+
         this.ACTIONS.add(buttonAction);
         this.ACTIONS_BY_MAP.put(buttonAction.getClass(), buttonAction);
+        this.ACTIONS_REGISTERED.add(buttonAction.getId());
     }
 
     public void post(ButtonInteractionEvent event) {

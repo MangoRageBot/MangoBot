@@ -154,9 +154,15 @@ public class DataHandler<T extends IFileNameResolver> {
         private boolean isFile = false;
         private String path = "";
         private int maxDepth = 0;
+        private Gson gson = GSON;
 
         public Builder file() {
             isFile = true;
+            return this;
+        }
+
+        public Builder setGson(Gson gson) {
+            this.gson = gson;
             return this;
         }
 
