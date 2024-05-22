@@ -20,20 +20,16 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mboteventbus.impl;
+package org.mangorage.mangobot.test.misc;
 
-import org.mangorage.mboteventbus.base.Event;
-import org.mangorage.mboteventbus.base.Listener;
+public record TimedTest(Runnable runnable) {
+    public static TimedTest of(Runnable runnable) {
+        return new TimedTest(runnable);
+    }
 
-import java.util.function.Consumer;
-
-public interface IListenerList<T> {
-    void accept(Event event);
-    void register(Consumer<T> eventConsumer, String name, int priority);
-
-    Listener<T>[] getListeners();
-
-    void invalidate();
-
-    void addChild(IListenerList<?> child);
+    public long getResult() {
+        var before = System.nanoTime();
+        runnable.run();
+        return System.nanoTime() - before;
+    }
 }

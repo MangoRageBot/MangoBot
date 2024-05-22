@@ -20,20 +20,43 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mboteventbus.impl;
+package org.mangorage.mangobot.test;
 
+import org.mangorage.mangobot.test.misc.TimedTest;
 import org.mangorage.mboteventbus.base.Event;
-import org.mangorage.mboteventbus.base.Listener;
+import org.mangorage.mboteventbus.base.EventBus;
 
-import java.util.function.Consumer;
+public class EventBusTest {
 
-public interface IListenerList<T> {
-    void accept(Event event);
-    void register(Consumer<T> eventConsumer, String name, int priority);
+    public static class MyEvent extends Event {
+    }
 
-    Listener<T>[] getListeners();
 
-    void invalidate();
+    public static void main(String[] args) {
+        var bus = EventBus.create();
 
-    void addChild(IListenerList<?> child);
+        var registration = TimedTest.of(() -> {
+            for (int i = 0; i < 10000; i++) {
+                bus.addListener(10, Event.class, e -> {
+                });
+                bus.addListener(10, MyEvent.class, e -> {
+                });
+            }
+        });
+
+        var post = TimedTest.of(() -> {
+            bus.post(new MyEvent());
+        });
+
+        System.out.println("Registration time for 1 listener -> " + registration.getResult());
+        long total = 0;
+        long amount = 10000;
+
+        for (int i = 0; i < amount; i++) {
+            var result = post.getResult();
+            System.out.println("Post time for Post #%s -> ".formatted(i) + result);
+            total += result;
+        }
+        System.out.println("AVG -> " + total / amount);
+    }
 }

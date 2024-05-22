@@ -22,18 +22,44 @@
 
 package org.mangorage.mboteventbus.base;
 
+import org.mangorage.basicutils.misc.Lazy;
 import org.mangorage.mboteventbus.impl.IListenerList;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class ListenerListImpl<T> implements IListenerList<T> {
     private final List<Listener<T>> backingList;
     private final IListenerList<?> parent;
+    private final Set<IListenerList<?>> children = new HashSet<>();
+    private final Lazy<Listener<T>[]> listeners;
 
     public ListenerListImpl(List<Listener<T>> backingList, IListenerList<?> parent) {
         this.backingList = backingList;
         this.parent = parent;
+        if (parent != null) parent.addChild(this);
+
+        this.listeners = Lazy.concurrentOf(() -> {
+            if (parent != null) {
+                return Stream.of(backingList, List.of(parent.getListeners()))
+                        .flatMap(List::stream)
+                        .sorted()
+                        .toArray(Listener[]::new);
+            }
+
+            return backingList.toArray(Listener[]::new);
+        });
+    }
+
+    /**
+     * @param child
+     */
+    @Override
+    public void addChild(IListenerList<?> child) {
+        children.add(child);
     }
 
     /**
@@ -41,10 +67,9 @@ public class ListenerListImpl<T> implements IListenerList<T> {
      */
     @Override
     public void accept(Event event) {
-        backingList.stream()
-                .sorted()
-                .forEach(e -> e.consumer().accept((T) event));
-        if (parent != null) parent.accept(event);
+        for (Listener<T> listener : getListeners()) {
+            listener.consumer().accept((T) event);
+        }
     }
 
     /**
@@ -55,5 +80,25 @@ public class ListenerListImpl<T> implements IListenerList<T> {
     @Override
     public void register(Consumer<T> eventConsumer, String name, int priority) {
         backingList.add(new Listener<>(priority, name, eventConsumer));
+        if (parent != null) parent.invalidate();
+        children.forEach(IListenerList::invalidate);
     }
+
+    /**
+     * @return
+     */
+    @Override
+    public Listener<T>[] getListeners() {
+        return listeners.get();
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void invalidate() {
+        listeners.invalidate();
+    }
+
+
 }

@@ -40,13 +40,19 @@ public final class EventBus implements IEventBus {
 
     private final Map<ListenerKey, IListenerList<? extends Event>> LISTENERS = new ConcurrentHashMap<>();
 
+
+    @SuppressWarnings("unchecked")
     public <T extends Event> void addListener(int priority, Class<T> eventClass, Consumer<T> eventConsumer) {
         IListenerList<T> list = (IListenerList<T>) getListenerList(eventClass, null);
+        if (list == null) return;
         list.register(eventConsumer, "default", priority);
     }
 
+
+    @SuppressWarnings("unchecked")
     public <T extends GenericEvent<? extends G>, G> void addGenericListener(int priority, Class<G> genericClassFilter, Class<T> eventType, Consumer<T> genericEventListener) {
         IListenerList<T> list = (IListenerList<T>) getListenerList(eventType, genericClassFilter);
+        if (list == null) return;
         list.register(genericEventListener, "default", priority);
     }
 
@@ -60,7 +66,6 @@ public final class EventBus implements IEventBus {
             listeners.accept(event);
     }
 
-    @SuppressWarnings("unchecked")
     private IListenerList<?> getListenerList(Class<?> eventClass, Class<?> genericClass) {
         var key = new ListenerKey(eventClass, genericClass);
         var list = LISTENERS.get(key);
