@@ -24,10 +24,7 @@ package org.mangorage.mangobot.test;
 
 import org.mangorage.eventbus.EventBus;
 import org.mangorage.eventbus.event.Event;
-import org.mangorage.mangobot.test.misc.TimedTest;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -46,28 +43,18 @@ public class EventBusTest {
     public static void main(String[] args) throws InterruptedException {
         var bus = EventBus.create();
 
-        var registration = TimedTest.of(() -> {
-            for (int i = 0; i < 1; i++) {
-                bus.addListener(10, MyOther.class, e -> {
-                    System.out.println("LOL");
-                });
-            }
+        bus.addListener(10, Event.class, e -> {
+            System.out.println("All -> " + e);
+        });
+        bus.addListener(10, MyEvent.class, e -> {
+            System.out.println(e.getClass());
         });
 
-        long amount = 10;
-        var post = TimedTest.of(() -> {
-            for (int i = 0; i < amount; i++) {
-                bus.post(new MyOther());
-                bus.post(new Event());
-            }
+        bus.addListener(11, MyOther.class, e -> {
+            System.out.println("Cool !");
         });
 
-        List<MyEvent> myEvents = new ArrayList<>();
-        for (int i = 0; i < amount; i++)
-            myEvents.add(new MyOther());
-
-        System.out.println("Registration time for 1 listener -> " + registration.getResult());
-        System.out.println("AVG -> " + post.getResult() / amount);
-        var a = 1;
+        bus.post(new MyOther());
+        bus.post(new MyEvent());
     }
 }

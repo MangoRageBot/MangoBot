@@ -22,9 +22,18 @@
 
 package org.mangorage.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.mangorage.eventbus.event.Event;
 
 import java.util.function.Consumer;
 
-public record Listener<E extends Event>(int priority, Consumer<E> consumer) {
+public record Listener<E extends Event>(int priority, Consumer<E> consumer) implements Comparable<Listener<E>> {
+    /**
+     * @param o the object to be compared.
+     * @return
+     */
+    @Override
+    public int compareTo(@NotNull Listener<E> o) {
+        return Integer.compare(o.priority, priority);
+    }
 }

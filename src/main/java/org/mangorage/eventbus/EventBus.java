@@ -59,7 +59,17 @@ public final class EventBus implements IEventBus {
 
     @SuppressWarnings("unchecked")
     private <E extends Event> IListenerList<E> getListenerList(Class<E> eventClass, Class<?> genericType) {
-        return (IListenerList<E>) LISTENERS.computeIfAbsent(new EventKey<>(eventClass, genericType), e -> new ListenerListImpl<>());
+        var key = new EventKey<>(eventClass, genericType);
+        var list = LISTENERS.get(key);
+        if (list != null) {
+            return (IListenerList<E>) list;
+        }
+
+        if (((Class<?>) eventClass) == Object.class)
+            return null;
+
+
+        return (IListenerList<E>) LISTENERS.computeIfAbsent(key, e -> new ListenerListImpl<>(getListenerList((Class<E>) eventClass.getSuperclass(), genericType)));
     }
 
     @Override

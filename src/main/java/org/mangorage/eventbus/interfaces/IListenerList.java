@@ -22,12 +22,18 @@
 
 package org.mangorage.eventbus.interfaces;
 
+import org.mangorage.eventbus.Listener;
 import org.mangorage.eventbus.event.Event;
 
 import java.util.function.Consumer;
 
 public interface IListenerList<E extends Event> {
+    void post(E event);
     void register(int priority, Consumer<E> consumer);
 
-    void post(E event);
+    Listener<E>[] getListeners();
+
+    void invalidate();
+
+    void addChild(IListenerList<E> child);
 }
