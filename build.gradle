@@ -133,12 +133,14 @@ dependencies {
     library('com.google.code.gson:gson:2.10.1')
 
     library('org.luaj:luaj-jse:3.0.1')
-    library('org.apache.logging.log4j:log4j-core:2.23.1')
+    library('org.apache.logging.log4j:log4j-core:+')
 
-    library('org.slf4j:slf4j-simple:2.0.13')
+    library('org.slf4j:slf4j-simple:+')
     library('org.reflections:reflections:0.10.2')
 
-    embedLibrary('net.minecraftforge:eventbus:+') // Embed cuz wont work otherwise, dunno?
+    embedLibrary('net.minecraftforge:eventbus:+') {
+        exclude group: "org.apache"
+    }
 }
 
 test {
