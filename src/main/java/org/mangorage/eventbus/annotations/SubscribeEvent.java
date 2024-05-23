@@ -20,24 +20,17 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.eventbus.interfaces;
+package org.mangorage.eventbus.annotations;
 
-import org.mangorage.eventbus.event.Event;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-import java.util.function.Consumer;
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SubscribeEvent {
+    int priority() default 0;
 
-public interface IEventBus {
-    <E extends Event> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer);
-    <E extends Event & IGenericEvent<G>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer);
+    Class<?> genericType() default NullClass.class;
 
-    void registerClass(Class<?> clazz);
-
-    void registerObject(Object object);
-
-
-    <E extends Event> void post(E event);
-
-    void startup();
-    void shutdown();
-
+    final class NullClass {
+    }
 }

@@ -32,11 +32,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public final class ListenerList<E extends Event> {
-    private final List<Listener<E>> listeners = Collections.synchronizedList(new ArrayList<>(2));
+    private final List<EventListener<E>> listeners = Collections.synchronizedList(new ArrayList<>(2));
     private final List<ListenerList<E>> children = Collections.synchronizedList(new ArrayList<>(2));
     private final ListenerList<?> parent;
 
-    private final AtomicReference<Listener<E>[]> allListeners = new AtomicReference<>();
+    private final AtomicReference<EventListener<E>[]> allListeners = new AtomicReference<>();
     private final Semaphore writeLock = new Semaphore(1, true);
     private boolean rebuild = true;
 
@@ -46,9 +46,9 @@ public final class ListenerList<E extends Event> {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Listener<E>> getListenersInternal() {
+    private List<EventListener<E>> getListenersInternal() {
         writeLock.acquireUninterruptibly();
-        ArrayList<Listener<E>> list = new ArrayList<>(listeners);
+        ArrayList<EventListener<E>> list = new ArrayList<>(listeners);
         writeLock.release();
         if (parent != null) {
             list.addAll(((ListenerList<E>) parent).getListenersInternal());
@@ -56,7 +56,7 @@ public final class ListenerList<E extends Event> {
         return list;
     }
 
-    private Listener<E>[] getListeners() {
+    private EventListener<E>[] getListeners() {
         if (shouldRebuild()) buildCache();
         return allListeners.get();
     }
@@ -80,7 +80,7 @@ public final class ListenerList<E extends Event> {
                 getListenersInternal()
                         .stream()
                         .sorted()
-                        .toArray(Listener[]::new)
+                        .toArray(EventListener[]::new)
         );
 
         rebuild = false;
@@ -95,14 +95,14 @@ public final class ListenerList<E extends Event> {
     }
 
     public void post(E event) {
-        for (Listener<E> listener : getListeners()) {
+        for (EventListener<E> listener : getListeners()) {
             listener.consumer().accept(event);
         }
     }
 
     public void register(int priority, Consumer<E> consumer) {
         writeLock.acquireUninterruptibly();
-        listeners.add(new Listener<E>(priority, consumer));
+        listeners.add(new EventListener<E>(priority, consumer));
         writeLock.release();
         children.forEach(ListenerList::forceRebuild);
         if (parent != null) parent.forceRebuild();

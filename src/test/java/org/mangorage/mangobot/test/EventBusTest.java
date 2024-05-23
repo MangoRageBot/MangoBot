@@ -23,9 +23,10 @@
 package org.mangorage.mangobot.test;
 
 import org.mangorage.eventbus.EventBus;
+import org.mangorage.eventbus.annotations.SubscribeEvent;
 import org.mangorage.eventbus.event.Event;
+import org.mangorage.mangobotapi.core.events.DiscordEvent;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,32 +42,32 @@ public class EventBusTest {
     public static final ExecutorService ex = Executors.newWorkStealingPool();
 
 
+    public static class Listeners {
+
+        @SubscribeEvent
+        public void onMyInstance(MyEvent event) {
+            System.out.println("Instance!");
+        }
+
+        @SubscribeEvent
+        public static void onMyStatic(MyEvent event) {
+            System.out.println("Static!");
+        }
+
+        @SubscribeEvent(genericType = Integer.class)
+        public static void onDiscord(DiscordEvent<Integer> event) {
+            System.out.println(event.getInstance());
+        }
+    }
+
+
     public static void main(String[] args) throws InterruptedException {
         var bus = EventBus.create();
 
+        bus.registerClass(Listeners.class);
+        bus.registerObject(new Listeners());
 
-        ArrayList<Runnable> runnables = new ArrayList<>();
-        for (int i = 0; i < 1000; i++) {
-            runnables.add(() -> {
-                bus.addListener(10, Event.class, e -> {
-                    //System.out.println("All -> " + e);
-                });
-                bus.addListener(10, MyEvent.class, e -> {
-                    //System.out.println(e.getClass());
-                });
-
-                bus.addListener(11, MyOther.class, e -> {
-                    // System.out.println("Cool !");
-                });
-
-                bus.post(new Event());
-                bus.post(new MyOther());
-                bus.post(new MyEvent());
-            });
-        }
-
-        runnables.stream().parallel().forEach(Runnable::run);
-        System.out.println(34);
-
+        bus.post(new MyEvent());
+        bus.post(new DiscordEvent<>(100));
     }
 }
