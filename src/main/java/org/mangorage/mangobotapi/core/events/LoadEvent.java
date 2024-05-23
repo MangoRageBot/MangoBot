@@ -23,7 +23,5 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-import org.mangorage.mboteventbus.base.Event;
-
-public class LoadEvent extends Event {
+public class LoadEvent extends MangoBotEvent {
 }

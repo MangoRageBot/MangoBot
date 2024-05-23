@@ -23,9 +23,7 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-import org.mangorage.mboteventbus.base.Event;
-
-public class ShutdownEvent extends Event {
+public class ShutdownEvent extends MangoBotEvent {
     private final Phase phase;
 
     public ShutdownEvent(Phase phase) {

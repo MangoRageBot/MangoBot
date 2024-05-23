@@ -22,7 +22,7 @@
 
 package org.mangorage.mangobotapi.core.events;
 
-import org.mangorage.mboteventbus.base.GenericEvent;
+import net.minecraftforge.eventbus.api.GenericEvent;
 
 public class DiscordEvent<T> extends GenericEvent<T> {
     private final T instance;

@@ -23,9 +23,7 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-import org.mangorage.mboteventbus.base.Event;
-
-public class StartupEvent extends Event {
+public class StartupEvent extends MangoBotEvent {
     private final Phase phase;
 
     public StartupEvent(Phase phase) {

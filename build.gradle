@@ -137,6 +137,7 @@ dependencies {
 
     library('org.slf4j:slf4j-simple:2.0.13')
     library('org.reflections:reflections:0.10.2')
+    library('net.minecraftforge:eventbus:+')
 }
 
 test {

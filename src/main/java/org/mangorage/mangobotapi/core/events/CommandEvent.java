@@ -24,9 +24,8 @@ package org.mangorage.mangobotapi.core.events;
 
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
-import org.mangorage.mboteventbus.base.Event;
 
-public abstract class CommandEvent extends Event {
+public abstract class CommandEvent extends MangoBotEvent {
     private final String command;
     private final Arguments arguments;
 

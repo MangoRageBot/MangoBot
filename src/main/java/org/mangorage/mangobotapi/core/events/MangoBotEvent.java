@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,9 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mboteventbus.annotations;
+package org.mangorage.mangobotapi.core.events;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import net.minecraftforge.eventbus.api.Event;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
-@Retention(value = RUNTIME)
-@Target(value = METHOD)
-public @interface SubscribeEvent {
-    int priority() default 0;
-
-    boolean receiveCancelled() default false;
-
-    /**
-     * Used for {@link org.mangorage.mboteventbus.base.GenericEvent<?>}
-     *
-     * @return Generic Class for (?) {@link org.mangorage.mboteventbus.base.GenericEvent<?>}
-     */
-    Class<?> baseGenericClass() default Object.class;
+public abstract class MangoBotEvent extends Event {
 }
