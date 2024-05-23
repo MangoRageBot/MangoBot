@@ -24,12 +24,11 @@ package org.mangorage.eventbus;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import org.mangorage.eventbus.event.Event;
-import org.mangorage.eventbus.impl.ListenerListImpl;
 import org.mangorage.eventbus.interfaces.IEventBus;
 import org.mangorage.eventbus.interfaces.IGenericEvent;
-import org.mangorage.eventbus.interfaces.IListenerList;
 
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
 public final class EventBus implements IEventBus {
@@ -39,8 +38,8 @@ public final class EventBus implements IEventBus {
     }
 
 
-    private final Map<EventKey<?, ?>, IListenerList<?>> LISTENERS = new Object2ObjectArrayMap<>();
-
+    private final Map<EventKey<?, ?>, ListenerList<?>> LISTENERS = new Object2ObjectArrayMap<>();
+    private final Semaphore writeLock = new Semaphore(1, true);
 
     private EventBus() {
     }
@@ -58,18 +57,16 @@ public final class EventBus implements IEventBus {
     }
 
     @SuppressWarnings("unchecked")
-    private <E extends Event> IListenerList<E> getListenerList(Class<E> eventClass, Class<?> genericType) {
+    private <E extends Event> ListenerList<E> getListenerList(Class<E> eventClass, Class<?> genericType) {
         var key = new EventKey<>(eventClass, genericType);
         var list = LISTENERS.get(key);
-        if (list != null) {
-            return (IListenerList<E>) list;
+
+        if (list != null) return (ListenerList<E>) list;
+        if (((Class<?>) eventClass) == Object.class) return null;
+
+        synchronized (this) {
+            return (ListenerList<E>) LISTENERS.computeIfAbsent(key, e -> new ListenerList<>(getListenerList((Class<E>) eventClass.getSuperclass(), genericType)));
         }
-
-        if (((Class<?>) eventClass) == Object.class)
-            return null;
-
-
-        return (IListenerList<E>) LISTENERS.computeIfAbsent(key, e -> new ListenerListImpl<>(getListenerList((Class<E>) eventClass.getSuperclass(), genericType)));
     }
 
     @Override
@@ -79,7 +76,7 @@ public final class EventBus implements IEventBus {
         if (event instanceof IGenericEvent<?> genericEvent)
             genericType = genericEvent.getGenericType();
 
-        IListenerList<E> list = (IListenerList<E>) getListenerList(event.getClass(), genericType);
+        ListenerList<E> list = (ListenerList<E>) getListenerList(event.getClass(), genericType);
         list.post(event);
     }
 

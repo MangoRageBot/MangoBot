@@ -25,6 +25,7 @@ package org.mangorage.mangobot.test;
 import org.mangorage.eventbus.EventBus;
 import org.mangorage.eventbus.event.Event;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,18 +44,29 @@ public class EventBusTest {
     public static void main(String[] args) throws InterruptedException {
         var bus = EventBus.create();
 
-        bus.addListener(10, Event.class, e -> {
-            System.out.println("All -> " + e);
-        });
-        bus.addListener(10, MyEvent.class, e -> {
-            System.out.println(e.getClass());
-        });
 
-        bus.addListener(11, MyOther.class, e -> {
-            System.out.println("Cool !");
-        });
+        ArrayList<Runnable> runnables = new ArrayList<>();
+        for (int i = 0; i < 1000; i++) {
+            runnables.add(() -> {
+                bus.addListener(10, Event.class, e -> {
+                    //System.out.println("All -> " + e);
+                });
+                bus.addListener(10, MyEvent.class, e -> {
+                    //System.out.println(e.getClass());
+                });
 
-        bus.post(new MyOther());
-        bus.post(new MyEvent());
+                bus.addListener(11, MyOther.class, e -> {
+                    // System.out.println("Cool !");
+                });
+
+                bus.post(new Event());
+                bus.post(new MyOther());
+                bus.post(new MyEvent());
+            });
+        }
+
+        runnables.stream().parallel().forEach(Runnable::run);
+        System.out.println(34);
+
     }
 }
