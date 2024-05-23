@@ -22,11 +22,12 @@
 
 package org.mangorage.mangobotapi.core.plugin.api;
 
-import org.mangorage.mangobotapi.core.events.MangoBotEvent;
+
+import org.mangorage.eventbus.event.Event;
 
 import java.util.function.Supplier;
 
-public final class PluginMessageEvent extends MangoBotEvent {
+public final class PluginMessageEvent extends Event {
     private final AbstractPlugin origin;
     private final String method;
     private final Supplier<?> object;

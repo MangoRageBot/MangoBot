@@ -22,10 +22,11 @@
 
 package org.mangorage.mangobotapi.core.events;
 
+import org.mangorage.eventbus.event.Event;
 import org.mangorage.mangobotapi.core.commands.Arguments;
 import org.mangorage.mangobotapi.core.commands.CommandResult;
 
-public abstract class CommandEvent extends MangoBotEvent {
+public abstract class CommandEvent extends Event {
     private final String command;
     private final Arguments arguments;
 

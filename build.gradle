@@ -135,12 +135,10 @@ dependencies {
     library('org.luaj:luaj-jse:3.0.1')
     library('org.apache.logging.log4j:log4j-core:+')
 
-    library('org.slf4j:slf4j-simple:+')
+    library('org.slf4j:slf4j-simple:2.1.0-alpha1')
     library('org.reflections:reflections:0.10.2')
 
-    embedLibrary('net.minecraftforge:eventbus:+') {
-        exclude group: "org.apache"
-    }
+    embedLibrary('it.unimi.dsi:fastutil:8.5.13')
 }
 
 test {

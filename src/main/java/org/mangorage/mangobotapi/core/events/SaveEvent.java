@@ -23,5 +23,7 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-public class SaveEvent extends MangoBotEvent {
+import org.mangorage.eventbus.event.Event;
+
+public class SaveEvent extends Event {
 }

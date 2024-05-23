@@ -23,7 +23,6 @@
 package org.mangorage.mangobotapi.core.plugin.api;
 
 import net.dv8tion.jda.api.JDA;
-import net.minecraftforge.eventbus.api.EventPriority;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
 import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
@@ -42,7 +41,7 @@ public abstract class CorePlugin extends AbstractPlugin {
         super(id);
         this.JDA = jda;
 
-        getPluginBus().addListener(EventPriority.HIGHEST, true, StartupEvent.class, event -> {
+        getPluginBus().addListener(10, StartupEvent.class, event -> {
             switch (event.phase()) {
                 case STARTUP -> {
                     startup();
@@ -56,7 +55,7 @@ public abstract class CorePlugin extends AbstractPlugin {
             }
         });
 
-        getPluginBus().addListener(EventPriority.HIGHEST, true, ShutdownEvent.class, event -> {
+        getPluginBus().addListener(10, ShutdownEvent.class, event -> {
             switch (event.phase()) {
                 case PRE -> {
                     shutdownPre();

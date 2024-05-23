@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,8 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.events;
+package org.mangorage.eventbus.interfaces;
 
-
-import org.mangorage.eventbus.event.Event;
-
-public class StartupEvent extends Event {
-    private final Phase phase;
-
-    public StartupEvent(Phase phase) {
-        this.phase = phase;
-    }
-
-    public Phase phase() {
-        return phase;
-    }
-
-    public enum Phase {
-        STARTUP,
-        REGISTRATION,
-        FINISHED
-    }
+public interface IGenericEvent<G> {
+    Class<G> getGenericType();
 }

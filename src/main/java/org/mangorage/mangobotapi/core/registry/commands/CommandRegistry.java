@@ -22,7 +22,6 @@
 
 package org.mangorage.mangobotapi.core.registry.commands;
 
-import net.minecraftforge.eventbus.api.EventPriority;
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
 import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
@@ -43,7 +42,7 @@ public final class CommandRegistry {
     private final CopyOnWriteArrayList<IBasicCommand> COMMANDS = new CopyOnWriteArrayList<>();
 
     public void addBasicCommand(IBasicCommand command) {
-        plugin.getPluginBus().addListener(EventPriority.NORMAL, false, BasicCommandEvent.class, command.getListener());
+        plugin.getPluginBus().addListener(10, BasicCommandEvent.class, command.getListener());
         COMMANDS.add(command);
     }
 

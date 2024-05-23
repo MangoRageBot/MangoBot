@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,25 +20,21 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.events;
-
+package org.mangorage.eventbus.interfaces;
 
 import org.mangorage.eventbus.event.Event;
 
-public class StartupEvent extends Event {
-    private final Phase phase;
+import java.util.function.Consumer;
 
-    public StartupEvent(Phase phase) {
-        this.phase = phase;
-    }
+public interface IEventBus {
+    <E extends Event> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer);
 
-    public Phase phase() {
-        return phase;
-    }
+    <E extends Event & IGenericEvent<G>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer);
 
-    public enum Phase {
-        STARTUP,
-        REGISTRATION,
-        FINISHED
-    }
+    <E extends Event> void post(E event);
+
+    void startup();
+
+    void shutdown();
+
 }

@@ -22,9 +22,8 @@
 
 package org.mangorage.mangobot.test;
 
-import net.minecraftforge.eventbus.api.BusBuilder;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
+import org.mangorage.eventbus.EventBus;
+import org.mangorage.eventbus.event.Event;
 import org.mangorage.mangobot.test.misc.TimedTest;
 
 import java.util.ArrayList;
@@ -45,14 +44,12 @@ public class EventBusTest {
 
 
     public static void main(String[] args) throws InterruptedException {
-        var bus = BusBuilder.builder()
-                .useModLauncher()
-                .checkTypesOnDispatch()
-                .build();
+        var bus = EventBus.create();
 
         var registration = TimedTest.of(() -> {
-            for (int i = 0; i < 1000; i++) {
-                bus.addListener(EventPriority.NORMAL, false, MyOther.class, e -> {
+            for (int i = 0; i < 1; i++) {
+                bus.addListener(10, MyOther.class, e -> {
+                    System.out.println("LOL");
                 });
             }
         });
@@ -67,8 +64,7 @@ public class EventBusTest {
 
         List<MyEvent> myEvents = new ArrayList<>();
         for (int i = 0; i < amount; i++)
-            myEvents.add(new MyEvent());
-
+            myEvents.add(new MyOther());
 
         System.out.println("Registration time for 1 listener -> " + registration.getResult());
         System.out.println("AVG -> " + post.getResult() / amount);

@@ -23,8 +23,8 @@
 package org.mangorage.mangobotapi.core.plugin.api;
 
 
-import net.minecraftforge.eventbus.api.BusBuilder;
-import net.minecraftforge.eventbus.api.IEventBus;
+import org.mangorage.eventbus.EventBus;
+import org.mangorage.eventbus.interfaces.IEventBus;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -32,7 +32,7 @@ import java.util.function.Supplier;
 import static org.mangorage.mangobotapi.core.plugin.api.InterPluginMessage.send;
 
 public abstract class AbstractPlugin {
-    private final IEventBus pluginBus = BusBuilder.builder().build();
+    private final IEventBus pluginBus = EventBus.create();
     private final String id;
 
     public AbstractPlugin(String id) {
