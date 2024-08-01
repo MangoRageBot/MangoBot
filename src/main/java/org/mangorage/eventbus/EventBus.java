@@ -150,7 +150,7 @@ public final class EventBus implements IEventBus {
             genericType = genericEvent.getGenericType();
 
         ListenerList<E> list = (ListenerList<E>) getListenerList(event.getClass(), genericType);
-        list.post(event);
+        if (list != null) list.post(event);
     }
 
     /**
