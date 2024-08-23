@@ -25,6 +25,7 @@ package org.mangorage.mangobot.loader;
 import org.mangorage.basicutils.language.LanguageHandler;
 import org.mangorage.eventbus.EventBus;
 import org.mangorage.eventbus.interfaces.IEventBus;
+import org.mangorage.eventbus.interfaces.IEventType;
 import org.mangorage.mangobot.misc.Example;
 import org.mangorage.mangobotapi.core.plugin.PluginLoader;
 
@@ -35,9 +36,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CoreMain {
     private static final CountDownLatch latch = new CountDownLatch(1);
-    private static final IEventBus coreEventBus = EventBus.create();
+    private static final IEventBus<IEventType.INormalBusEvent> coreEventBus = EventBus.create();
     private static final AtomicBoolean running = new AtomicBoolean(false);
-    public static IEventBus getCoreEventBus() {
+
+    public static IEventBus<IEventType.INormalBusEvent> getCoreEventBus() {
         return coreEventBus;
     }
 

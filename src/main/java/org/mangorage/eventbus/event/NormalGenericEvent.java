@@ -22,5 +22,12 @@
 
 package org.mangorage.eventbus.event;
 
-public class Event {
+import org.mangorage.eventbus.event.core.GenericEvent;
+import org.mangorage.eventbus.interfaces.IEventType;
+import org.mangorage.eventbus.interfaces.IGenericEvent;
+
+public abstract class NormalGenericEvent<G> extends GenericEvent<G> implements IGenericEvent<G>, IEventType.INormalBusEvent {
+    public NormalGenericEvent(Class<G> tClass) {
+        super(tClass);
+    }
 }

@@ -22,7 +22,7 @@
 
 package org.mangorage.eventbus;
 
-import org.mangorage.eventbus.event.Event;
+import org.mangorage.eventbus.event.core.Event;
 
 public record EventKey<E extends Event, G>(Class<E> eventClass, Class<G> genericClass) {
 }

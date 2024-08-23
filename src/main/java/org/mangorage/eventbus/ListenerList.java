@@ -22,7 +22,7 @@
 
 package org.mangorage.eventbus;
 
-import org.mangorage.eventbus.event.Event;
+import org.mangorage.eventbus.event.core.Event;
 
 import java.util.ArrayList;
 import java.util.Collections;

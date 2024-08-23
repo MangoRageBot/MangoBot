@@ -23,23 +23,19 @@
 package org.mangorage.eventbus;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import org.mangorage.eventbus.annotations.SubscribeEvent;
-import org.mangorage.eventbus.event.Event;
-import org.mangorage.eventbus.event.GenericEvent;
+import org.mangorage.eventbus.event.core.Event;
 import org.mangorage.eventbus.interfaces.IEventBus;
+import org.mangorage.eventbus.interfaces.IEventType;
 import org.mangorage.eventbus.interfaces.IGenericEvent;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
-public final class EventBus implements IEventBus {
+public final class EventBus<F extends IEventType<F>> implements IEventBus<F> {
 
-    public static IEventBus create() {
-        return new EventBus();
+    public static <F extends IEventType<F>> IEventBus<F> create() {
+        return new EventBus<>();
     }
 
 
@@ -50,13 +46,13 @@ public final class EventBus implements IEventBus {
     }
 
     @Override
-    public <E extends Event> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer) {
+    public <E extends Event & IEventType<F>> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer) {
         var list = getListenerList(eventClass, null);
         if (list != null) list.register(priority, consumer);
     }
 
     @Override
-    public <E extends Event & IGenericEvent<G>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer) {
+    public <E extends Event & IGenericEvent<G> & IEventType<F>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer) {
         var list = getListenerList(eventClass, baseFilterClass);
         if (list != null) list.register(priority, consumer);
     }
@@ -73,6 +69,8 @@ public final class EventBus implements IEventBus {
 
     @SuppressWarnings("unchecked")
     private void register(Class<?> clazz, Object instance) {
+        // TODO: FIX LATER
+        /**
         for (Method method : clazz.getDeclaredMethods()) {
             var subscribeEvent = method.getDeclaredAnnotation(SubscribeEvent.class);
 
@@ -124,6 +122,7 @@ public final class EventBus implements IEventBus {
                 addListener(subscribeEvent.priority(), eventClass, consumer);
             }
         }
+         **/
     }
 
     @SuppressWarnings("unchecked")
@@ -144,7 +143,7 @@ public final class EventBus implements IEventBus {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends Event> void post(E event) {
+    public <E extends Event & IEventType<F>> void post(E event) {
         Class<?> genericType = null;
         if (event instanceof IGenericEvent<?> genericEvent)
             genericType = genericEvent.getGenericType();

@@ -23,9 +23,9 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-import org.mangorage.eventbus.event.Event;
+import org.mangorage.eventbus.event.NormalEvent;
 
-public class StartupEvent extends Event {
+public class StartupEvent extends NormalEvent {
     private final Phase phase;
 
     public StartupEvent(Phase phase) {

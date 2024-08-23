@@ -24,7 +24,9 @@ package org.mangorage.mangobot.test;
 
 import org.mangorage.eventbus.EventBus;
 import org.mangorage.eventbus.annotations.SubscribeEvent;
-import org.mangorage.eventbus.event.Event;
+import org.mangorage.eventbus.event.NormalEvent;
+import org.mangorage.eventbus.interfaces.IEventBus;
+import org.mangorage.eventbus.interfaces.IEventType;
 import org.mangorage.mangobotapi.core.events.DiscordEvent;
 
 import java.util.concurrent.ExecutorService;
@@ -32,10 +34,10 @@ import java.util.concurrent.Executors;
 
 public class EventBusTest {
 
-    public static class MyEvent extends Event {
+    public static class MyEvent extends NormalEvent {
     }
 
-    public static class MyOther extends MyEvent {
+    public static class MyOther extends NormalEvent {
     }
 
 
@@ -62,7 +64,7 @@ public class EventBusTest {
 
 
     public static void main(String[] args) throws InterruptedException {
-        var bus = EventBus.create();
+        IEventBus<IEventType.INormalBusEvent> bus = EventBus.create();
 
         bus.registerClass(Listeners.class);
         bus.registerObject(new Listeners());

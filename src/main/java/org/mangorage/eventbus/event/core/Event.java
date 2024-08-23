@@ -20,18 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.eventbus.event;
+package org.mangorage.eventbus.event.core;
 
-import org.mangorage.eventbus.interfaces.IGenericEvent;
-
-public abstract class GenericEvent<G> extends Event implements IGenericEvent<G> {
-    private final Class<G> tClass;
-
-    public GenericEvent(Class<G> tClass) {
-        this.tClass = tClass;
-    }
-
-    public Class<G> getGenericType() {
-        return tClass;
-    }
+public abstract class Event {
 }

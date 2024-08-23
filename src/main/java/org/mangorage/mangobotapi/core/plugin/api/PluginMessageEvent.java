@@ -23,11 +23,11 @@
 package org.mangorage.mangobotapi.core.plugin.api;
 
 
-import org.mangorage.eventbus.event.Event;
+import org.mangorage.eventbus.event.NormalEvent;
 
 import java.util.function.Supplier;
 
-public final class PluginMessageEvent extends Event {
+public final class PluginMessageEvent extends NormalEvent {
     private final AbstractPlugin origin;
     private final String method;
     private final Supplier<?> object;

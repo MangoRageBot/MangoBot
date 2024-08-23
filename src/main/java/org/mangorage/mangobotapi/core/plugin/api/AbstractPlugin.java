@@ -25,6 +25,7 @@ package org.mangorage.mangobotapi.core.plugin.api;
 
 import org.mangorage.eventbus.EventBus;
 import org.mangorage.eventbus.interfaces.IEventBus;
+import org.mangorage.eventbus.interfaces.IEventType;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -32,7 +33,7 @@ import java.util.function.Supplier;
 import static org.mangorage.mangobotapi.core.plugin.api.InterPluginMessage.send;
 
 public abstract class AbstractPlugin {
-    private final IEventBus pluginBus = EventBus.create();
+    private final IEventBus<IEventType.INormalBusEvent> pluginBus = EventBus.create();
     private final String id;
 
     public AbstractPlugin(String id) {
@@ -51,7 +52,7 @@ public abstract class AbstractPlugin {
         send(this, sendTo, method, objectSupplier);
     }
 
-    public IEventBus getPluginBus() {
+    public IEventBus<IEventType.INormalBusEvent> getPluginBus() {
         return pluginBus;
     }
 }

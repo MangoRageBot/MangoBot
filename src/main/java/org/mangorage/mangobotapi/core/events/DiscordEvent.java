@@ -23,9 +23,9 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-import org.mangorage.eventbus.event.GenericEvent;
+import org.mangorage.eventbus.event.NormalGenericEvent;
 
-public class DiscordEvent<T> extends GenericEvent<T> {
+public class DiscordEvent<T> extends NormalGenericEvent<T> {
     private final T instance;
 
     public DiscordEvent(Class<T> tClass, T instance) {

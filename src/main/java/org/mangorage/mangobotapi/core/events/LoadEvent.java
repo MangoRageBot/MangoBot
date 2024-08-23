@@ -23,7 +23,7 @@
 package org.mangorage.mangobotapi.core.events;
 
 
-import org.mangorage.eventbus.event.Event;
+import org.mangorage.eventbus.event.NormalEvent;
 
-public class LoadEvent extends Event {
+public class LoadEvent extends NormalEvent {
 }

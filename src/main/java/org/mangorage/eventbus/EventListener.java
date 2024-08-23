@@ -23,7 +23,7 @@
 package org.mangorage.eventbus;
 
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.eventbus.event.Event;
+import org.mangorage.eventbus.event.core.Event;
 
 import java.util.function.Consumer;
 
