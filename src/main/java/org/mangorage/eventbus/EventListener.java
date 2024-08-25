@@ -23,12 +23,12 @@
 package org.mangorage.eventbus;
 
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.eventbus.event.core.Event;
+import org.mangorage.eventbus.interfaces.IEvent;
 
 import java.util.function.Consumer;
 
-public record EventListener<E extends Event>(int priority,
-                                             Consumer<E> consumer) implements Comparable<EventListener<E>> {
+public record EventListener<E extends IEvent>(int priority,
+                                              Consumer<E> consumer) implements Comparable<EventListener<E>> {
     /**
      * @param o the object to be compared.
      * @return

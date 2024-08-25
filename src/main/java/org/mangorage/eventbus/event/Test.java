@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,32 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin.api;
-
+package org.mangorage.eventbus.event;
 
 import org.mangorage.eventbus.EventBus;
-import org.mangorage.eventbus.event.NormalEventHandler;
+import org.mangorage.eventbus.annotations.SubscribeEvent;
 import org.mangorage.eventbus.interfaces.IEventBus;
 import org.mangorage.eventbus.interfaces.IEventType;
 
-import java.nio.file.Path;
-import java.util.function.Supplier;
+public class Test {
+    private static final IEventBus<IEventType.INormalBusEvent> NORMAL = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
 
-import static org.mangorage.mangobotapi.core.plugin.api.InterPluginMessage.send;
 
-public abstract class AbstractPlugin {
-    private final IEventBus<IEventType.INormalBusEvent> pluginBus = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
-    private final String id;
+    public static class MyGeneric<S> extends NormalGenericEvent<S> {
 
-    public AbstractPlugin(String id) {
-        this.id = id;
+        public MyGeneric(Class<S> tClass) {
+            super(tClass);
+        }
     }
 
-    public String getId() {
-        return id;
+
+    public static void main(String[] args) {
+        NORMAL.registerClass(Test.class);
+        NORMAL.post(new MyGeneric<>(String.class));
     }
 
-    public Path getPluginDirectory() {
-        return Path.of("plugins/%s/".formatted(getId())).toAbsolutePath();
-    }
-
-    protected void sendInterPluginMessage(String sendTo, String method, Supplier<?> objectSupplier) {
-        send(this, sendTo, method, objectSupplier);
-    }
-
-    public IEventBus<IEventType.INormalBusEvent> getPluginBus() {
-        return pluginBus;
+    @SubscribeEvent(genericType = String.class)
+    public static void test(MyGeneric<String> test) {
+        System.out.println(test.getGenericType());
     }
 }

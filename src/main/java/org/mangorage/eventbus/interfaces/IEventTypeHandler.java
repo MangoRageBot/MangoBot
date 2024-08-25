@@ -20,9 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.eventbus;
+package org.mangorage.eventbus.interfaces;
 
-import org.mangorage.eventbus.interfaces.IEvent;
+import org.mangorage.eventbus.ListenerType;
+import org.mangorage.eventbus.event.core.GenericEvent;
 
-public record EventKey<E extends IEvent, G>(Class<E> eventClass, Class<G> genericClass) {
+import java.util.function.Consumer;
+
+public interface IEventTypeHandler<E extends IEvent & IEventType<F>, G extends IGenericEvent<?> & IEventType<F>, F extends IEventType<F>> {
+    boolean canHandle(Class<?> eventClass, ListenerType listenerType);
+
+    @SuppressWarnings("unchecked")
+    default Class<E> castNormalClass(Class<?> clz) {
+        return (Class<E>) clz;
+    }
+
+    @SuppressWarnings("unchecked")
+    default Consumer<E> castNormalConsumer(Consumer<?> consumer) {
+        return (Consumer<E>) consumer;
+    }
+
+    @SuppressWarnings("unchecked")
+    <GT, T extends GenericEvent<GT> & IEventType<F>> Class<T> castGenericClass(Class<?> clz, Class<GT> genericType);
 }

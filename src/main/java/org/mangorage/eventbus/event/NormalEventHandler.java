@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2024. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,27 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin.api;
+package org.mangorage.eventbus.event;
 
-
-import org.mangorage.eventbus.EventBus;
-import org.mangorage.eventbus.event.NormalEventHandler;
-import org.mangorage.eventbus.interfaces.IEventBus;
+import org.mangorage.eventbus.ListenerType;
+import org.mangorage.eventbus.event.core.GenericEvent;
 import org.mangorage.eventbus.interfaces.IEventType;
+import org.mangorage.eventbus.interfaces.IEventTypeHandler;
 
-import java.nio.file.Path;
-import java.util.function.Supplier;
+public class NormalEventHandler implements IEventTypeHandler<NormalEvent, NormalGenericEvent<?>, IEventType.INormalBusEvent> {
 
-import static org.mangorage.mangobotapi.core.plugin.api.InterPluginMessage.send;
 
-public abstract class AbstractPlugin {
-    private final IEventBus<IEventType.INormalBusEvent> pluginBus = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
-    private final String id;
-
-    public AbstractPlugin(String id) {
-        this.id = id;
+    @Override
+    public boolean canHandle(Class<?> eventClass, ListenerType listenerType) {
+        return switch (listenerType) {
+            case NORMAL -> NormalEvent.class.isAssignableFrom(eventClass);
+            case GENERIC -> NormalGenericEvent.class.isAssignableFrom(eventClass);
+        };
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public <GT, T extends GenericEvent<GT> & IEventType<IEventType.INormalBusEvent>> Class<T> castGenericClass(Class<?> clz, Class<GT> genericType) {
+        return (Class<T>) clz;
     }
 
-    public Path getPluginDirectory() {
-        return Path.of("plugins/%s/".formatted(getId())).toAbsolutePath();
-    }
-
-    protected void sendInterPluginMessage(String sendTo, String method, Supplier<?> objectSupplier) {
-        send(this, sendTo, method, objectSupplier);
-    }
-
-    public IEventBus<IEventType.INormalBusEvent> getPluginBus() {
-        return pluginBus;
-    }
 }

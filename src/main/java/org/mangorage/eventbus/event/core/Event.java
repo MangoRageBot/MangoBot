@@ -22,5 +22,7 @@
 
 package org.mangorage.eventbus.event.core;
 
-public abstract class Event {
+import org.mangorage.eventbus.interfaces.IEvent;
+
+public abstract class Event implements IEvent {
 }

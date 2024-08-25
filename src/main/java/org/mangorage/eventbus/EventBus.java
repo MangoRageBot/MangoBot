@@ -23,39 +23,59 @@
 package org.mangorage.eventbus;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import org.mangorage.eventbus.annotations.SubscribeEvent;
 import org.mangorage.eventbus.event.core.Event;
+import org.mangorage.eventbus.event.core.GenericEvent;
+import org.mangorage.eventbus.interfaces.IEvent;
 import org.mangorage.eventbus.interfaces.IEventBus;
 import org.mangorage.eventbus.interfaces.IEventType;
+import org.mangorage.eventbus.interfaces.IEventTypeHandler;
 import org.mangorage.eventbus.interfaces.IGenericEvent;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 import java.util.function.Consumer;
 
-public final class EventBus<F extends IEventType<F>> implements IEventBus<F> {
+public final class EventBus<EE extends IEvent & IEventType<F>, GG extends IGenericEvent<?> & IEventType<F>, F extends IEventType<F>> implements IEventBus<F> {
 
-    public static <F extends IEventType<F>> IEventBus<F> create() {
-        return new EventBus<>();
+    public static <E extends IEvent & IEventType<F>, G extends IGenericEvent<?> & IEventType<F>, F extends IEventType<F>> IEventBus<F> create(IEventTypeHandler<E, G, F> handler, Class<F> flagType) {
+        return new EventBus<>(handler, flagType);
     }
-
 
     private final Map<EventKey<?, ?>, ListenerList<?>> LISTENERS = new Object2ObjectArrayMap<>();
-    private final Semaphore writeLock = new Semaphore(1, true);
+    private final IEventTypeHandler<EE, GG, F> handler;
+    private final Class<F> flagType;
 
-    private EventBus() {
+    private EventBus(IEventTypeHandler<EE, GG, F> handler, Class<F> flagType) {
+        this.handler = handler;
+        this.flagType = flagType;
     }
 
+
     @Override
-    public <E extends Event & IEventType<F>> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer) {
+    public <E extends IEvent & IEventType<F>> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer) {
         var list = getListenerList(eventClass, null);
         if (list != null) list.register(priority, consumer);
     }
 
     @Override
-    public <E extends Event & IGenericEvent<G> & IEventType<F>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer) {
+    public <E extends IEvent & IGenericEvent<G> & IEventType<F>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer) {
         var list = getListenerList(eventClass, baseFilterClass);
         if (list != null) list.register(priority, consumer);
     }
+
+
+    private <E extends IEvent & IGenericEvent<G> & IEventType<F>, G> void addGenericListenerCast(int priority, Class<G> baseFilterClass, Class<?> eventClass, Consumer<?> consumer) {
+        addGenericListener(
+                priority,
+                baseFilterClass,
+                (Class<E>) eventClass,
+                (Consumer<E>) consumer
+        );
+    }
+
 
     @Override
     public void registerClass(Class<?> clazz) {
@@ -70,7 +90,6 @@ public final class EventBus<F extends IEventType<F>> implements IEventBus<F> {
     @SuppressWarnings("unchecked")
     private void register(Class<?> clazz, Object instance) {
         // TODO: FIX LATER
-        /**
         for (Method method : clazz.getDeclaredMethods()) {
             var subscribeEvent = method.getDeclaredAnnotation(SubscribeEvent.class);
 
@@ -94,9 +113,9 @@ public final class EventBus<F extends IEventType<F>> implements IEventBus<F> {
             }
 
             var eventClass = (Class<Event>) params[0].getType();
-            if (IGenericEvent.class.isAssignableFrom(eventClass)) {
-                var genericClass = (Class<GenericEvent<Object>>) params[0].getType();
+            if (handler.canHandle(eventClass, ListenerType.GENERIC)) {
                 var genericType = subscribeEvent.genericType();
+                var genericClass = handler.castGenericClass(params[0].getType(), genericType);
                 if (genericType == SubscribeEvent.NullClass.class) {
                     throw new IllegalStateException("Cannot Register a GenericListener due to no GenericType being defined...");
                 }
@@ -109,8 +128,13 @@ public final class EventBus<F extends IEventType<F>> implements IEventBus<F> {
                     }
                 };
 
-                addGenericListener(subscribeEvent.priority(), (Class<Object>) genericType, genericClass, consumer);
-            } else {
+                addGenericListenerCast(
+                        subscribeEvent.priority(),
+                        (Class<Object>) genericType,
+                        genericClass,
+                        consumer
+                );
+            } else if (handler.canHandle(eventClass, ListenerType.NORMAL)) {
                 Consumer<Event> consumer = e -> {
                     try {
                         method.invoke(instance, e);
@@ -119,14 +143,19 @@ public final class EventBus<F extends IEventType<F>> implements IEventBus<F> {
                     }
                 };
 
-                addListener(subscribeEvent.priority(), eventClass, consumer);
+                addListener(
+                        subscribeEvent.priority(),
+                        handler.castNormalClass(eventClass),
+                        handler.castNormalConsumer(consumer)
+                );
+            } else {
+                throw new IllegalStateException("Cannot register Method %s with EventType of %s needs to implement %s".formatted(method, eventClass, flagType));
             }
         }
-         **/
     }
 
     @SuppressWarnings("unchecked")
-    private <E extends Event> ListenerList<E> getListenerList(Class<E> eventClass, Class<?> genericType) {
+    private <E extends IEvent> ListenerList<E> getListenerList(Class<E> eventClass, Class<?> genericType) {
         var key = new EventKey<>(eventClass, genericType);
         var list = LISTENERS.get(key);
 
@@ -143,7 +172,7 @@ public final class EventBus<F extends IEventType<F>> implements IEventBus<F> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E extends Event & IEventType<F>> void post(E event) {
+    public <E extends IEvent & IEventType<F>> void post(E event) {
         Class<?> genericType = null;
         if (event instanceof IGenericEvent<?> genericEvent)
             genericType = genericEvent.getGenericType();

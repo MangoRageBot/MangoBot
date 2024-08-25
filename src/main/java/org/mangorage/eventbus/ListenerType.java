@@ -22,7 +22,7 @@
 
 package org.mangorage.eventbus;
 
-import org.mangorage.eventbus.interfaces.IEvent;
-
-public record EventKey<E extends IEvent, G>(Class<E> eventClass, Class<G> genericClass) {
+public enum ListenerType {
+    GENERIC,
+    NORMAL
 }

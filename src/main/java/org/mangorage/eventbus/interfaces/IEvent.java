@@ -20,9 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.eventbus;
+package org.mangorage.eventbus.interfaces;
 
-import org.mangorage.eventbus.interfaces.IEvent;
-
-public record EventKey<E extends IEvent, G>(Class<E> eventClass, Class<G> genericClass) {
+public interface IEvent {
 }

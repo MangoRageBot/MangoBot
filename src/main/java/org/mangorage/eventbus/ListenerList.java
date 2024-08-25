@@ -22,7 +22,7 @@
 
 package org.mangorage.eventbus;
 
-import org.mangorage.eventbus.event.core.Event;
+import org.mangorage.eventbus.interfaces.IEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public final class ListenerList<E extends Event> {
+public final class ListenerList<E extends IEvent> {
     private final List<EventListener<E>> listeners = Collections.synchronizedList(new ArrayList<>(2));
     private final List<ListenerList<E>> children = Collections.synchronizedList(new ArrayList<>(2));
     private final ListenerList<?> parent;

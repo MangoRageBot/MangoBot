@@ -22,21 +22,19 @@
 
 package org.mangorage.eventbus.interfaces;
 
-import org.mangorage.eventbus.event.core.Event;
-
 import java.util.function.Consumer;
 
 public interface IEventBus<F extends IEventType<F>> {
-    <E extends Event & IEventType<F>> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer);
+    <E extends IEvent & IEventType<F>> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer);
 
-    <E extends Event & IGenericEvent<G> & IEventType<F>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer);
+    <E extends IEvent & IGenericEvent<G> & IEventType<F>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer);
 
     void registerClass(Class<?> clazz);
 
     void registerObject(Object object);
 
 
-    <E extends Event & IEventType<F>> void post(E event);
+    <E extends IEvent & IEventType<F>> void post(E event);
 
     void startup();
     void shutdown();
