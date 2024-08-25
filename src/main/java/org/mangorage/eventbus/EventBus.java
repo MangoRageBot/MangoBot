@@ -160,7 +160,7 @@ public final class EventBus<EE extends IEvent & IEventType<F>, GG extends IGener
         var list = LISTENERS.get(key);
 
         if (list != null) return (ListenerList<E>) list;
-        if (((Class<?>) eventClass) == Object.class) return null;
+        if (((Class<?>) eventClass) == Object.class || !flagType.isAssignableFrom(eventClass)) return null;
 
         // Cant store listeners for a Generic Event if there is no genericType!!
         if (genericType == null && IGenericEvent.class.isAssignableFrom(eventClass)) return null;
