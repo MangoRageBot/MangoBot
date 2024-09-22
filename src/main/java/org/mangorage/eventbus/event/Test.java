@@ -20,22 +20,38 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.eventbus.interfaces;
+package org.mangorage.eventbus.event;
 
-import java.util.function.Consumer;
+import org.mangorage.eventbus.EventBus;
+import org.mangorage.eventbus.interfaces.IEvent;
+import org.mangorage.eventbus.interfaces.IEventBus;
+import org.mangorage.eventbus.interfaces.IEventType;
 
-public interface IEventBus<F extends IEventType<F>> {
-    <E extends IEvent & IEventType<F>> void addListener(int priority, Class<E> eventClass, Consumer<E> consumer);
+public class Test {
+    private static final IEventBus<IEventType.INormalBusEvent> BUS = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
 
-    <E extends IEvent & IGenericEvent<G> & IEventType<F>, G> void addGenericListener(int priority, Class<G> baseFilterClass, Class<E> eventClass, Consumer<E> consumer);
+    public record Example(int amount) implements IEvent, IEventType.INormalBusEvent {
+    }
 
-    void registerClass(Class<?> clazz);
+    public record Example2(String name) implements IEvent, IEventType.INormalBusEvent {
+    }
 
-    void registerObject(Object object);
+    public static void main(String[] args) {
+
+        var clz = Object.class;
+        if (!clz.isInterface()) {
+            throw new IllegalStateException("oops");
+        }
 
 
-    <E extends IEvent & IEventType<F>> void post(E event);
+        BUS.addListener(1, Example.class, e -> {
+            System.out.println(e.amount());
+        });
+        BUS.addListener(1, Example2.class, e -> {
+            System.out.println(e.name());
+        });
 
-    void startup();
-    void shutdown();
+        BUS.post(new Example(100));
+        BUS.post(new Example2("LOL"));
+    }
 }
