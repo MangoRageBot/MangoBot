@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024. MangoRage
+ * Copyright (c) 2024-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,18 +47,29 @@ apply plugin: 'maven-publish'
 apply plugin: 'MangoBotGradle'
 
 group 'org.mangorage'
-version = '10.0.' + getGitVersion()
+version = getLatestGitTag() + "." + getLatestGitVersion()
 
-def getGitVersion() {
-    def result = "git rev-list HEAD --count".execute().text.trim()
+def getLatestGitTag() {
+    def result = "git describe --long --tags".execute().text.trim()
     if (result.empty) {
         throw new RuntimeException("Failed to retrieve commit count")
     } else {
-        def commitCount = result.toInteger()
-        // Use the commitCount variable further in your script
+        return result.split("-")[0]
+    }
+}
+
+
+def getLatestGitVersion() {
+    def result = "git describe --long --tags".execute().text.trim()
+    if (result.empty) {
+        throw new RuntimeException("Failed to retrieve commit count")
+    } else {
+        def commitCount = result.split("-")[1].toInteger()
         return commitCount;
     }
 }
+
+println("Version: " + version)
 
 java {
     toolchain {
