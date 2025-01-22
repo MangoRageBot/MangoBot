@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,6 +50,7 @@ public class BasicPermission implements IFileNameResolver {
 
     private final HashSet<Permission> DISCORD_PERMISSIONS = new HashSet<>();
     private final HashSet<String> ROLES = new HashSet<>();
+    private final HashSet<String> USERS = new HashSet<>();
 
     @Expose
     protected final HashMap<String, Node> NODES = new HashMap<>();
@@ -101,7 +102,7 @@ public class BasicPermission implements IFileNameResolver {
     }
 
     private Node createNode(String guildID) {
-        return new Node(this, guildID, DISCORD_PERMISSIONS, ROLES);
+        return new Node(this, guildID, DISCORD_PERMISSIONS, ROLES, USERS);
     }
 
     private void save() {
@@ -116,10 +117,18 @@ public class BasicPermission implements IFileNameResolver {
         save();
     }
 
-
     public void addPermission(String guildId, Permission permission) {
         NODES.computeIfAbsent(guildId, this::createNode).DISCORD_PERMISSIONS.add(permission);
         save();
+    }
+
+    public void addUser(String guildId, String userId) {
+        NODES.computeIfAbsent(guildId, this::createNode).USERS.add(userId);
+        save();
+    }
+
+    public void addUser(String userId) {
+        USERS.add(userId);
     }
 
     public void removeRole(String guildId, String role) {
@@ -156,18 +165,23 @@ public class BasicPermission implements IFileNameResolver {
         @Expose
         private final HashSet<String> ROLES = new HashSet<>();
         @Expose
+        private final HashSet<String> USERS = new HashSet<>();
+        @Expose
         private final String guildID;
 
-        private Node(BasicPermission permission, String guildID, HashSet<Permission> permissions, HashSet<String> roles) {
+        private Node(BasicPermission permission, String guildID, HashSet<Permission> permissions, HashSet<String> roles, HashSet<String> users) {
             this.guildID = guildID;
             DISCORD_PERMISSIONS.addAll(permissions);
             ROLES.addAll(roles);
+            USERS.addAll(users);
             permission.save();
         }
 
 
         private boolean hasPermission(Member member) {
             if (!DISCORD_PERMISSIONS.isEmpty() && member.hasPermission(DISCORD_PERMISSIONS))
+                return true;
+            if (USERS.contains(member.getId()))
                 return true;
 
             AtomicBoolean result = new AtomicBoolean(false);
