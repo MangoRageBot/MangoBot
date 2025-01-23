@@ -92,10 +92,12 @@ public class BasicPermission implements IFileNameResolver {
         var node = NODES.computeIfAbsent(guildId, this::createNode);
         node.ROLES.clear();
         node.DISCORD_PERMISSIONS.clear();
+        node.USERS.clear();
 
         // Set default's back...
         node.ROLES.addAll(ROLES);
         node.DISCORD_PERMISSIONS.addAll(DISCORD_PERMISSIONS);
+        node.USERS.addAll(USERS);
     }
 
     private Node createNode(String guildID) {
