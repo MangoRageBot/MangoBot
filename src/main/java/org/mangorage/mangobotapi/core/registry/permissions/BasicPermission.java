@@ -96,49 +96,49 @@ public class BasicPermission implements IFileNameResolver {
         // Set default's back...
         node.ROLES.addAll(ROLES);
         node.DISCORD_PERMISSIONS.addAll(DISCORD_PERMISSIONS);
-
-        // Save
-        save();
     }
 
     private Node createNode(String guildID) {
-        return new Node(this, guildID, DISCORD_PERMISSIONS, ROLES, USERS);
+        return new Node(guildID, DISCORD_PERMISSIONS, ROLES, USERS);
     }
 
-    private void save() {
-    }
 
     public boolean hasPermission(Member member) {
+        if (!USERS.isEmpty() && USERS.contains(member.getId()))
+            return true;
         return NODES.computeIfAbsent(member.getGuild().getId(), this::createNode).hasPermission(member);
     }
 
     public void addRole(String guildId, String role) {
         NODES.computeIfAbsent(guildId, this::createNode).ROLES.add(role);
-        save();
     }
 
     public void addPermission(String guildId, Permission permission) {
         NODES.computeIfAbsent(guildId, this::createNode).DISCORD_PERMISSIONS.add(permission);
-        save();
     }
 
     public void addUser(String guildId, String userId) {
         NODES.computeIfAbsent(guildId, this::createNode).USERS.add(userId);
-        save();
     }
 
     public void addUser(String userId) {
         USERS.add(userId);
     }
 
+    public void removeUser(String guildId, String userId) {
+        NODES.computeIfAbsent(guildId, this::createNode).USERS.remove(userId);
+    }
+
+    public void removeUser(String userId) {
+        USERS.remove(userId);
+    }
+
     public void removeRole(String guildId, String role) {
         NODES.computeIfAbsent(guildId, this::createNode).ROLES.remove(role);
-        save();
     }
 
     public void removePermission(String guildId, Permission permission) {
         NODES.computeIfAbsent(guildId, this::createNode).DISCORD_PERMISSIONS.remove(permission);
-        save();
     }
 
     // DEFAULT
@@ -158,7 +158,6 @@ public class BasicPermission implements IFileNameResolver {
         return new FileName(id, "permissions");
     }
 
-
     private static class Node {
         @Expose
         private final HashSet<Permission> DISCORD_PERMISSIONS = new HashSet<>();
@@ -169,12 +168,11 @@ public class BasicPermission implements IFileNameResolver {
         @Expose
         private final String guildID;
 
-        private Node(BasicPermission permission, String guildID, HashSet<Permission> permissions, HashSet<String> roles, HashSet<String> users) {
+        private Node(String guildID, HashSet<Permission> permissions, HashSet<String> roles, HashSet<String> users) {
             this.guildID = guildID;
             DISCORD_PERMISSIONS.addAll(permissions);
             ROLES.addAll(roles);
             USERS.addAll(users);
-            permission.save();
         }
 
 
