@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024. MangoRage
+ * Copyright (c) 2024-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class DataHandler<T extends IFileNameResolver> {
-    private static final Gson GSON = new GsonBuilder()
+    private static final Gson DEFAULT_GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();
 
@@ -53,13 +53,15 @@ public class DataHandler<T extends IFileNameResolver> {
     }
 
     private final Class<T> tClass;
+    private final Gson gson;
     private final String path;
     private final boolean isFile;
     private final int maxDepth;
 
 
-    private DataHandler(Class<T> tClass, String path, boolean isFile, int maxDepth) {
+    private DataHandler(Class<T> tClass, Gson gson, String path, boolean isFile, int maxDepth) {
         this.tClass = tClass;
+        this.gson = gson;
         this.path = !isFile ? path : path.endsWith(".json") ? path : path + ".json";
         this.isFile = isFile;
         this.maxDepth = maxDepth;
@@ -70,7 +72,7 @@ public class DataHandler<T extends IFileNameResolver> {
         Path resolved = rootDirectory.resolve(path).toAbsolutePath();
 
         if (isFile) {
-            String data = GSON.toJson(objects[0]);
+            String data = gson.toJson(objects[0]);
             try {
                 save(data, resolved);
             } catch (IOException e) {
@@ -78,7 +80,7 @@ public class DataHandler<T extends IFileNameResolver> {
             }
         } else {
             for (T object : objects) {
-                String data = GSON.toJson(object);
+                String data = gson.toJson(object);
                 try {
                     var fn = object.resolve();
                     save(data, resolved.resolve(fn.path()).resolve(fn.name() + ".json").toAbsolutePath());
@@ -123,7 +125,7 @@ public class DataHandler<T extends IFileNameResolver> {
                         .filter(file -> file.isFile() && !file.isDirectory())
                         .forEach(f -> {
                             try {
-                                T obj = GSON.fromJson(new FileReader(f), tClass);
+                                T obj = gson.fromJson(new FileReader(f), tClass);
                                 list.add(obj);
                             } catch (FileNotFoundException e) {
                                 throw new RuntimeException(e);
@@ -139,7 +141,7 @@ public class DataHandler<T extends IFileNameResolver> {
             Path resolved = rootDirectory.resolve(path).toAbsolutePath();
             if (Files.exists(resolved)) {
                 try {
-                    T obj = GSON.fromJson(new FileReader(resolved.toFile()), tClass);
+                    T obj = gson.fromJson(new FileReader(resolved.toFile()), tClass);
                     return Optional.of(obj);
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
@@ -154,7 +156,7 @@ public class DataHandler<T extends IFileNameResolver> {
         private boolean isFile = false;
         private String path = "";
         private int maxDepth = 0;
-        private Gson gson = GSON;
+        private Gson gson = DEFAULT_GSON;
 
         public Builder file() {
             isFile = true;
@@ -177,7 +179,7 @@ public class DataHandler<T extends IFileNameResolver> {
         }
 
         public <T extends IFileNameResolver> DataHandler<T> build(Class<T> tClass) {
-            return new DataHandler<>(tClass, path, isFile, maxDepth);
+            return new DataHandler<>(tClass, gson, path, isFile, maxDepth);
         }
     }
 }
