@@ -129,9 +129,11 @@ public class PluginLoader {
 
         LogHelper.info("Loading %s plugin: %s".formatted(container.getType(), pluginId));
 
+        // Register it, so the plugin has access to any info it wishes to have, other then its own reference (At ctor it cant have access to itself, because it doesnt exist yet...)
+        PluginManager.registerPluginContainer(container);
+
         try {
             container.initInstance();
-            PluginManager.registerPluginContainer(container);
         } catch (Exception e) {
             LogHelper.error("Failed to load plugin: " + pluginId);
             LogHelper.error(e.getMessage());
