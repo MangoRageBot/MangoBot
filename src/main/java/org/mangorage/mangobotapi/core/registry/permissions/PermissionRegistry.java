@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 package org.mangorage.mangobotapi.core.registry.permissions;
 
 import org.mangorage.mangobotapi.core.data.DataHandler;
-import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
+import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,14 +33,14 @@ import java.util.List;
  * Permissions here can be seen and managed by guilds...
  */
 public class PermissionRegistry {
-    private final CorePlugin plugin;
+    private final JDAPlugin plugin;
     private final HashMap<String, BasicPermission> PERMISSIONS = new HashMap<>();
 
     private final DataHandler<BasicPermission> PERMISSION_DATA_HANDLER = DataHandler.create()
             .path("data/permissions")
             .build(BasicPermission.class);
 
-    public PermissionRegistry(CorePlugin plugin) {
+    public PermissionRegistry(JDAPlugin plugin) {
         this.plugin = plugin;
         PERMISSION_DATA_HANDLER.load(plugin.getPluginDirectory()).forEach(bp -> {
             PERMISSIONS.put(bp.getId(), bp);

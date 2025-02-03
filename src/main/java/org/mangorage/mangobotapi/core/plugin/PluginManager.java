@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,28 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 
 public class PluginManager {
+    private static final Gson GSON = new GsonBuilder().create();
+
+
+    private static InputStream getFileFromClassLoader(String filePath) {
+        InputStream inputStream = PluginManager.class.getClassLoader().getResourceAsStream(filePath);
+        if (inputStream == null) {
+            System.out.println("File not found: " + filePath);
+        }
+        return inputStream;
+    }
+
     private static final HashMap<String, PluginContainer> PLUGIN_CONTAINERS = new HashMap<>();
 
     public static List<PluginContainer> getPluginContainers() {
@@ -48,6 +63,9 @@ public class PluginManager {
     }
 
     protected static void registerPlugin(Plugin.Type type, AbstractPlugin plugin, String id) {
-        PLUGIN_CONTAINERS.put(id, new PluginContainer(type, plugin, id));
+        var is = getFileFromClassLoader(id + ".plugin.json");
+
+        PLUGIN_CONTAINERS.put(id, new PluginContainer(type, plugin, is == null ? new PluginMetadata(id, id, "Unknown") : GSON.fromJson(new InputStreamReader(is), PluginMetadata.class)));
+        var a = 1;
     }
 }

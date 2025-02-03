@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,10 +22,10 @@
 
 package org.mangorage.mangobotapi.core.registry;
 
-import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
+import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
 
 public final class GuildCache {
-    public static String getGuildName(CorePlugin plugin, String guildID) {
+    public static String getGuildName(JDAPlugin plugin, String guildID) {
         var guild = plugin.getJDA().getGuildById(guildID);
         return guild != null ? guild.getName() : "[Undefined]";
     }

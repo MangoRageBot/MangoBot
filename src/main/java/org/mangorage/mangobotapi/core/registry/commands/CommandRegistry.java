@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ package org.mangorage.mangobotapi.core.registry.commands;
 
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
-import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
+import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -32,9 +32,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class CommandRegistry {
 
-    private final CorePlugin plugin;
+    private final JDAPlugin plugin;
 
-    public CommandRegistry(CorePlugin plugin) {
+    public CommandRegistry(JDAPlugin plugin) {
         this.plugin = plugin;
     }
 

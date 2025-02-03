@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,5 +25,5 @@ package org.mangorage.mangobotapi.core.plugin;
 import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
-public record PluginContainer(Plugin.Type type, AbstractPlugin plugin, String id) {
+public record PluginContainer(Plugin.Type type, AbstractPlugin plugin, PluginMetadata metadata) {
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,7 @@
  */
 
 package org.mangorage.mangobotapi.core.plugin.api;
+
 
 public abstract class AddonPlugin extends AbstractPlugin {
     public AddonPlugin(String id) {

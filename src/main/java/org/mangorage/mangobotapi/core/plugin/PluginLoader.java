@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,10 @@ package org.mangorage.mangobotapi.core.plugin;
 import org.mangorage.basicutils.LogHelper;
 import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
 import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
-import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
+import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.util.HashSet;
@@ -36,7 +37,7 @@ import java.util.Set;
 public class PluginLoader {
     private static final Reflections reflections = new Reflections(
             ConfigurationBuilder.build()
-                    .forPackages("org", "addon", "com", "net")
+                    .setUrls(ClasspathHelper.forJavaClassPath())
     );
 
     public static void load() {
@@ -47,8 +48,8 @@ public class PluginLoader {
         reflections.getTypesAnnotatedWith(Plugin.class).forEach(cls -> {
             var pluginAnnotaion = cls.getAnnotation(Plugin.class);
             switch (pluginAnnotaion.type()) {
-                case CORE -> {
-                    if (!CorePlugin.class.isAssignableFrom(cls)) {
+                case JDA -> {
+                    if (!JDAPlugin.class.isAssignableFrom(cls)) {
                         LogHelper.error("Failed to load plugin: " + pluginAnnotaion.id() + " (must extend CorePlugin)");
                         return;
                     }
@@ -71,7 +72,7 @@ public class PluginLoader {
     }
 
     public static void loadCore(Class<?> cls) {
-        loadPlugin(Plugin.Type.CORE, cls);
+        loadPlugin(Plugin.Type.JDA, cls);
     }
 
     public static void loadAddon(Class<?> cls) {
@@ -87,7 +88,7 @@ public class PluginLoader {
             return;
         }
 
-        LogHelper.info("Loading plugin: " + pluginId);
+        LogHelper.info("Loading %s plugin: %s".formatted(type, pluginId));
 
         try {
             var plugin = (AbstractPlugin) cls.getDeclaredConstructor().newInstance();

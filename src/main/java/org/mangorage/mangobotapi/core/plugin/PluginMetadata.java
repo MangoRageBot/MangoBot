@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025. MangoRage
+ * Copyright (c) 2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,16 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin.api;
+package org.mangorage.mangobotapi.core.plugin;
 
-import org.mangorage.mangobotapi.core.plugin.PluginManager;
-
-import java.util.function.Supplier;
-
-// TODO: Work on making this...
-public class InterPluginMessage {
-    protected static void send(AbstractPlugin origin, String sendTo, String method, Supplier<?> objectSupplier) {
-        if (PluginManager.isLoaded(sendTo))
-            PluginManager.getPlugin(sendTo).getPluginBus().post(new PluginMessageEvent(origin, method, objectSupplier));
-    }
+public record PluginMetadata(String id, String name, String version) {
 }

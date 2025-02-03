@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,12 @@ import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;
 
-public abstract class CorePlugin extends AbstractPlugin {
+/**
+ * Holds a reference to a {@link JDA} instance
+ * <p>
+ * Useful if you have Multiple plugins with different bots and etc
+ */
+public abstract class JDAPlugin extends AbstractPlugin {
     private final JDA JDA;
     private final String COMMAND_PREFIX = "!";
     private final MessageSettings DEFAULT_MESSAGE_SETTINGS = MessageSettings.create().build();
@@ -37,33 +42,19 @@ public abstract class CorePlugin extends AbstractPlugin {
     private final PermissionRegistry permissionRegistry = new PermissionRegistry(this);
 
 
-    public CorePlugin(String id, JDA jda) {
+    public JDAPlugin(String id, JDA jda) {
         super(id);
         this.JDA = jda;
+    }
 
+    // Call this to use default startup/shutdown behavior
+    protected void init() {
         getPluginBus().addListener(10, StartupEvent.class, event -> {
-            switch (event.phase()) {
-                case STARTUP -> {
-                    startup();
-                }
-                case REGISTRATION -> {
-                    registration();
-                }
-                case FINISHED -> {
-                    finished();
-                }
-            }
+            startup(event.phase());
         });
 
         getPluginBus().addListener(10, ShutdownEvent.class, event -> {
-            switch (event.phase()) {
-                case PRE -> {
-                    shutdownPre();
-                }
-                case POST -> {
-                    shutdownPost();
-                }
-            }
+            shutdown(event.phase());
         });
 
         for (StartupEvent.Phase phase : StartupEvent.Phase.values())
@@ -90,17 +81,7 @@ public abstract class CorePlugin extends AbstractPlugin {
         return DEFAULT_MESSAGE_SETTINGS;
     }
 
-    public abstract void registration();
+    public abstract void startup(StartupEvent.Phase phase);
 
-    public abstract void startup();
-
-    public abstract void finished();
-
-    public abstract void shutdownPre();
-
-    public void shutdownPost() {
-        for (ShutdownEvent.Phase phase : ShutdownEvent.Phase.values())
-            getPluginBus().post(new ShutdownEvent(phase));
-        getPluginBus().shutdown();
-    }
+    public abstract void shutdown(ShutdownEvent.Phase phase);
 }

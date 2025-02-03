@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ package org.mangorage.mangobotapi.core.plugin.impl;
  */
 
 import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
-import org.mangorage.mangobotapi.core.plugin.api.CorePlugin;
+import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -39,7 +39,7 @@ import static java.lang.annotation.ElementType.TYPE;
 @Target(TYPE)
 public @interface Plugin {
     enum Type {
-        CORE(CorePlugin.class),
+        JDA(JDAPlugin.class),
         ADDON(AddonPlugin.class);
 
         private final Class<?> clazz;
@@ -52,7 +52,8 @@ public @interface Plugin {
             return clazz;
         }
     }
+
     String id();
 
-    Plugin.Type type() default Plugin.Type.CORE;
+    Plugin.Type type() default Plugin.Type.JDA;
 }
