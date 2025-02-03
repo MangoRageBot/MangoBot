@@ -141,7 +141,7 @@ dependencies {
 
     // Libs for Bot
     library('net.dv8tion:JDA:5.0.0-beta.23')
-    library('com.google.code.gson:gson:2.10.1')
+    library('com.google.code.gson:gson:2.12.1')
 
     library('org.luaj:luaj-jse:3.0.1')
     library('org.apache.logging.log4j:log4j-core:+')
