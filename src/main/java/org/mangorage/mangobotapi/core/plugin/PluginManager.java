@@ -64,8 +64,6 @@ public class PluginManager {
 
     protected static void registerPlugin(Plugin.Type type, AbstractPlugin plugin, String id) {
         var is = getFileFromClassLoader(id + ".plugin.json");
-
         PLUGIN_CONTAINERS.put(id, new PluginContainer(type, plugin, is == null ? new PluginMetadata(id, id, "Unknown") : GSON.fromJson(new InputStreamReader(is), PluginMetadata.class)));
-        var a = 1;
     }
 }

@@ -37,7 +37,7 @@ import java.util.Set;
 public class PluginLoader {
     private static final Reflections reflections = new Reflections(
             ConfigurationBuilder.build()
-                    .setUrls(ClasspathHelper.forJavaClassPath())
+                    .setUrls(ClasspathHelper.forClassLoader())
     );
 
     public static void load() {
