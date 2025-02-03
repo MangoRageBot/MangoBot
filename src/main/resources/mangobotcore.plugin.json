@@ -1,5 +1,5 @@
 {
   "id": "mangobotcore",
-  "version": "11.0.9",
+  "version": "${mangobot_version}",
   "name": "MangoBotCore"
 }
