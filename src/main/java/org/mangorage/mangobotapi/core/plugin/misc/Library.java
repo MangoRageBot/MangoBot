@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025. MangoRage
+ * Copyright (c) 2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,44 +20,38 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin;
+package org.mangorage.mangobotapi.core.plugin.misc;
 
-import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
-import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
+import java.util.HashSet;
+import java.util.Set;
 
-public final class PluginContainer {
-    private final String id;
-    private final Plugin.Type type;
-    private final Class<?> entrypoint;
-    private final PluginMetadata metadata;
+public final class Library<T> implements Comparable<Library<?>> {
+    private final T libraryObject;
+    private final Set<String> dependencies = new HashSet<>();
+    private int priority = 0;
 
-    AbstractPlugin instance = null;
-
-    public PluginContainer(String id, Plugin.Type type, Class<?> entrypoint, PluginMetadata metadata) {
-        this.id = id;
-        this.type = type;
-        this.entrypoint = entrypoint;
-        this.metadata = metadata;
+    public Library(T value) {
+        this.libraryObject = value;
     }
 
-    // TODO: Have better handling of creating new instance
-    void initInstance() throws InstantiationException, IllegalAccessException {
-        instance = (AbstractPlugin) entrypoint.newInstance();
+    public void addDependency(String id) {
+        this.dependencies.add(id);
     }
 
-    public String getId() {
-        return id;
+    public void incrementPriority() {
+        this.priority += 1;
     }
 
-    public AbstractPlugin getInstance() {
-        return instance;
+    public int getPriority() {
+        return priority;
     }
 
-    public Plugin.Type getType() {
-        return type;
+    public T getObject() {
+        return libraryObject;
     }
 
-    public PluginMetadata getMetadata() {
-        return metadata;
+    @Override
+    public int compareTo(Library<?> o) {
+        return Integer.compare(o.getPriority(), getPriority());
     }
 }

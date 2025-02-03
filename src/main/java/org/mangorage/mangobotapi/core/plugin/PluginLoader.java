@@ -22,77 +22,116 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
 import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
 import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
+import org.mangorage.mangobotapi.core.plugin.misc.Library;
+import org.mangorage.mangobotapi.core.plugin.misc.LibraryManager;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
 
 public class PluginLoader {
+    private static final Gson GSON = new GsonBuilder().create();
+
     private static final Reflections reflections = new Reflections(
             ConfigurationBuilder.build()
                     .setUrls(ClasspathHelper.forClassLoader())
     );
 
+    private static InputStream getFileFromClassLoader(String filePath) {
+        InputStream inputStream = PluginManager.class.getClassLoader().getResourceAsStream(filePath);
+        if (inputStream == null) {
+            System.out.println("File not found: " + filePath);
+        }
+        return inputStream;
+    }
+
     public static void load() {
-        LogHelper.info("Loading plugins & addons...");
-        Set<Class<?>> PLUGINS_CORE = new HashSet<>();
-        Set<Class<?>> PLUGINS_ADDON = new HashSet<>();
+        LogHelper.info("Gathering Plugin Info...");
+        LibraryManager<PluginContainer> manager = new LibraryManager<>();
 
         reflections.getTypesAnnotatedWith(Plugin.class).forEach(cls -> {
-            var pluginAnnotaion = cls.getAnnotation(Plugin.class);
-            switch (pluginAnnotaion.type()) {
+            var pluginAnnotation = cls.getAnnotation(Plugin.class);
+
+            switch (pluginAnnotation.type()) {
                 case JDA -> {
                     if (!JDAPlugin.class.isAssignableFrom(cls)) {
-                        LogHelper.error("Failed to load plugin: " + pluginAnnotaion.id() + " (must extend CorePlugin)");
+                        LogHelper.error("Failed to load plugin: " + pluginAnnotation.id() + " (must extend CorePlugin)");
                         return;
                     }
-                    PLUGINS_CORE.add(cls);
                 }
                 case ADDON -> {
                     if (!AddonPlugin.class.isAssignableFrom(cls)) {
-                        LogHelper.error("Failed to load plugin: " + pluginAnnotaion.id() + " (must extend AddonPlugin)");
+                        LogHelper.error("Failed to load plugin: " + pluginAnnotation.id() + " (must extend AddonPlugin)");
                         return;
                     }
-                    PLUGINS_ADDON.add(cls);
                 }
+            }
+
+            LogHelper.info("Found Plugin with ID '%s', now attempting to find metadata".formatted(pluginAnnotation.id()));
+
+            var metadataIS = getFileFromClassLoader(pluginAnnotation.id() + ".plugin.json");
+            if (metadataIS == null) {
+                throw new IllegalStateException("Unable to find plugin.json for '%s'".formatted(pluginAnnotation.id()));
+            } else {
+                var metadata = GSON.fromJson(new InputStreamReader(metadataIS), PluginMetadata.class);
+
+                LogHelper.info("Found Metadata for plugin '%s'".formatted(pluginAnnotation.id()));
+
+                manager.addLibrary(
+                        pluginAnnotation.id(),
+                        new PluginContainer(
+                                pluginAnnotation.id(),
+                                pluginAnnotation.type(),
+                                cls,
+                                metadata
+                        )
+                );
             }
         });
 
-        PLUGINS_CORE.forEach(PluginLoader::loadCore);
-        PLUGINS_ADDON.forEach(PluginLoader::loadAddon);
+        LogHelper.info("Organizing Plugin Load Order...");
 
-        LogHelper.info("Finished loading plugins & addons...");
+        for (Library<PluginContainer> library : List.copyOf(manager.getLibraries())) {
+            var dependencies = library.getObject().getMetadata().dependencies();
+            if (dependencies != null && !dependencies.isEmpty()) {
+                LogHelper.info("Found %s dependencies for '%s'".formatted(dependencies.size(), library.getObject().getId()));
+                manager.addDependenciesForLibrary(library.getObject().getId(), dependencies);
+            } else {
+                LogHelper.info("Found no dependencies for '%s'".formatted(library.getObject().getId()));
+            }
+        }
+
+        LogHelper.info("Loading Plugins...");
+
+        for (Library<PluginContainer> library : manager.getLibrariesInOrder()) {
+            loadPlugin(library.getObject());
+        }
+
+        LogHelper.info("Finished loading plugins...");
     }
 
-    public static void loadCore(Class<?> cls) {
-        loadPlugin(Plugin.Type.JDA, cls);
-    }
-
-    public static void loadAddon(Class<?> cls) {
-        loadPlugin(Plugin.Type.ADDON, cls);
-    }
-
-    public static void loadPlugin(Plugin.Type type, Class<?> cls) {
-        var pluginAnnotaion = cls.getAnnotation(Plugin.class);
-        var pluginId = pluginAnnotaion.id();
+    public static void loadPlugin(PluginContainer container) {
+        var pluginId = container.getId();
 
         if (PluginManager.isLoaded(pluginId)) {
-            LogHelper.error("Failed to load plugin: " + pluginId + " (already loaded)");
+            LogHelper.error("Failed to load plugin '%s', already loaded".formatted(pluginId));
             return;
         }
 
-        LogHelper.info("Loading %s plugin: %s".formatted(type, pluginId));
+        LogHelper.info("Loading %s plugin: %s".formatted(container.getType(), pluginId));
 
         try {
-            var plugin = (AbstractPlugin) cls.getDeclaredConstructor().newInstance();
-            PluginManager.registerPlugin(type, plugin, pluginId);
+            container.initInstance();
+            PluginManager.registerPluginContainer(container);
         } catch (Exception e) {
             LogHelper.error("Failed to load plugin: " + pluginId);
             LogHelper.error(e.getMessage());

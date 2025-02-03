@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CoreMain {
+public final class CoreMain {
     private static final CountDownLatch latch = new CountDownLatch(1);
     private static final IEventBus<IEventType.INormalBusEvent> coreEventBus = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
     private static final AtomicBoolean running = new AtomicBoolean(false);

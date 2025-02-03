@@ -22,5 +22,22 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
-public record PluginMetadata(String id, String name, String version) {
+import com.google.gson.annotations.Expose;
+import org.mangorage.mangobotapi.core.plugin.misc.Dependency;
+
+import java.util.List;
+
+public record PluginMetadata(
+        @Expose
+        String id,
+
+        @Expose
+        String name,
+
+        @Expose
+        String version,
+
+        @Expose
+        List<Dependency> dependencies
+) {
 }
