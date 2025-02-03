@@ -42,6 +42,10 @@ public class PluginManager {
         return PLUGIN_CONTAINERS.get(id).getInstance();
     }
 
+    public static PluginContainer getPluginContainer(String id) {
+        return PLUGIN_CONTAINERS.get(id);
+    }
+
     public static boolean isLoaded(String id) {
         return PLUGIN_CONTAINERS.containsKey(id);
     }
