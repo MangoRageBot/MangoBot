@@ -42,8 +42,7 @@ public abstract class JDAPlugin extends AbstractPlugin {
     private final PermissionRegistry permissionRegistry = new PermissionRegistry(this);
 
 
-    public JDAPlugin(String id, JDA jda) {
-        super(id);
+    public JDAPlugin(JDA jda) {
         this.JDA = jda;
     }
 

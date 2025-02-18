@@ -35,6 +35,9 @@ public record PluginMetadata(
         String name,
 
         @Expose
+        String type,
+
+        @Expose
         String version,
 
         @Expose

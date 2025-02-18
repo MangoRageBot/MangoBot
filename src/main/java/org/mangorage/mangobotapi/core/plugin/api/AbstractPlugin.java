@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ import org.mangorage.eventbus.EventBus;
 import org.mangorage.eventbus.event.NormalEventHandler;
 import org.mangorage.eventbus.interfaces.IEventBus;
 import org.mangorage.eventbus.interfaces.IEventType;
+import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -37,8 +38,8 @@ public abstract class AbstractPlugin {
     private final IEventBus<IEventType.INormalBusEvent> pluginBus = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
     private final String id;
 
-    public AbstractPlugin(String id) {
-        this.id = id;
+    public AbstractPlugin() {
+        this.id = getClass().getAnnotation(Plugin.class).id();
     }
 
     public String getId() {

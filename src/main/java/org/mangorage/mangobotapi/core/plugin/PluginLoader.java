@@ -25,8 +25,6 @@ package org.mangorage.mangobotapi.core.plugin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.mangorage.basicutils.LogHelper;
-import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
-import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 import org.mangorage.mangobotapi.core.plugin.misc.Library;
 import org.mangorage.mangobotapi.core.plugin.misc.LibraryManager;
@@ -61,21 +59,6 @@ public class PluginLoader {
         reflections.getTypesAnnotatedWith(Plugin.class).forEach(cls -> {
             var pluginAnnotation = cls.getAnnotation(Plugin.class);
 
-            switch (pluginAnnotation.type()) {
-                case JDA -> {
-                    if (!JDAPlugin.class.isAssignableFrom(cls)) {
-                        LogHelper.error("Failed to load plugin: " + pluginAnnotation.id() + " (must extend CorePlugin)");
-                        return;
-                    }
-                }
-                case ADDON -> {
-                    if (!AddonPlugin.class.isAssignableFrom(cls)) {
-                        LogHelper.error("Failed to load plugin: " + pluginAnnotation.id() + " (must extend AddonPlugin)");
-                        return;
-                    }
-                }
-            }
-
             LogHelper.info("Found Plugin with ID '%s', now attempting to find metadata".formatted(pluginAnnotation.id()));
 
             var metadataIS = getFileFromClassLoader(pluginAnnotation.id() + ".plugin.json");
@@ -90,7 +73,6 @@ public class PluginLoader {
                         pluginAnnotation.id(),
                         new PluginContainer(
                                 pluginAnnotation.id(),
-                                pluginAnnotation.type(),
                                 cls,
                                 metadata
                         )

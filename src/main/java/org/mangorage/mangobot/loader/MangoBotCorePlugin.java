@@ -22,19 +22,16 @@
 
 package org.mangorage.mangobot.loader;
 
-import org.mangorage.mangobotapi.core.plugin.api.AddonPlugin;
+import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
 /**
  * Default Addon Class for MangoBot
  */
-@Plugin(id = MangoBotCorePlugin.ID, type = Plugin.Type.ADDON)
-public final class MangoBotCorePlugin extends AddonPlugin {
+@Plugin(id = MangoBotCorePlugin.ID)
+public final class MangoBotCorePlugin extends AbstractPlugin {
     public static final String ID = "mangobotcore";
 
     public MangoBotCorePlugin() {
-        super(
-                ID
-        );
     }
 }

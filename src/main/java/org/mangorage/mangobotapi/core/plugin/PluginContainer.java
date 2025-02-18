@@ -23,19 +23,16 @@
 package org.mangorage.mangobotapi.core.plugin;
 
 import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
-import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
 public final class PluginContainer {
     private final String id;
-    private final Plugin.Type type;
     private final Class<?> entrypoint;
     private final PluginMetadata metadata;
 
     AbstractPlugin instance = null;
 
-    public PluginContainer(String id, Plugin.Type type, Class<?> entrypoint, PluginMetadata metadata) {
+    public PluginContainer(String id, Class<?> entrypoint, PluginMetadata metadata) {
         this.id = id;
-        this.type = type;
         this.entrypoint = entrypoint;
         this.metadata = metadata;
     }
@@ -53,8 +50,8 @@ public final class PluginContainer {
         return instance;
     }
 
-    public Plugin.Type getType() {
-        return type;
+    public String getType() {
+        return metadata.type();
     }
 
     public PluginMetadata getMetadata() {
