@@ -34,4 +34,12 @@ public final class MangoBotCorePlugin extends AbstractPlugin {
 
     public MangoBotCorePlugin() {
     }
+
+    /**
+     *
+     */
+    @Override
+    protected void init() {
+
+    }
 }
