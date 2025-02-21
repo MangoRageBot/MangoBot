@@ -24,7 +24,7 @@ package org.mangorage.mangobotapi.core.registry.commands;
 
 import org.mangorage.mangobotapi.core.commands.IBasicCommand;
 import org.mangorage.mangobotapi.core.events.BasicCommandEvent;
-import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
+import org.mangorage.mangobotapi.core.plugin.extra.JDAPlugin;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

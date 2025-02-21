@@ -20,41 +20,14 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin.api;
+package org.mangorage.mangobotapi.core.plugin;
 
-
-import org.mangorage.eventbus.EventBus;
-import org.mangorage.eventbus.event.NormalEventHandler;
-import org.mangorage.eventbus.interfaces.IEventBus;
-import org.mangorage.eventbus.interfaces.IEventType;
-import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
-
-import java.nio.file.Path;
 import java.util.function.Supplier;
 
-import static org.mangorage.mangobotapi.core.plugin.api.InterPluginMessage.send;
-
-public abstract class AbstractPlugin {
-    private final IEventBus<IEventType.INormalBusEvent> pluginBus = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
-    private final String id;
-
-    public AbstractPlugin() {
-        this.id = getClass().getAnnotation(Plugin.class).id();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public Path getPluginDirectory() {
-        return Path.of("plugins/%s/".formatted(getId())).toAbsolutePath();
-    }
-
-    protected void sendInterPluginMessage(String sendTo, String method, Supplier<?> objectSupplier) {
-        send(this, sendTo, method, objectSupplier);
-    }
-
-    public IEventBus<IEventType.INormalBusEvent> getPluginBus() {
-        return pluginBus;
+// TODO: Work on making this...
+public final class InterPluginMessage {
+    protected static void send(AbstractPlugin origin, String sendTo, String method, Supplier<?> objectSupplier) {
+        if (PluginManager.isLoaded(sendTo))
+            PluginManager.getPlugin(sendTo).getPluginBus().post(new PluginMessageEvent(origin, method, objectSupplier));
     }
 }

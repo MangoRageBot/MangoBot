@@ -22,7 +22,7 @@
 
 package org.mangorage.mangobot.loader;
 
-import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
+import org.mangorage.mangobotapi.core.plugin.AbstractPlugin;
 import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
 /**

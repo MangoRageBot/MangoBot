@@ -20,33 +20,43 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin.api;
+package org.mangorage.mangobotapi.core.plugin;
 
 
-import org.mangorage.eventbus.event.NormalEvent;
+import org.mangorage.eventbus.EventBus;
+import org.mangorage.eventbus.event.NormalEventHandler;
+import org.mangorage.eventbus.interfaces.IEventBus;
+import org.mangorage.eventbus.interfaces.IEventType;
+import org.mangorage.mangobotapi.core.plugin.impl.Plugin;
 
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
-public final class PluginMessageEvent extends NormalEvent {
-    private final AbstractPlugin origin;
-    private final String method;
-    private final Supplier<?> object;
+import static org.mangorage.mangobotapi.core.plugin.InterPluginMessage.send;
 
-    PluginMessageEvent(AbstractPlugin origin, String method, Supplier<?> object) {
-        this.origin = origin;
-        this.method = method;
-        this.object = object;
+public abstract class AbstractPlugin {
+    private final IEventBus<IEventType.INormalBusEvent> pluginBus = EventBus.create(new NormalEventHandler(), IEventType.INormalBusEvent.class);
+    private final String id;
+
+    public AbstractPlugin() {
+        this.id = getClass().getAnnotation(Plugin.class).id();
     }
 
-    public AbstractPlugin getOrigin() {
-        return origin;
+    public String getId() {
+        return id;
     }
 
-    public String getMethod() {
-        return method;
+    protected abstract void init();
+
+    public Path getPluginDirectory() {
+        return Path.of("plugins/%s/".formatted(getId())).toAbsolutePath();
     }
 
-    public Supplier<?> getObject() {
-        return object;
+    protected void sendInterPluginMessage(String sendTo, String method, Supplier<?> objectSupplier) {
+        send(this, sendTo, method, objectSupplier);
+    }
+
+    public IEventBus<IEventType.INormalBusEvent> getPluginBus() {
+        return pluginBus;
     }
 }

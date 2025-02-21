@@ -20,11 +20,12 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin.api;
+package org.mangorage.mangobotapi.core.plugin.extra;
 
 import net.dv8tion.jda.api.JDA;
 import org.mangorage.mangobotapi.core.events.ShutdownEvent;
 import org.mangorage.mangobotapi.core.events.StartupEvent;
+import org.mangorage.mangobotapi.core.plugin.AbstractPlugin;
 import org.mangorage.mangobotapi.core.registry.commands.CommandRegistry;
 import org.mangorage.mangobotapi.core.registry.permissions.PermissionRegistry;
 import org.mangorage.mangobotapi.core.util.MessageSettings;

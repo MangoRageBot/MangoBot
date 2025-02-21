@@ -98,6 +98,12 @@ public class PluginLoader {
             loadPlugin(library.getObject());
         }
 
+        LogHelper.info("Calling init Method on all Plugins...");
+
+        PluginManager.getPluginContainers().forEach(pluginContainer -> {
+            pluginContainer.getInstance().init();
+        });
+
         LogHelper.info("Finished loading plugins...");
     }
 

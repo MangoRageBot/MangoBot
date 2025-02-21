@@ -23,7 +23,7 @@
 package org.mangorage.mangobotapi.core.registry.permissions;
 
 import org.mangorage.mangobotapi.core.data.DataHandler;
-import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
+import org.mangorage.mangobotapi.core.plugin.extra.JDAPlugin;
 
 import java.util.HashMap;
 import java.util.List;

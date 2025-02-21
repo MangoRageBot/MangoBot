@@ -20,16 +20,33 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.mangorage.mangobotapi.core.plugin.api;
+package org.mangorage.mangobotapi.core.plugin;
 
-import org.mangorage.mangobotapi.core.plugin.PluginManager;
+
+import org.mangorage.eventbus.event.NormalEvent;
 
 import java.util.function.Supplier;
 
-// TODO: Work on making this...
-public class InterPluginMessage {
-    protected static void send(AbstractPlugin origin, String sendTo, String method, Supplier<?> objectSupplier) {
-        if (PluginManager.isLoaded(sendTo))
-            PluginManager.getPlugin(sendTo).getPluginBus().post(new PluginMessageEvent(origin, method, objectSupplier));
+public final class PluginMessageEvent extends NormalEvent {
+    private final AbstractPlugin origin;
+    private final String method;
+    private final Supplier<?> object;
+
+    PluginMessageEvent(AbstractPlugin origin, String method, Supplier<?> object) {
+        this.origin = origin;
+        this.method = method;
+        this.object = object;
+    }
+
+    public AbstractPlugin getOrigin() {
+        return origin;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public Supplier<?> getObject() {
+        return object;
     }
 }

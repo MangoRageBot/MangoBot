@@ -22,8 +22,6 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
-import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
-
 public final class PluginContainer {
     private final String id;
     private final Class<?> entrypoint;

@@ -22,7 +22,7 @@
 
 package org.mangorage.mangobotapi.core.registry;
 
-import org.mangorage.mangobotapi.core.plugin.api.JDAPlugin;
+import org.mangorage.mangobotapi.core.plugin.extra.JDAPlugin;
 
 public final class GuildCache {
     public static String getGuildName(JDAPlugin plugin, String guildID) {

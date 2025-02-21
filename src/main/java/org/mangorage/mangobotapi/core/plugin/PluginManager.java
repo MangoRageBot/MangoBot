@@ -22,8 +22,6 @@
 
 package org.mangorage.mangobotapi.core.plugin;
 
-import org.mangorage.mangobotapi.core.plugin.api.AbstractPlugin;
-
 import java.util.HashMap;
 import java.util.List;
 
