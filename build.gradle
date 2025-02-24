@@ -134,7 +134,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2' // For JUnit 5
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2' // For JUnit 5
 
-    installer('org.mangorage:installer:4.0.')
+    installer('org.mangorage:installer:4.0.3')
     botInternal(sourceSets.main.output)
 
     runtimeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.23.1')
