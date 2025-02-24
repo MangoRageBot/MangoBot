@@ -59,6 +59,7 @@ public final class CoreMain {
         running.set(true);
         System.out.println("Supplied Args -> " + Arrays.toString(args));
         CoreMain.args = List.of(args);
+
         for (String arg : args) {
             if (arg.contains("--dev")) {
                 isDev = true;
