@@ -137,3 +137,4 @@ secrets.properties
 
 /mappings/
 /src/main/resources/installerdata/deps.txt
+/src/main/resources/installer-data/dependencies.json

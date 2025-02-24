@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,7 @@ public class Loader {
 
     static {
         List<URL> urls = new ArrayList<>();
-        List<Path> directories = List.of(Path.of("libs/"), Path.of("plugins/"));
+        List<Path> directories = List.of(Path.of("libraries/"), Path.of("plugins/"));
 
         directories.forEach(directory -> {
             try {
