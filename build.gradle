@@ -19,6 +19,7 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import org.mangorage.mangobotgradle.util.GitVersion
 
 buildscript {
     repositories {
@@ -38,7 +39,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'org.mangorage:MangoBotGradle:5.0.2'
+        classpath 'org.mangorage:MangoBotGradle:5.0.4'
     }
 }
 
@@ -47,27 +48,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'MangoBotGradle'
 
 group 'org.mangorage'
-version = getLatestGitTag() + "." + getLatestGitVersion()
-
-def getLatestGitTag() {
-    def result = "git describe --long --tags".execute().text.trim()
-    if (result.empty) {
-        throw new RuntimeException("Failed to retrieve commit count")
-    } else {
-        return result.split("-")[0]
-    }
-}
-
-
-def getLatestGitVersion() {
-    def result = "git describe --long --tags".execute().text.trim()
-    if (result.empty) {
-        throw new RuntimeException("Failed to retrieve commit count")
-    } else {
-        def commitCount = result.split("-")[1].toInteger()
-        return commitCount;
-    }
-}
+version = GitVersion.getGitVersion().getVersionAsString()
 
 println("Version: " + version)
 
@@ -88,15 +69,6 @@ tasks.withType(JavaExec) {
 MangoBotConfig {
     disableCopyOverBot()
     setJarTask(jar)
-
-    if (System.getenv().containsKey("SERVER_TOKEN") && System.getenv().containsKey("SERVER_ID")) {
-        enableRestartServerTask(
-                System.getenv("SERVER_ID") as String,
-                "https://panel.sodiumhosting.com/",
-                System.getenv("SERVER_TOKEN") as String,
-                null
-        )
-    }
 }
 
 
