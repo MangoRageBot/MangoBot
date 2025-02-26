@@ -39,7 +39,7 @@ buildscript {
 
     dependencies {
         classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'org.mangorage:MangoBotGradle:5.0.4'
+        classpath 'org.mangorage:MangoBotGradle:5.0.6'
     }
 }
 
@@ -71,8 +71,8 @@ MangoBotConfig {
     setJarTask(jar)
 }
 
-
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {
         url 'https://m2.dv8tion.net/releases'
@@ -91,17 +91,6 @@ repositories {
     }
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'java'
-        }
-        resources {
-            srcDir 'resources'
-        }
-    }
-}
-
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2' // For JUnit 5
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2' // For JUnit 5
@@ -110,6 +99,8 @@ dependencies {
     botInternal(sourceSets.main.output)
 
     runtimeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.23.1')
+
+    plugin('org.mangorage:MangoBotAddonExample:+')
 
     // Libs for Bot
     library('net.dv8tion:JDA:5.3.0')
