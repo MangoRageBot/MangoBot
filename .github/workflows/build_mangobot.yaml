@@ -1,0 +1,22 @@
+name: Build MangoBot
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - /**
+      - '!.github/workflows/**'
+      - '!settings.gradle'
+permissions:
+  contents: read
+jobs:
+  build:
+    uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
+    with:
+      java: 22
+      gradle_tasks: :runDatagen :publish
+      project_path: mangobot
+      artifact_name: mangobot
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      MAVEN_USERNAME: ${{ secrets.USERNAME }}  # Reference the secret
+      MAVEN_PASSWORD: ${{ secrets.PASSWORD }}  # Reference the secret
