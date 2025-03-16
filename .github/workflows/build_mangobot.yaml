@@ -10,10 +10,12 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  main:
     steps:
       - name: Fix gradlew permissions
         run: chmod +x gradlew
+    runs-on: ubuntu-latest
+  build:
     uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
     with:
       java: 22
