@@ -18,5 +18,6 @@ jobs:
       artifact_name: "MangoBot"
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+    env:
       MAVEN_USERNAME: ${{ secrets.USERNAME }}  # Reference the secret
       MAVEN_PASSWORD: ${{ secrets.PASSWORD }}  # Reference the secret
