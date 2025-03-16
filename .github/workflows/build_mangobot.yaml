@@ -16,6 +16,9 @@ jobs:
       java: 22
       gradle_tasks: "check runDatagen publish"
       artifact_name: "MangoBot"
+      env:
+        MAVEN_USERNAME: ${{ secrets.USERNAME }}  # Reference the secret
+        MAVEN_PASSWORD: ${{ secrets.PASSWORD }}  # Reference the secret
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       MAVEN_USERNAME: ${{ secrets.USERNAME }}  # Reference the secret
