@@ -11,6 +11,9 @@ permissions:
 
 jobs:
   build:
+    steps:
+      - name: Fix gradlew permissions
+        run: chmod +x gradlew
     uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
     with:
       java: 22
