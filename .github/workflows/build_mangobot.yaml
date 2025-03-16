@@ -14,7 +14,7 @@ jobs:
     uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
     with:
       java: 22
-      gradle_tasks: "runDatagen publish"
+      gradle_tasks: :runDatagen :publish
       artifact_name: "MangoBot"
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
