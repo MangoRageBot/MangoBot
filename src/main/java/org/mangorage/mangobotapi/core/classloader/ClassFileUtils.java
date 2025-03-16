@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024. MangoRage
+ * Copyright (c) 2024-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,6 @@ public class ClassFileUtils {
 
         return signature.substring(start + 1, end - 1);
     }
-
 
     public static ClassDesc getClassName(Class<?> clazz) {
         return ClassDesc.ofDescriptor(clazz.descriptorString());
