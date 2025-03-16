@@ -7,7 +7,7 @@ on:
       - 'settings.gradle'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
