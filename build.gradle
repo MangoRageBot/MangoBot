@@ -100,8 +100,6 @@ dependencies {
 
     runtimeOnly('org.apache.logging.log4j:log4j-slf4j-impl:2.23.1')
 
-    plugin('org.mangorage:MangoBotAddonExample:+')
-
     // Libs for Bot
     library('net.dv8tion:JDA:5.3.0')
     library('com.google.code.gson:gson:2.10.1')
@@ -190,7 +188,7 @@ publishing {
             url = "https://maven.minecraftforge.net/"
 
             credentials {
-                username = System.getenv("MAVEN_USERNAME")
+                username = System.getenv("MAVEN_USER")
                 password = System.getenv("MAVEN_PASSWORD")
             }
         }
