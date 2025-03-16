@@ -2,10 +2,6 @@ name: Build MangoBot
 on:
   push:
     branches: [ master ]
-    paths:
-      - /*
-      - '!.github/workflows/**'
-      - '!settings.gradle'
 permissions:
   contents: read
 jobs:
