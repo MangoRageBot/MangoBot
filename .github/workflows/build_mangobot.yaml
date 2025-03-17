@@ -12,8 +12,6 @@ permissions:
 jobs:
   notify-discord-end:
     name: Notify Discord (end)
-    needs: [ 'git-version', 'gradle' ]
-    if: ${{ always() }}
     uses: MinecraftForge/SharedActions/.github/workflows/discord-build-notifier.yml@v0
     with:
       project_path: "MangoBot"
