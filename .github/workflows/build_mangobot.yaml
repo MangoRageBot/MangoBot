@@ -10,13 +10,23 @@ permissions:
   contents: write
 
 jobs:
+  notify-discord-end:
+    name: Notify Discord (end)
+    needs: [ 'git-version', 'gradle' ]
+    if: ${{ always() }}
+    uses: MinecraftForge/SharedActions/.github/workflows/discord-build-notifier.yml@v0
+    with:
+      project_path: "MangoBot"
+      build_status: "Success"
+      build_number: "1.0.0.0"
+    secrets:
+      DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
   build:
     uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
     with:
       java: 22
       gradle_tasks: :runDatagen :publish
       artifact_name: "MangoBot"
-      author_icon_url: "https://avatars.githubusercontent.com/u/147930550"
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       MAVEN_USER: ${{ secrets.USERNAME }}  # Reference the secret
