@@ -17,6 +17,7 @@ jobs:
       project_path: "MangoBot"
       build_status: "Success"
       build_number: "1.0.0.0"
+      author_icon_url: "https://avatars.githubusercontent.com/u/147930550"
     secrets:
       DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
   build:
