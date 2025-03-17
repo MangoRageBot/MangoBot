@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    uses: RealMangoRage/SharedActions/.github/workflows/gradle.yml@v0
+    uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
     with:
       java: 22
       gradle_tasks: :runDatagen :publish
