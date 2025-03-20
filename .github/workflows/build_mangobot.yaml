@@ -15,7 +15,7 @@ jobs:
   build:
     uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
     with:
-      java: 22
+      java: 24
       gradle_tasks: :runDatagen :publish
       artifact_name: "mangobot"
       artifact_group: "org.mangorage"

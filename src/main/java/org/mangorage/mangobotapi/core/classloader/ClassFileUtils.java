@@ -24,7 +24,6 @@ package org.mangorage.mangobotapi.core.classloader;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.classfile.AccessFlags;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.AccessFlag;
@@ -72,6 +71,10 @@ public class ClassFileUtils {
     }
 
     public static int getMethodFlagsInt(AccessFlag... flags) {
-        return AccessFlags.ofMethod(flags).flagsMask();
+        int mask = 0;
+        for (AccessFlag flag : flags) {
+            mask |= flag.mask();
+        }
+        return mask;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024. MangoRage
+ * Copyright (c) 2023-2025. MangoRage
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@ import org.mangorage.mangobotapi.core.classloader.TransformResult;
 import org.mangorage.mangobotapi.core.classloader.TransformerFlags;
 
 import java.lang.classfile.ClassFile;
-import java.lang.classfile.ClassModel;
 import java.lang.classfile.CodeElement;
 import java.lang.classfile.MethodModel;
 import java.lang.classfile.attribute.SignatureAttribute;
@@ -38,35 +37,31 @@ import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.AccessFlag;
 import java.util.concurrent.atomic.AtomicReference;
 
-
-@SuppressWarnings("preview")
 public class ExampleGenericTransformer implements IClassTransformer {
+
     private static final String EXAMPLE_CLASS = "org/mangorage/mangobot/misc/Example";
     private static final String GET_TYPE_TOKEN_METHOD = "getTypeToken";
 
-
     @Override
     public TransformResult transform(byte[] preData) {
-        ClassFile file = ClassFile.of();
-        ClassModel classModel = file.parse(preData);
-
-
+        var file = ClassFile.of();
+        var classModel = file.parse(preData);
         byte[] data = null;
 
         if (classModel.thisClass().name().stringValue().equals(EXAMPLE_CLASS)) {
             data = file.build(classModel.thisClass().asSymbol(), cb -> {
-                classModel.forEachElement(e -> {
+                classModel.elementList().forEach(e -> {
                     if (e instanceof MethodModel me) {
                         if (!me.methodName().stringValue().equals(GET_TYPE_TOKEN_METHOD)) {
                             cb.with(e);
                         } else {
-                            cb.withMethod(me.methodName(), me.methodType(), ClassFileUtils.getMethodFlagsInt(AccessFlag.PUBLIC), a -> {
-                                a.withCode(cbb -> {
-                                    for (CodeElement element : me.code().get().elementList()) {
-                                        cbb.with(element);
-                                    }
-                                });
-                            });
+                            cb.withMethod(me.methodName(), me.methodType(),
+                                    ClassFileUtils.getMethodFlagsInt(AccessFlag.PUBLIC),
+                                    a -> a.withCode(cbb -> {
+                                        for (CodeElement element : me.code().get().elementList()) {
+                                            cbb.with(element);
+                                        }
+                                    }));
                         }
                     } else {
                         cb.with(e);
@@ -76,7 +71,8 @@ public class ExampleGenericTransformer implements IClassTransformer {
         } else if (classModel.superclass().get().name().stringValue().startsWith(EXAMPLE_CLASS)) {
             AtomicReference<String> type = new AtomicReference<>();
             data = file.build(classModel.thisClass().asSymbol(), cb -> {
-                classModel.forEachElement(e -> {
+
+                classModel.elementList().forEach(e -> {
                     if (e instanceof MethodModel me) {
                         if (!me.methodName().stringValue().equals(GET_TYPE_TOKEN_METHOD)) {
                             cb.with(e);
@@ -84,35 +80,30 @@ public class ExampleGenericTransformer implements IClassTransformer {
                     } else {
                         cb.with(e);
                     }
-
                     if (e instanceof SignatureAttribute s) {
                         type.set(ClassFileUtils.parseSignature(s.signature().stringValue()));
                     }
                 });
 
-                cb.withMethodBody(GET_TYPE_TOKEN_METHOD, ClassFileUtils.getMethodDesc(TypeToken.class), ClassFileUtils.getMethodFlagsInt(AccessFlag.PUBLIC, AccessFlag.FINAL), mcb -> {
-                    mcb
-                            .aload(0)
-                            .new_(ClassFileUtils.getClassName(TypeTokenImpl.class))
-                            .dup()
-                            .ldc(type.get())
-                            .invokespecial(ClassFileUtils.getClassName(TypeTokenImpl.class), "<init>", MethodTypeDesc.ofDescriptor("(Ljava/lang/String;)V"))
-                            .areturn();
-                });
+                cb.withMethodBody(GET_TYPE_TOKEN_METHOD,
+                        ClassFileUtils.getMethodDesc(TypeToken.class),
+                        ClassFileUtils.getMethodFlagsInt(AccessFlag.PUBLIC, AccessFlag.FINAL),
+                        mcb -> mcb.aload(0)
+                                .new_(ClassFileUtils.getClassName(TypeTokenImpl.class))
+                                .dup()
+                                .ldc(type.get())
+                                .invokespecial(ClassFileUtils.getClassName(TypeTokenImpl.class),
+                                        "<init>",
+                                        MethodTypeDesc.ofDescriptor("(Ljava/lang/String;)V"))
+                                .areturn());
             });
         }
 
-
-        if (data != null) {
-            return TransformerFlags.FULL_REWRITE.of(data);
-        }
-
-        return TransformerFlags.NO_REWRITE.of(preData);
+        return (data != null)
+                ? TransformerFlags.FULL_REWRITE.of(data)
+                : TransformerFlags.NO_REWRITE.of(preData);
     }
 
-    /**
-     * @return
-     */
     @Override
     public String getName() {
         return "Example Generic Transformer";
