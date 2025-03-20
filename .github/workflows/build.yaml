@@ -1,0 +1,36 @@
+name: Publish Maven Artifact
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle/**'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the damn repo
+        uses: actions/checkout@v3
+
+      - name: Set up Java (because apparently you can’t manage without it)
+        uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: '17'  # Change this if you’re into using some other version
+          cache: gradle
+
+      - name: Make gradlew executable (try not to break it)
+        run: chmod +x gradlew
+
+      - name: Build and Publish to Maven (get your act together)
+        run: ./gradlew clean publish
+        env:
+          MAVEN_USER: ${{ secrets.MAVEN_USER }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
