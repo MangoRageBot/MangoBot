@@ -12,12 +12,18 @@ permissions:
   contents: write
 
 jobs:
-  pre-build:
-    name: Setup Java Pre
-    uses: actions/setup-java@v4
-    with:
-      distribution: 'temurin'
-      java-version: 24
+  setup:
+    name: Setup Java Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 24
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 24
   build:
     uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
     with:
