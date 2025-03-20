@@ -26,6 +26,7 @@ jobs:
           java-version: 24
   build:
     uses: MinecraftForge/SharedActions/.github/workflows/gradle.yml@v0
+    needs: [ "setup" ]
     with:
       java: 21
       gradle_tasks: :runDatagen :publish
