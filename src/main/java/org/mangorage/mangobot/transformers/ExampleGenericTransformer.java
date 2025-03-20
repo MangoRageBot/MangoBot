@@ -39,6 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ExampleGenericTransformer implements IClassTransformer {
 
+
     private static final String EXAMPLE_CLASS = "org/mangorage/mangobot/misc/Example";
     private static final String GET_TYPE_TOKEN_METHOD = "getTypeToken";
 
