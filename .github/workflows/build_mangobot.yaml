@@ -2,9 +2,8 @@ name: Build MangoBot
 on:
   push:
     branches: [ "master" ]
-    paths-ignore:
-      - 'README.md'
-      - 'settings.gradle'
+    paths:
+      - 'src/*'
 
 permissions:
   contents: write
