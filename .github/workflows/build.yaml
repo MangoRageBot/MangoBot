@@ -19,20 +19,32 @@ jobs:
       - name: Checkout the damn repo (with full history)
         uses: actions/checkout@v3
         with:
-          fetch-depth: 1000
+          fetch-depth: 0
 
-      - name: Set up Java (because apparently you can’t manage without it)
+      - name: Set up Java 23 for Gradle runtime (try not to mess this up)
+        id: jdk23
         uses: actions/setup-java@v3
         with:
           distribution: corretto
-          java-version: '24'  # Change this if you’re too much of a wimp for another version
+          java-version: '23'
           cache: gradle
 
-      - name: Make gradlew executable (try not to screw it up)
+      - name: Set up Java 24 for compilation (because you clearly need the latest)
+        id: jdk24
+        uses: actions/setup-java@v3
+        with:
+          distribution: corretto
+          java-version: '24'
+          architecture: x64
+
+      - name: Revert JAVA_HOME to JDK 23 for Gradle runtime (remember which one you actually use)
+        run: echo "JAVA_HOME=${{ steps.jdk23.outputs.java-home }}" >> $GITHUB_ENV
+
+      - name: Make gradlew executable (if you haven’t broken it already)
         run: chmod +x gradlew
 
-      - name: Build and Publish to Maven (get your act together)
-        run: ./gradlew clean publish
+      - name: Build and Publish to Maven (finally, do your job)
+        run: ./gradlew clean publish -Dorg.gradle.java.installations.paths=${{ steps.jdk24.outputs.java-home }}
         env:
           MAVEN_USER: ${{ secrets.MAVEN_USER }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
