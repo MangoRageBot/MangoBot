@@ -3,7 +3,10 @@ on:
   push:
     branches: [ "master" ]
     paths:
-      - /src/**
+      - 'src/**'  # Only trigger when files inside /src change
+      - 'build.gradle'  # Include Gradle build script changes
+      - 'settings.gradle'  # Include Gradle settings changes
+      - 'gradle/**'  # Include Gradle wrapper changes
 
 permissions:
   contents: write
