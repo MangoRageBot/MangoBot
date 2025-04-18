@@ -1,0 +1,33 @@
+package org.mangorage.mangobotcore.jda.command.internal;
+
+import net.dv8tion.jda.api.entities.Message;
+import org.mangorage.mangobotcore.jda.command.api.CommandManager;
+import org.mangorage.mangobotcore.jda.command.api.ICommand;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class CommandManagerImpl implements CommandManager {
+    private final List<ICommand> commands = new ArrayList<>();
+
+
+    @Override
+    public void register(ICommand command) {
+        commands.add(command);
+    }
+
+    @Override
+    public void handle(Message message) {
+        var rawMessage = message.getContentRaw();
+        if (rawMessage.startsWith("?")) {
+            var cmd = rawMessage.replaceFirst("\\?", "").split(" ");
+
+            for (ICommand command : commands) {
+                if (command.commands().contains(cmd[0])) {
+                    command.execute(message);
+                    break;
+                }
+            }
+        }
+    }
+}

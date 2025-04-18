@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        //mavenLocal()
+        maven { url = 'https://maven.minecraftforge.net/' }
+    }
+}
+
+
+rootProject.name = 'MangoBotCore'
+
+include 'modules:eventbus'
+include 'modules:core'
+include 'modules:plugin'
+
+
+include 'bot'
+include 'modules:common-utils'
+findProject(':modules:common-utils')?.name = 'common-utils'
+
