@@ -40,3 +40,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/bot/src/main/resources/installer-data/dependencies.json
