@@ -8,8 +8,8 @@ buildscript {
     }
 
     dependencies {
-        classpath 'gradle.plugin.com.github.johnrengelman:shadow:7.1.2'
-        classpath 'org.mangorage:MangoBotGradle:+'
+
+        classpath 'org.mangorage:MangoBotGradle:5.0.14'
     }
 }
 
@@ -31,7 +31,6 @@ MangoBotConfig {
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {
         url = 'https://maven.minecraftforge.net/'
     }
@@ -51,14 +50,14 @@ dependencies {
     installer('org.mangorage:installer:+')
     botInternal(sourceSets.main.output)
 
-    library('org.mangorage:scanner:1.1.0')
+    library('org.mangorage:scanner:+')
     library('net.dv8tion:JDA:5.3.2')
     library('com.google.code.gson:gson:2.10.1')
     library('org.luaj:luaj-jse:3.0.1')
     library('net.minecraftforge:eventbus:7.0-beta.1')
 
-    embedLibrary project(":modules:core")
-    embedLibrary project(":modules:common-utils")
+    embedLibrary(project(":modules:core"))
+    embedLibrary(project(":modules:common-utils"))
 }
 
 jar {
