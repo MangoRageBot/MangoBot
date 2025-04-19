@@ -4,12 +4,13 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="" />
+        <option name="gradleJvm" value="corretto-21" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/bot" />
             <option value="$PROJECT_DIR$/modules" />
+            <option value="$PROJECT_DIR$/modules/common-utils" />
             <option value="$PROJECT_DIR$/modules/core" />
             <option value="$PROJECT_DIR$/modules/eventbus" />
             <option value="$PROJECT_DIR$/modules/plugin" />

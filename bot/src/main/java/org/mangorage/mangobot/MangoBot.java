@@ -11,7 +11,11 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.mangorage.commonutils.config.Config;
 import org.mangorage.commonutils.config.ConfigSetting;
 import org.mangorage.commonutils.config.ISetting;
+import org.mangorage.commonutils.jda.ButtonActionRegistry;
+import org.mangorage.commonutils.jda.MessageSettings;
+import org.mangorage.mangobot.actions.TrashButtonAction;
 import org.mangorage.mangobot.commands.PingCommand;
+import org.mangorage.mangobot.commands.trick.TrickCommand;
 import org.mangorage.mangobotcore.jda.command.api.CommandManager;
 import org.mangorage.mangobotcore.plugin.api.MangoBotPlugin;
 import org.mangorage.mangobotcore.plugin.api.Plugin;
@@ -22,6 +26,9 @@ import java.util.EnumSet;
 @MangoBotPlugin(id = MangoBot.ID)
 public final class MangoBot implements Plugin {
     public static final String ID = "mangobot";
+
+    public static final ButtonActionRegistry ACTION_REGISTRY = new ButtonActionRegistry();
+
 
     // Where we create our "config"
     public final static Config CONFIG = new Config(Path.of("plugins/%s/.env".formatted(MangoBot.ID)));
@@ -63,7 +70,10 @@ public final class MangoBot implements Plugin {
     private JDA jda;
 
     public MangoBot() {
+        ACTION_REGISTRY.register(new TrashButtonAction());
+
         commandManager.register(new PingCommand());
+        commandManager.register(new TrickCommand(this));
     }
 
     public void load() {
@@ -92,6 +102,14 @@ public final class MangoBot implements Plugin {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public Path getPluginDirectory() {
+        return Path.of("plugins").resolve(ID).toAbsolutePath();
+    }
+
+    public MessageSettings getMessageSettings() {
+        return MessageSettings.create().build();
     }
 
 }

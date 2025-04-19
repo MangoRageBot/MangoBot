@@ -177,10 +177,24 @@
     },
     {
       "url": "https://repo.maven.apache.org/maven2/",
-      "group": "net.sf.trove4j",
-      "artifact": "trove4j",
-      "version": "3.0.3",
-      "target": "trove4j-3.0.3.jar"
+      "group": "org.luaj",
+      "artifact": "luaj-jse",
+      "version": "3.0.1",
+      "target": "luaj-jse-3.0.1.jar"
+    },
+    {
+      "url": "https://maven.minecraftforge.net/",
+      "group": "net.minecraftforge",
+      "artifact": "eventbus",
+      "version": "7.0-beta.1",
+      "target": "eventbus-7.0-beta.1.jar"
+    },
+    {
+      "url": "https://repo.maven.apache.org/maven2/",
+      "group": "org.jspecify",
+      "artifact": "jspecify",
+      "version": "1.0.0",
+      "target": "jspecify-1.0.0.jar"
     }
   ]
 }
