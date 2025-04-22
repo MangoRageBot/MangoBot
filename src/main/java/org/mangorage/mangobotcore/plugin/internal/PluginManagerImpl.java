@@ -103,6 +103,13 @@ public final class PluginManagerImpl implements PluginManager {
         return plugins.get(id);
     }
 
+    @Override
+    public List<PluginContainer> getPlugins() {
+        return List.copyOf(
+                plugins.values()
+        );
+    }
+
     public void loadPlugin(PluginContainerImpl container) {
         var pluginId = container.getMetadata().getId();
 
