@@ -24,7 +24,7 @@ package org.mangorage.commonutils.misc;
 
 import java.util.function.Supplier;
 
-public class LazyReference<T> {
+public final class LazyReference<T> {
     private Supplier<T> supplier;
     private T object;
 
