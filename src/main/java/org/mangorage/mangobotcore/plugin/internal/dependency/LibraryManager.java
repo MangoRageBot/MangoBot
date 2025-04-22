@@ -35,7 +35,7 @@ public final class LibraryManager<T> {
         libraries.put(id, new Library<>(value));
     }
 
-    public void addDependenciesForLibrary(String id, List<Dependency> dependencies) {
+    public void addDependenciesForLibrary(String id, List<? extends Dependency> dependencies) {
         var library = libraries.get(id);
         if (library != null) {
             for (var dependency : dependencies) {
