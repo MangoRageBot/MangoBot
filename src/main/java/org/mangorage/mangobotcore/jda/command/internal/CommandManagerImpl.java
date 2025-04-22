@@ -23,7 +23,7 @@ public final class CommandManagerImpl implements CommandManager {
     @Override
     public void handle(Message message) {
         var rawMessage = message.getContentRaw();
-        var cmdPrefix = "?";
+        var cmdPrefix = "!";
         if (rawMessage.startsWith(cmdPrefix)) {
 
             String[] command_pre = rawMessage.split(" ");
