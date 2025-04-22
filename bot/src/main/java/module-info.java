@@ -6,7 +6,6 @@ module org.mangorage.mangobotcore {
     requires net.minecraftforge.eventbus;
     requires org.mangorage.scanner;
 
-
     // Common Utils
     exports org.mangorage.commonutils.misc;
     exports org.mangorage.commonutils.data;
