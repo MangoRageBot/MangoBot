@@ -22,6 +22,8 @@
 
 package org.mangorage.mangobotcore.plugin.internal.dependency;
 
+import org.mangorage.mangobotcore.plugin.api.Dependency;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -33,19 +35,19 @@ public final class LibraryManager<T> {
         libraries.put(id, new Library<>(value));
     }
 
-    public void addDependenciesForLibrary(String id, List<DependencyImpl> dependencies) {
+    public void addDependenciesForLibrary(String id, List<Dependency> dependencies) {
         var library = libraries.get(id);
         if (library != null) {
             for (var dependency : dependencies) {
-                var dependencyLibrary = libraries.get(dependency.id());
+                var dependencyLibrary = libraries.get(dependency.getId());
                 if (dependencyLibrary == null) {
-                    switch (dependency.type()) {
+                    switch (dependency.getType()) {
                         case REQUIRED ->
-                                throw new IllegalStateException("Failed to find Dependency %s for %s".formatted(dependency.id(), id));
+                                throw new IllegalStateException("Failed to find Dependency %s for %s".formatted(dependency.getId(), id));
                     }
                 } else {
                     dependencyLibrary.incrementPriority();
-                    library.addDependency(dependency.id());
+                    library.addDependency(dependency.getId());
                 }
             }
         }

@@ -7,6 +7,7 @@ import org.mangorage.mangobotcore.plugin.api.MangoBotPlugin;
 import org.mangorage.mangobotcore.plugin.api.Plugin;
 import org.mangorage.mangobotcore.plugin.api.PluginContainer;
 import org.mangorage.mangobotcore.plugin.api.PluginManager;
+import org.mangorage.mangobotcore.plugin.internal.dependency.DependencyImpl;
 import org.mangorage.mangobotcore.plugin.internal.dependency.Library;
 import org.mangorage.mangobotcore.plugin.internal.dependency.LibraryManager;
 import org.mangorage.scanner.api.Scanner;
@@ -72,7 +73,7 @@ public final class PluginManagerImpl implements PluginManager {
         LogHelper.info("Organizing Plugin Load Order...");
 
         for (Library<PluginContainerImpl> library : List.copyOf(manager.getLibraries())) {
-            var dependencies = library.getObject().getMetadata().dependencies();
+            var dependencies = library.getObject().getMetadata().getDependencies();
             if (dependencies != null && !dependencies.isEmpty()) {
                 LogHelper.info("Found %s dependencies for '%s'".formatted(dependencies.size(), library.getObject().getMetadata().getId()));
                 manager.addDependenciesForLibrary(library.getObject().getMetadata().getId(), dependencies);

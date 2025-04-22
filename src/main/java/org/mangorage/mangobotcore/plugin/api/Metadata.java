@@ -6,5 +6,8 @@ import java.util.List;
 
 public sealed interface Metadata permits MetadataImpl {
     String getId();
-    List<? extends Dependency> dependencies();
+    String getName();
+    String getType();
+    String getVersion();
+    List<Dependency> getDependencies();
 }
