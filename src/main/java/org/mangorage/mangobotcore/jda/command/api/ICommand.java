@@ -6,6 +6,8 @@ import org.mangorage.commonutils.misc.Arguments;
 import java.util.List;
 
 public interface ICommand {
+    String id();
+
     List<String> commands();
     String usage();
     CommandResult execute(Message message, Arguments arguments);

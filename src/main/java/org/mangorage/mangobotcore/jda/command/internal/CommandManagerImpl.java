@@ -7,15 +7,17 @@ import org.mangorage.mangobotcore.jda.command.api.ICommand;
 import org.mangorage.mangobotcore.jda.event.CommandEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class CommandManagerImpl implements CommandManager {
-    private final List<ICommand> commands = new ArrayList<>();
+    private final Map<String, ICommand> commands = new HashMap<>();
 
 
     @Override
     public void register(ICommand command) {
-        commands.add(command);
+        commands.putIfAbsent(command.id(), command);
     }
 
     @Override
@@ -30,7 +32,7 @@ public final class CommandManagerImpl implements CommandManager {
             var cmd = rawMessage.replaceFirst("\\"+cmdPrefix, "").split(" ");
 
             var success = false;
-            for (ICommand command : commands) {
+            for (ICommand command : commands.values()) {
                 if (command.commands().contains(cmd[0])) {
                     command.execute(message, arguments);
                     success = true;
@@ -40,5 +42,10 @@ public final class CommandManagerImpl implements CommandManager {
             if (!success)
                 CommandEvent.BUS.post(new CommandEvent(message, cmd[0], arguments));
         }
+    }
+
+    @Override
+    public ICommand getCommand(String id) {
+        return commands.get(id);
     }
 }
