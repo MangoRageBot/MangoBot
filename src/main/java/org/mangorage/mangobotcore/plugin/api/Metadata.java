@@ -9,5 +9,5 @@ public sealed interface Metadata permits MetadataImpl {
     String getName();
     String getType();
     String getVersion();
-    List<Dependency> getDependencies();
+    List<? extends Dependency> getDependencies();
 }

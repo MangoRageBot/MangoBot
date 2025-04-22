@@ -21,7 +21,7 @@ public record MetadataImpl(
         String version,
 
         @Expose
-        List<Dependency> dependencies
+        List<DependencyImpl> dependencies
 ) implements Metadata {
 
 
@@ -47,7 +47,7 @@ public record MetadataImpl(
     }
 
     @Override
-    public List<Dependency> getDependencies() {
+    public List<DependencyImpl> getDependencies() {
         return dependencies;
     }
 }
