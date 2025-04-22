@@ -63,6 +63,17 @@ dependencies {
     library('net.minecraftforge:eventbus:7.0-beta.1')
 }
 
+tasks.named('processResources', ProcessResources).configure {
+    var replaceProperties = [
+            mangobot_version: version
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['mangobotcore.plugin.json']) {
+        expand replaceProperties + [project: project]
+    }
+}
+
 jar {
     dependsOn configurations.embedLibrary
 
