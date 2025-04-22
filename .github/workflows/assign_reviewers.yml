@@ -1,0 +1,19 @@
+name: Auto Assign
+on:
+  pull_request_target:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      discussions: write
+    steps:
+      - uses: wow-actions/auto-assign@v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          reviewers: RealMangoRage, PaintNinja
+          assignees: PaintNinja, RealMangoRage
+          skipKeywords: wip, draft

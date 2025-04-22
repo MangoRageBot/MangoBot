@@ -1,6 +1,5 @@
 package org.mangorage.mangobot.loader;
 
-
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -14,7 +13,7 @@ public final class Loader {
         URLClassLoader CL_libraries = new URLClassLoader(fetchJars(new File[]{new File("libraries")}), Thread.currentThread().getContextClassLoader().getParent());
         URLClassLoader cl = new URLClassLoader(fetchJars(new File[]{new File("plugins")}), CL_libraries);
         Thread.currentThread().setContextClassLoader(cl);
-        callMain("org.mangorage.mangobot.loader.Bootstrap", args, cl);
+        callMain("org.mangorage.entrypoint.MangoBotCore", args, cl);
     }
 
     public static URL[] fetchJars(File[] directories) {
