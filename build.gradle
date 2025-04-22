@@ -61,6 +61,9 @@ dependencies {
     library('net.dv8tion:JDA:5.3.2')
     library('com.google.code.gson:gson:2.10.1')
     library('net.minecraftforge:eventbus:7.0-beta.1')
+
+    library('org.apache.logging.log4j:log4j-core:+')
+    library('org.slf4j:slf4j-simple:2.1.0-alpha1')
 }
 
 tasks.named('processResources', ProcessResources).configure {
