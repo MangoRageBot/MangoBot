@@ -25,7 +25,7 @@ public final class CommandManagerImpl implements CommandManager {
     @Override
     public void handle(Message message) {
         var rawMessage = message.getContentRaw();
-        var cmdPrefix = "?`";
+        var cmdPrefix = "!";
         var silent = false;
 
         if (rawMessage.startsWith("s"+cmdPrefix)) {
