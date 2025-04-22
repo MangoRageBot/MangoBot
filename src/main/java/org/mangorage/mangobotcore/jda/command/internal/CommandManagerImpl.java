@@ -39,7 +39,7 @@ public final class CommandManagerImpl implements CommandManager {
             String[] command_pre = rawMessage.split(" ");
             Arguments arguments = Arguments.of(Arguments.of(command_pre).getFrom(1).split(" "));
 
-            var cmd = rawMessage.replaceFirst("\\" + cmdPrefix, "").split(" ");
+            var cmd = rawMessage.replaceFirst(cmdPrefix, "").split(" ");
 
             var success = false;
             for (ICommand command : commands.values()) {
