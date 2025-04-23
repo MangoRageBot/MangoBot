@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Message;
 import org.mangorage.commonutils.misc.Arguments;
 import org.mangorage.commonutils.misc.TaskScheduler;
 import org.mangorage.mangobotcore.jda.command.api.CommandManager;
+import org.mangorage.mangobotcore.jda.command.api.CommandResult;
 import org.mangorage.mangobotcore.jda.command.api.ICommand;
 import org.mangorage.mangobotcore.jda.event.CommandEvent;
 
@@ -44,14 +45,16 @@ public final class CommandManagerImpl implements CommandManager {
             var success = false;
             for (ICommand command : commands.values()) {
                 if (command.commands().contains(cmd[0])) {
-                    command.execute(message, arguments);
+                    command.execute(message, arguments).accept(message);
                     success = true;
                     break;
                 }
             }
-            if (!success)
-                CommandEvent.BUS.post(new CommandEvent(message, cmd[0], arguments));
-
+            if (!success) {
+                var event = CommandEvent.BUS.fire(new CommandEvent(message, cmd[0], arguments));
+                if (event.isHandled())
+                    event.getResult().accept(message);
+            }
             if (silent) {
                 TaskScheduler.getExecutor().schedule(() -> {
                     message.delete().queue();

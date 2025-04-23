@@ -13,7 +13,7 @@ public final class CommandEvent extends MutableEvent {
     private final String cmd;
     private final Arguments arguments;
 
-    private boolean handled = false;
+    private CommandResult result = null;
 
     public CommandEvent(Message message, String cmd, Arguments arguments) {
         this.message = message;
@@ -33,11 +33,15 @@ public final class CommandEvent extends MutableEvent {
         return cmd;
     }
 
-    public void setHandled(CommandResult execute) {
-        this.handled = true;
+    public void setHandled(CommandResult result) {
+        this.result = result;
     }
 
     public boolean isHandled() {
-        return handled;
+        return result != null;
+    }
+
+    public CommandResult getResult() {
+        return result;
     }
 }
