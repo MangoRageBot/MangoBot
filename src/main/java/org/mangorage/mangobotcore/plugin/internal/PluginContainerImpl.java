@@ -13,10 +13,8 @@ public final class PluginContainerImpl implements PluginContainer {
         this.metadata = metadata;
     }
 
-    void init() {
-        try {
-            pluginInstance = pluginClazz.getConstructor().newInstance();
-        } catch (ReflectiveOperationException ignored) {}
+    void init() throws ReflectiveOperationException {
+        pluginInstance = pluginClazz.getConstructor().newInstance();
     }
 
     @Override

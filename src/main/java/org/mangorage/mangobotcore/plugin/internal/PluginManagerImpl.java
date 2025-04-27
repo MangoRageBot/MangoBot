@@ -126,7 +126,7 @@ public final class PluginManagerImpl implements PluginManager {
 
         try {
             container.init();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LogHelper.error("Failed to load plugin: " + pluginId);
             LogHelper.error(e.getMessage());
             e.printStackTrace();
