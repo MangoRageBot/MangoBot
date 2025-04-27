@@ -20,5 +20,5 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore.jda.command.api;
     exports org.mangorage.mangobotcore.jda.event;
 
-    opens org.mangorage.entrypoint to org.mangorage.installer;
+    exports org.mangorage.entrypoint;
 }
