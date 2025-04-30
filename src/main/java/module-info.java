@@ -3,9 +3,10 @@ module org.mangorage.mangobotcore {
     requires static org.slf4j;
     requires static net.minecraftforge.eventbus;
 
-    requires com.google.gson;
-    requires net.dv8tion.jda;
-    requires org.mangorage.scanner;
+    requires static com.google.gson;
+    requires static net.dv8tion.jda;
+    requires static org.mangorage.scanner;
+
     requires jdk.unsupported;
 
     // Common Utils
