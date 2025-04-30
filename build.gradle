@@ -3,14 +3,13 @@ import org.mangorage.mangobotgradle.util.GitVersion
 buildscript {
     repositories {
         gradlePluginPortal()
-        mavenLocal()
         maven {
             url = "https://maven.minecraftforge.net/"
         }
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:5.0.14'
+        classpath 'org.mangorage:MangoBotGradle:6.0.2'
     }
 }
 
@@ -54,7 +53,7 @@ repositories {
 
 
 dependencies {
-    installer('org.mangorage:installer:4.0.9')
+    installer('org.mangorage:installer:4.0.13')
     botInternal(sourceSets.main.output)
 
     library('org.mangorage:scanner:1.1.3')
@@ -90,7 +89,10 @@ jar {
     }
 
     manifest {
-        attributes 'Main-Class': 'org.mangorage.mangobot.Test'
+        attributes(
+                'Main-Class': 'org.mangorage.mangobot.loader.Loader',
+                'ModuleMainClass': 'org.mangorage.mangobot.loader.Loader'
+        )
     }
 }
 
