@@ -14,8 +14,10 @@ public final class Loader {
         boolean isDev = false;
 
         for (String arg : args) {
-            if (arg.contains("--dev"))
+            if (arg.contains("--dev")) {
                 isDev = true;
+                break;
+            }
         }
 
         System.out.println("Path: " + Path.of("").toAbsolutePath());
