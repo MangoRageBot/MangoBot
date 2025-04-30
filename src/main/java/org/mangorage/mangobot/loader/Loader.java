@@ -1,7 +1,6 @@
 package org.mangorage.mangobot.loader;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,22 +18,12 @@ public final class Loader {
                 isDev = true;
         }
 
-
         System.out.println("Path: " + Path.of("").toAbsolutePath());
 
-        // Cant have parent, for unkown reasons...
-        // Needs to be null...
         URLClassLoader CL_libraries = new URLClassLoader(fetchJars(new File[]{new File("libraries")}), isDev ? null : Thread.currentThread().getContextClassLoader().getParent());
-
-        try (URLClassLoader loader = new URLClassLoader(fetchJars(new File[]{new File("plugins")}), CL_libraries)) {
-            Thread.currentThread().setContextClassLoader(loader);
-            Class<?> clazz = Class.forName("org.mangorage.entrypoint.MangoBotCore", false, loader);
-            System.out.println(clazz.getClassLoader());
-            Method method = clazz.getDeclaredMethod("main", String[].class);
-            method.invoke(null, (Object) args);
-        } catch (IOException | ReflectiveOperationException e) {
-            throw new RuntimeException("Failed to launch the application", e);
-        }
+        URLClassLoader cl = new URLClassLoader(fetchJars(new File[]{new File("plugins")}), CL_libraries);
+        Thread.currentThread().setContextClassLoader(cl);
+        callMain("org.mangorage.entrypoint.MangoBotCore", args, cl);
     }
 
     public static URL[] fetchJars(File[] directories) {
@@ -57,8 +46,24 @@ public final class Loader {
             }
         }
 
-        System.out.println("Found: " + urls.size());
-
         return urls.toArray(URL[]::new);
+    }
+
+    public static void callMain(String className, String[] args, ClassLoader classLoader) {
+        try {
+            Class<?> clazz = Class.forName(className, false, classLoader);
+            Method mainMethod = clazz.getMethod("main", String[].class);
+
+            // Make sure it's static and public
+            if (!java.lang.reflect.Modifier.isStatic(mainMethod.getModifiers())) {
+                throw new IllegalStateException("Main method is not static, are you high?");
+            }
+
+            // Invoke the main method with a godawful cast
+            mainMethod.invoke(null, (Object) args);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Couldn't reflectively call main because something exploded.", e);
+        }
     }
 }
