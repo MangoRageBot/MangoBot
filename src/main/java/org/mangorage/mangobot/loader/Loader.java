@@ -28,7 +28,7 @@ public final class Loader {
 
         try (URLClassLoader loader = new URLClassLoader(fetchJars(new File[]{new File("plugins")}), CL_libraries)) {
             Thread.currentThread().setContextClassLoader(loader);
-            Class<?> clazz = Class.forName("org.mangorage.entrypoint.MangoBotCore", true, loader);
+            Class<?> clazz = Class.forName("org.mangorage.entrypoint.MangoBotCore", false, loader);
             System.out.println(clazz.getClassLoader());
             Method method = clazz.getDeclaredMethod("main", String[].class);
             method.invoke(null, (Object) args);
