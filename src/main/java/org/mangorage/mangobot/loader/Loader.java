@@ -12,11 +12,19 @@ import java.util.List;
 
 public final class Loader {
     public static void main(String[] args) {
+        boolean isDev = false;
+
+        for (String arg : args) {
+            if (arg.contains("--dev"))
+                isDev = true;
+        }
+
+
         System.out.println("Path: " + Path.of("").toAbsolutePath());
 
         // Cant have parent, for unkown reasons...
         // Needs to be null...
-        URLClassLoader CL_libraries = new URLClassLoader(fetchJars(new File[]{new File("libraries")}), null);
+        URLClassLoader CL_libraries = new URLClassLoader(fetchJars(new File[]{new File("libraries")}), isDev ? null : Thread.currentThread().getContextClassLoader());
 
         try (URLClassLoader loader = new URLClassLoader(fetchJars(new File[]{new File("plugins")}), CL_libraries)) {
             Thread.currentThread().setContextClassLoader(loader);
