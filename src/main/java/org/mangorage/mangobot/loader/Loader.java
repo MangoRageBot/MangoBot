@@ -24,7 +24,7 @@ public final class Loader {
 
         // Cant have parent, for unkown reasons...
         // Needs to be null...
-        URLClassLoader CL_libraries = new URLClassLoader(fetchJars(new File[]{new File("libraries")}), isDev ? null : Thread.currentThread().getContextClassLoader());
+        URLClassLoader CL_libraries = new URLClassLoader(fetchJars(new File[]{new File("libraries")}), isDev ? null : Thread.currentThread().getContextClassLoader().getParent());
 
         try (URLClassLoader loader = new URLClassLoader(fetchJars(new File[]{new File("plugins")}), CL_libraries)) {
             Thread.currentThread().setContextClassLoader(loader);
