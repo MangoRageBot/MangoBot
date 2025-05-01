@@ -49,10 +49,17 @@ public final class PluginManagerImpl implements PluginManager {
                 .enableAllInfo()
                 .scan()) {
 
-            List<Class<?>> annotated = scanResult.getClassesWithAnnotation(MangoBotPlugin.class.getName())
-                    .loadClasses();
-
-            scanner.addAll(annotated);
+            scanResult.getClassesWithAnnotation(MangoBotPlugin.class.getName()).forEach(info -> {
+                loop: for (Module module : PluginManagerImpl.class.getModule().getLayer().modules()) {
+                    try {
+                        var clz = Class.forName(module, info.getName());
+                        if (clz != null) {
+                            scanner.add(clz);
+                            break loop;
+                        }
+                    } catch (Throwable ignored) {}
+                }
+            });
         }
 
         scanner
