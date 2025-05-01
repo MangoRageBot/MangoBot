@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:6.0.6-beta.10'
+        classpath 'org.mangorage:MangoBotGradle:6.0.7'
     }
 }
 
