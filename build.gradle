@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:6.0.7'
+        classpath 'org.mangorage:MangoBotGradle:6.0.9'
     }
 }
 
@@ -23,7 +23,7 @@ apply plugin: 'MangoBotGradle'
 apply plugin: 'maven-publish'
 
 group = 'org.mangorage'
-version = GitVersion.getGitVersion().getVersionAsString()
+version = GitVersion.getGitVersion().getVersionAsString() + "-beta.10"
 
 println("Version: " + version)
 
@@ -55,7 +55,7 @@ repositories {
 
 dependencies {
     installer('org.mangorage:installer:4.0.13')
-    bot("org.mangorage:mangobotbootstrap:1.0.10")
+    bot("org.mangorage:mangobotbootstrap:1.0.15")
 
 
     library('io.github.classgraph:classgraph:4.8.162')

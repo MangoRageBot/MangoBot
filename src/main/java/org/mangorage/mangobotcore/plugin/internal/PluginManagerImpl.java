@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 public final class PluginManagerImpl implements PluginManager {
     private static final Gson GSON = new GsonBuilder().create();
@@ -45,15 +46,12 @@ public final class PluginManagerImpl implements PluginManager {
 
         List<Class<?>> scanner = new ArrayList<>();
 
-        try (ScanResult scanResult = new ClassGraph()
-                .enableAllInfo()
-                .scan()) {
-
-            List<Class<?>> annotated = scanResult.getClassesWithAnnotation(MangoBotPlugin.class.getName())
-                    .loadClasses();
-
-            scanner.addAll(annotated);
-        }
+        ServiceLoader.load(PluginContainerImpl.class.getModule().getLayer(), Plugin.class)
+                .stream()
+                .forEach(p -> {
+                    scanner.add(p.type());
+                    System.out.println("Found Service: " + p.type().getName());
+                });
 
         scanner
                 .forEach(clz -> {
