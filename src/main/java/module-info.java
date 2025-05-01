@@ -24,5 +24,4 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore.jda.event;
 
     exports org.mangorage.entrypoint;
-    uses org.mangorage.mangobot.loader.Loader;
 }
