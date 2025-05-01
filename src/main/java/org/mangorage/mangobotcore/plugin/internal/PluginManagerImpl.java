@@ -2,6 +2,8 @@ package org.mangorage.mangobotcore.plugin.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 import org.mangorage.commonutils.log.LogHelper;
 import org.mangorage.mangobotcore.plugin.api.MangoBotPlugin;
 import org.mangorage.mangobotcore.plugin.api.Plugin;
@@ -16,6 +18,7 @@ import org.mangorage.scanner.api.ScannerBuilder;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,13 +43,19 @@ public final class PluginManagerImpl implements PluginManager {
         LogHelper.info("Gathering Plugin Info...");
         LibraryManager<PluginContainerImpl> manager = new LibraryManager<>();
 
-        Scanner scanner = ScannerBuilder.of()
-                .addClassloader((URLClassLoader) Thread.currentThread().getContextClassLoader())
-                .build();
+        List<Class<?>> scanner = new ArrayList<>();
 
-        scanner.commitScan();
+        try (ScanResult scanResult = new ClassGraph()
+                .enableAllInfo()
+                .scan()) {
 
-        scanner.findClassesWithAnnotation(MangoBotPlugin.class)
+            List<Class<?>> annotated = scanResult.getClassesWithAnnotation(MangoBotPlugin.class.getName())
+                    .loadClasses();
+
+            scanner.addAll(annotated);
+        }
+
+        scanner
                 .forEach(clz -> {
                     var annotation = clz.getAnnotation(MangoBotPlugin.class);
                     if (Plugin.class.isAssignableFrom(clz)) {

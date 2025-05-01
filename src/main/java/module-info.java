@@ -1,13 +1,15 @@
 module org.mangorage.mangobotcore {
-    requires static annotations;
-    requires static org.slf4j;
-    requires static net.minecraftforge.eventbus;
+    requires org.jetbrains.annotations;
+    requires org.slf4j;
+    requires net.minecraftforge.eventbus;
 
-    requires static com.google.gson;
-    requires static net.dv8tion.jda;
-    requires static org.mangorage.scanner;
+    requires com.google.gson;
+    requires net.dv8tion.jda;
+    requires org.mangorage.scanner;
 
-    requires jdk.unsupported;
+    requires org.mangorage.bootstrap;
+    requires io.github.classgraph;
+
 
     // Common Utils
     exports org.mangorage.commonutils.misc;
@@ -24,4 +26,7 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore.jda.event;
 
     exports org.mangorage.entrypoint;
+
+    exports org.mangorage.mangobotcore.plugin.internal to com.google.gson;
+    exports org.mangorage.mangobotcore.plugin.internal.dependency to com.google.gson;
 }
