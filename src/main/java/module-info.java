@@ -7,7 +7,7 @@ module org.mangorage.mangobotcore {
     requires net.dv8tion.jda;
     requires org.mangorage.scanner;
 
-    requires org.mangorage.bootstrap;
+
     requires io.github.classgraph;
 
 
