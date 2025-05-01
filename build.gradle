@@ -23,7 +23,7 @@ apply plugin: 'MangoBotGradle'
 apply plugin: 'maven-publish'
 
 group = 'org.mangorage'
-version = GitVersion.getGitVersion().getVersionAsString() + "-beta.10"
+version = GitVersion.getGitVersion().getVersionAsString()
 
 println("Version: " + version)
 
