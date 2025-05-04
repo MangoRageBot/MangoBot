@@ -55,7 +55,7 @@ repositories {
 
 dependencies {
     installer('org.mangorage:installer:4.0.13')
-    bot("org.mangorage:mangobotbootstrap:1.0.15")
+    bot("org.mangorage:mangobotbootstrap:1.0.18")
 
 
     library('io.github.classgraph:classgraph:4.8.162')
