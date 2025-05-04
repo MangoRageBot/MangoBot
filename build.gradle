@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:6.0.9'
+        classpath 'org.mangorage:MangoBotGradle:6.0.10'
     }
 }
 
@@ -27,12 +27,17 @@ version = GitVersion.getGitVersion().getVersionAsString()
 
 println("Version: " + version)
 
-extraJavaModuleInfo {
-    setDeriveAutomaticModuleNamesFromFileNames(true)
-}
-
 MangoBotConfig {
     setJarTask(jar)
+
+    addRunConfig {
+        it.setName("runDevBot")
+        it.addArgs("--dev")
+    }
+}
+
+extraJavaModuleInfo {
+    setDeriveAutomaticModuleNamesFromFileNames(true)
 }
 
 repositories {
@@ -54,9 +59,9 @@ repositories {
 
 
 dependencies {
-    installer('org.mangorage:installer:4.0.13')
-    bot("org.mangorage:mangobotbootstrap:1.0.18")
 
+    installer('org.mangorage:installer:4.0.13')
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.18")
 
     library('io.github.classgraph:classgraph:4.8.162')
     library('org.mangorage:scanner:1.1.3')
