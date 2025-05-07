@@ -3,6 +3,7 @@ package org.mangorage.mangobotcore.jda.command.internal;
 import net.dv8tion.jda.api.entities.Message;
 import org.mangorage.commonutils.misc.Arguments;
 import org.mangorage.commonutils.misc.TaskScheduler;
+import org.mangorage.entrypoint.MangoBotCore;
 import org.mangorage.mangobotcore.jda.command.api.CommandManager;
 import org.mangorage.mangobotcore.jda.command.api.CommandResult;
 import org.mangorage.mangobotcore.jda.command.api.ICommand;
@@ -26,7 +27,7 @@ public final class CommandManagerImpl implements CommandManager {
     @Override
     public void handle(Message message) {
         var rawMessage = message.getContentRaw();
-        var cmdPrefix = "!";
+        var cmdPrefix = MangoBotCore.isDevMode() ? "dev!" : "!";
         var silent = false;
 
         if (rawMessage.startsWith("s"+cmdPrefix)) {
