@@ -10,6 +10,7 @@ import org.mangorage.mangobotcore.jda.command.api.ICommand;
 import org.mangorage.mangobotcore.jda.event.CommandEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public final class CommandManagerImpl implements CommandManager {
         if (rawMessage.startsWith(cmdPrefix)) {
 
             String[] command_pre = rawMessage.split(" ");
-            Arguments arguments = Arguments.of(Arguments.of(command_pre).getFrom(1).split(" "));
+            Arguments arguments = Arguments.of(Arrays.copyOfRange(command_pre, 0, command_pre.length));
 
             var cmd = rawMessage.replaceFirst(cmdPrefix, "").split(" ");
 
