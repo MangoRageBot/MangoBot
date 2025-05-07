@@ -17,6 +17,6 @@ public final class MangoBotCore implements Plugin {
 
     @Override
     public void load() {
-        var a = 1;
+
     }
 }
