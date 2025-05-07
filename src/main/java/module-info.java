@@ -27,8 +27,13 @@ module org.mangorage.mangobotcore {
 
     exports org.mangorage.entrypoint;
 
-    exports org.mangorage.mangobotcore.plugin.internal to com.google.gson;
-    exports org.mangorage.mangobotcore.plugin.internal.dependency to com.google.gson;
+    exports org.mangorage.mangobotcore.plugin.internal;
+    exports org.mangorage.mangobotcore.plugin.internal.dependency;
+
+    opens org.mangorage.mangobotcore.plugin.internal;
+    opens org.mangorage.mangobotcore.plugin.internal.dependency;
+
+    exports org.mangorage.mangobotcore;
 
     provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;
     uses org.mangorage.mangobotcore.plugin.api.Plugin;

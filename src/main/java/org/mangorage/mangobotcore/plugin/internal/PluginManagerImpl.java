@@ -44,16 +44,11 @@ public final class PluginManagerImpl implements PluginManager {
         LogHelper.info("Gathering Plugin Info...");
         LibraryManager<PluginContainerImpl> manager = new LibraryManager<>();
 
-        List<Class<?>> scanner = new ArrayList<>();
+        Scanner scanner = ScannerBuilder.of()
+                .addClassloader((URLClassLoader) PluginManagerImpl.class.getClassLoader())
+                .build();
 
-        ServiceLoader.load(PluginContainerImpl.class.getModule().getLayer(), Plugin.class)
-                .stream()
-                .forEach(p -> {
-                    scanner.add(p.type());
-                    System.out.println("Found Service: " + p.type().getName());
-                });
-
-        scanner
+        scanner.findClassesWithAnnotation(MangoBotPlugin.class)
                 .forEach(clz -> {
                     var annotation = clz.getAnnotation(MangoBotPlugin.class);
                     if (Plugin.class.isAssignableFrom(clz)) {
