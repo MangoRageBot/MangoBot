@@ -48,6 +48,8 @@ public final class PluginManagerImpl implements PluginManager {
                 .addClassloader((URLClassLoader) PluginManagerImpl.class.getClassLoader())
                 .build();
 
+        scanner.commitScan();
+
         scanner.findClassesWithAnnotation(MangoBotPlugin.class)
                 .forEach(clz -> {
                     var annotation = clz.getAnnotation(MangoBotPlugin.class);
