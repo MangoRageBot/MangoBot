@@ -2,7 +2,6 @@ package org.mangorage.mangobotcore.plugin.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.mangorage.bootstrap.Bootstrap;
 import org.mangorage.commonutils.log.LogHelper;
 import org.mangorage.mangobotcore.plugin.api.MangoBotPlugin;
 import org.mangorage.mangobotcore.plugin.api.Plugin;
