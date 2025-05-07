@@ -5,10 +5,7 @@ module org.mangorage.mangobotcore {
 
     requires com.google.gson;
     requires net.dv8tion.jda;
-    requires org.mangorage.scanner;
-
-
-    requires io.github.classgraph;
+    requires org.mangorage.bootstrap;
 
 
     // Common Utils

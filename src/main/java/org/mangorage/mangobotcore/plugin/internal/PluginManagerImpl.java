@@ -2,23 +2,17 @@ package org.mangorage.mangobotcore.plugin.internal;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.ScanResult;
+import org.mangorage.bootstrap.Bootstrap;
 import org.mangorage.commonutils.log.LogHelper;
 import org.mangorage.mangobotcore.plugin.api.MangoBotPlugin;
 import org.mangorage.mangobotcore.plugin.api.Plugin;
 import org.mangorage.mangobotcore.plugin.api.PluginContainer;
 import org.mangorage.mangobotcore.plugin.api.PluginManager;
-import org.mangorage.mangobotcore.plugin.internal.dependency.DependencyImpl;
 import org.mangorage.mangobotcore.plugin.internal.dependency.Library;
 import org.mangorage.mangobotcore.plugin.internal.dependency.LibraryManager;
-import org.mangorage.scanner.api.Scanner;
-import org.mangorage.scanner.api.ScannerBuilder;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,14 +38,13 @@ public final class PluginManagerImpl implements PluginManager {
         LogHelper.info("Gathering Plugin Info...");
         LibraryManager<PluginContainerImpl> manager = new LibraryManager<>();
 
-        Scanner scanner = ScannerBuilder.of()
-                .addClassloader((URLClassLoader) PluginManagerImpl.class.getClassLoader())
-                .build();
 
-        scanner.commitScan();
 
-        scanner.findClassesWithAnnotation(MangoBotPlugin.class)
-                .forEach(clz -> {
+        ServiceLoader.load(PluginManagerImpl.class.getModule().getLayer(), Plugin.class)
+                .stream()
+                .toList()
+                .forEach(plugin -> {
+                    var clz = plugin.type();
                     var annotation = clz.getAnnotation(MangoBotPlugin.class);
                     if (Plugin.class.isAssignableFrom(clz)) {
                         LogHelper.info("Found Plugin with ID '%s', now attempting to find metadata".formatted(annotation.id()));
