@@ -32,8 +32,8 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore;
 
     provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;
-    provides org.mangorage.bootstrap.api.IClassTransformer with org.mangorage.mangobotcore.transformer.ExampleTransformer;
+    provides org.mangorage.bootstrap.api.transformer.IClassTransformer with org.mangorage.mangobotcore.transformer.ExampleTransformer;
 
     uses org.mangorage.mangobotcore.plugin.api.Plugin;
-    uses org.mangorage.bootstrap.api.IClassTransformer;
+    uses org.mangorage.bootstrap.api.transformer.IClassTransformer;
 }
