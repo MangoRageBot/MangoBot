@@ -61,7 +61,7 @@ repositories {
 dependencies {
 
     installer('org.mangorage:installer:4.0.13')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.22")
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.27")
 
     library('net.dv8tion:JDA:5.3.2')
     library('com.google.code.gson:gson:2.10.1')

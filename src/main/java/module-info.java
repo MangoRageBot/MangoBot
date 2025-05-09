@@ -5,6 +5,7 @@ module org.mangorage.mangobotcore {
 
     requires com.google.gson;
     requires net.dv8tion.jda;
+    requires org.mangorage.bootstrap;
 
     // Common Utils
     exports org.mangorage.commonutils.misc;
@@ -31,5 +32,8 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore;
 
     provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;
+    provides org.mangorage.bootstrap.api.IClassTransformer with org.mangorage.mangobotcore.transformer.ExampleTransformer;
+
     uses org.mangorage.mangobotcore.plugin.api.Plugin;
+    uses org.mangorage.bootstrap.api.IClassTransformer;
 }
