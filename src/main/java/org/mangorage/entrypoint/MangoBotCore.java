@@ -5,8 +5,6 @@ import org.mangorage.mangobotcore.plugin.internal.PluginManagerImpl;
 public final class MangoBotCore {
     static String[] args;
     static boolean devMode = false;
-
-
     static boolean loaded = false;
 
     public static String[] getArgs() {

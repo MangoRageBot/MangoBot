@@ -10,6 +10,10 @@ public final class MangoBotCore implements Plugin {
 
     public static final String ID = "mangobotcore";
 
+    public static boolean isDevMode() {
+        return org.mangorage.entrypoint.MangoBotCore.isDevMode();
+    }
+
     @Override
     public String getId() {
         return ID;
