@@ -17,8 +17,9 @@ public final class MangoBotCore {
         return devMode;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
         if (loaded) return;
+        var a = MangoBotCore.class.getClassLoader().loadClass("kotlin.Unit");
         MangoBotCore.args = args;
 
         for (String arg : args) {

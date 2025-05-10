@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:6.0.11'
+        classpath 'org.mangorage:MangoBotGradle:6.0.11-beta'
     }
 }
 
@@ -60,8 +60,8 @@ repositories {
 
 dependencies {
 
-    installer('org.mangorage:installer:4.0.13')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.27")
+    installer('org.mangorage:installer:4.0.20')
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.31")
 
     library('net.dv8tion:JDA:5.3.2')
     library('com.google.code.gson:gson:2.10.1')
