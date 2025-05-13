@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:6.0.11'
+        classpath 'org.mangorage:MangoBotGradle:6.0.13'
     }
 }
 
@@ -32,12 +32,22 @@ MangoBotConfig {
 
     addRunConfig {
         it.setName("runDevBot")
+        it.addArgs("--launchTarget", "mangobot")
         it.addArgs("--dev")
+        it.addArgs("--mixin", "mangobotcore.mixins.json")
     }
 }
 
 extraJavaModuleInfo {
     setDeriveAutomaticModuleNamesFromFileNames(true)
+    module("net.fabricmc:sponge-mixin", "org.spongepowered.mixin") {
+        preserveExisting()
+        exports("org.spongepowered.asm.mixin.transformer", "org.mangorage.mangobotcore")
+        opens("org.spongepowered.asm.mixin.transformer", "org.mangorage.mangobotcore")
+
+        exports("org.spongepowered.asm.transformers", "org.mangorage.mangobotcore")
+    }
+
 }
 
 repositories {
@@ -45,6 +55,9 @@ repositories {
     mavenLocal()
     maven {
         url = 'https://maven.minecraftforge.net/'
+    }
+    maven {
+        url = "https://maven.fabricmc.net/"
     }
     maven {
         url 'https://m2.dv8tion.net/releases'
@@ -61,7 +74,21 @@ repositories {
 dependencies {
 
     installer('org.mangorage:installer:4.0.20')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.31")
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.41")
+
+
+    // SpongeMixin...
+    library('net.fabricmc:sponge-mixin:0.13.4+mixin.0.8.5')
+
+    library('net.minecraftforge:modlauncher:10.2.4')
+    library('net.minecraftforge:securemodules:2.2.21')
+
+    library('org.ow2.asm:asm:9.8')
+    library('org.ow2.asm:asm-util:9.8')
+    library('org.ow2.asm:asm-analysis:9.8')
+    library('org.ow2.asm:asm-tree:9.8')
+    library('org.ow2.asm:asm-commons:9.8')
+
 
     library('net.dv8tion:JDA:5.3.2')
     library('com.google.code.gson:gson:2.10.1')

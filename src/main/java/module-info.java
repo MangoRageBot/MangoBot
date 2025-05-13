@@ -1,12 +1,15 @@
-module org.mangorage.mangobotcore {
-    requires  org.jetbrains.annotations;
+open module org.mangorage.mangobotcore {
+    requires org.jetbrains.annotations;
     requires org.slf4j;
     requires net.minecraftforge.eventbus;
 
-    requires com.google.gson;
     requires net.dv8tion.jda;
     requires org.mangorage.bootstrap;
     requires kotlin.stdlib;
+    requires org.spongepowered.mixin;
+
+    requires com.google.gson;
+    requires java.sql;
 
     // Common Utils
     exports org.mangorage.commonutils.misc;
@@ -32,15 +35,21 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore;
 
 
+    exports org.mangorage.mixin.core;
 
-    opens org.mangorage.mangobotcore.plugin.internal;
-    opens org.mangorage.mangobotcore.plugin.internal.dependency;
-    opens org.mangorage.entrypoint;
+    exports org.mangorage.mangobotcore.mixin;
+
+
+//    opens org.mangorage.mangobotcore.plugin.internal;
+//    opens org.mangorage.mangobotcore.plugin.internal.dependency;
+//    opens org.mangorage.entrypoint;
 
 
     provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;
-    provides org.mangorage.bootstrap.api.transformer.IClassTransformer with org.mangorage.mangobotcore.transformer.ExampleTransformer;
+    provides org.mangorage.bootstrap.api.transformer.IClassTransformer with org.mangorage.mangobotcore.transformer.ExampleTransformer, org.mangorage.mixin.SpongeMixinTransformer;
+    provides org.spongepowered.asm.service.IGlobalPropertyService with org.mangorage.mixin.core.MixinBlackboardImpl;
 
     uses org.mangorage.mangobotcore.plugin.api.Plugin;
     uses org.mangorage.bootstrap.api.transformer.IClassTransformer;
+    uses org.spongepowered.asm.service.IGlobalPropertyService;
 }
