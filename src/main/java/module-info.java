@@ -6,7 +6,7 @@ module org.mangorage.mangobotcore {
     requires net.dv8tion.jda;
     requires org.mangorage.bootstrap;
     requires kotlin.stdlib;
-    requires org.spongepowered.mixin;
+    requires static org.spongepowered.mixin;
 
     requires com.google.gson;
     requires java.sql;
@@ -39,6 +39,7 @@ module org.mangorage.mangobotcore {
     opens org.mangorage.mangobotcore.plugin.internal;
     opens org.mangorage.mangobotcore.plugin.internal.dependency;
     opens org.mangorage.entrypoint;
+    exports org.mangorage.mangobotcore.plugin.internal;
 
 
     provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;

@@ -2,5 +2,12 @@
   "id": "mangobotcore",
   "name": "MangoBotCore",
   "type": "Core",
-  "version": "${mangobot_version}"
+  "version": "${mangobot_version}",
+  "extraInfo": {
+    "data": {
+      "mixins": [
+        "Test"
+      ]
+    }
+  }
 }

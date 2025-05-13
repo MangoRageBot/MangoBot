@@ -40,14 +40,6 @@ MangoBotConfig {
 
 extraJavaModuleInfo {
     setDeriveAutomaticModuleNamesFromFileNames(true)
-    module("net.fabricmc:sponge-mixin", "org.spongepowered.mixin") {
-        preserveExisting()
-        exports("org.spongepowered.asm.mixin.transformer", "org.mangorage.mangobotcore")
-        opens("org.spongepowered.asm.mixin.transformer", "org.mangorage.mangobotcore")
-
-        exports("org.spongepowered.asm.transformers", "org.mangorage.mangobotcore")
-    }
-
 }
 
 repositories {
@@ -74,13 +66,14 @@ repositories {
 dependencies {
 
     installer('org.mangorage:installer:4.0.20')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.41")
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.43")
 
 
     // SpongeMixin...
     compileOnly('net.fabricmc:sponge-mixin:0.13.4+mixin.0.8.5')
 
-
+    library('net.minecraftforge:modlauncher:10.2.4')
+    library('net.minecraftforge:securemodules:2.2.21')
 
     library('net.dv8tion:JDA:5.3.2')
     library('com.google.code.gson:gson:2.10.1')

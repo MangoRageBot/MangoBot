@@ -1,7 +1,6 @@
 package org.mangorage.mangobotcore.plugin.internal;
 
 import com.google.gson.annotations.Expose;
-import org.mangorage.mangobotcore.plugin.api.Dependency;
 import org.mangorage.mangobotcore.plugin.api.Metadata;
 import org.mangorage.mangobotcore.plugin.internal.dependency.DependencyImpl;
 
@@ -21,10 +20,11 @@ public record MetadataImpl(
         String version,
 
         @Expose
-        List<DependencyImpl> dependencies
+        List<DependencyImpl> dependencies,
+
+        @Expose
+        ExtraMap extraInfo
 ) implements Metadata {
-
-
 
     @Override
     public String getId() {
@@ -49,5 +49,10 @@ public record MetadataImpl(
     @Override
     public List<DependencyImpl> getDependencies() {
         return dependencies;
+    }
+
+    @Override
+    public ExtraMap getExtraMap() {
+        return extraInfo;
     }
 }
