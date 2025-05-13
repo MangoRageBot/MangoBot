@@ -6,7 +6,7 @@
   "extraInfo": {
     "data": {
       "mixins": [
-        "Test"
+        "mangobotcore.mixins.json"
       ]
     }
   }
