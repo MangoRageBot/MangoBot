@@ -3,7 +3,9 @@ package org.mangorage.mangobotcore.plugin.internal;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.mangorage.commonutils.log.LogHelper;
+import org.mangorage.mangobotcore.plugin.api.IPluginInfoGetter;
 import org.mangorage.mangobotcore.plugin.api.MangoBotPlugin;
+import org.mangorage.mangobotcore.plugin.api.Metadata;
 import org.mangorage.mangobotcore.plugin.api.Plugin;
 import org.mangorage.mangobotcore.plugin.api.PluginContainer;
 import org.mangorage.mangobotcore.plugin.api.PluginManager;
@@ -77,6 +79,19 @@ public final class PluginManagerImpl implements PluginManager {
                 LogHelper.info("Found no dependencies for '%s'".formatted(library.getObject().getMetadata().getId()));
             }
         }
+
+        LogHelper.info("Giving Metadata info out...");
+
+        ServiceLoader.load(IPluginInfoGetter.class)
+                .stream()
+                .forEach(provider -> {
+                    final var list = manager.getLibraries()
+                            .stream()
+                            .map(library -> (Metadata) library.getObject().getMetadata())
+                            .toList();
+                    provider.get().onGet(list);
+                });
+
 
         LogHelper.info("Loading Plugins...");
 

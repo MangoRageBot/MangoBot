@@ -44,4 +44,5 @@ module org.mangorage.mangobotcore {
 
     provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;
     uses org.mangorage.mangobotcore.plugin.api.Plugin;
+    uses org.mangorage.mangobotcore.plugin.api.IPluginInfoGetter;
 }
