@@ -1,4 +1,4 @@
-open module org.mangorage.mangobotcore {
+module org.mangorage.mangobotcore {
     requires org.jetbrains.annotations;
     requires org.slf4j;
     requires net.minecraftforge.eventbus;
@@ -34,22 +34,13 @@ open module org.mangorage.mangobotcore {
     // Core Plugin
     exports org.mangorage.mangobotcore;
 
-
-    exports org.mangorage.mixin.core;
-
     exports org.mangorage.mangobotcore.mixin;
 
-
-//    opens org.mangorage.mangobotcore.plugin.internal;
-//    opens org.mangorage.mangobotcore.plugin.internal.dependency;
-//    opens org.mangorage.entrypoint;
+    opens org.mangorage.mangobotcore.plugin.internal;
+    opens org.mangorage.mangobotcore.plugin.internal.dependency;
+    opens org.mangorage.entrypoint;
 
 
     provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;
-    provides org.mangorage.bootstrap.api.transformer.IClassTransformer with org.mangorage.mangobotcore.transformer.ExampleTransformer, org.mangorage.mixin.SpongeMixinTransformer;
-    provides org.spongepowered.asm.service.IGlobalPropertyService with org.mangorage.mixin.core.MixinBlackboardImpl;
-
     uses org.mangorage.mangobotcore.plugin.api.Plugin;
-    uses org.mangorage.bootstrap.api.transformer.IClassTransformer;
-    uses org.spongepowered.asm.service.IGlobalPropertyService;
 }
