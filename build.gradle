@@ -5,7 +5,7 @@ buildscript {
         gradlePluginPortal()
         mavenLocal()
         maven {
-            url = "https://maven.minecraftforge.net/"
+            url = "https://maven.mangorage.org/releases/"
         }
     }
 
@@ -46,6 +46,9 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven {
+        url = "https://maven.mangorage.org/releases/"
+    }
+    maven {
         url = 'https://maven.minecraftforge.net/'
     }
     maven {
@@ -57,16 +60,13 @@ repositories {
     maven {
         url 'https://jitpack.io'
     }
-    maven {
-        url = "https://maven.minecraftforge.net/"
-    }
 }
 
 
 dependencies {
 
     installer('org.mangorage:installer:4.0.20')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.43")
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.47")
 
 
     // SpongeMixin...
@@ -159,7 +159,7 @@ publishing {
 
     repositories {
         maven {
-            url = "https://maven.minecraftforge.net/"
+            url = "https://maven.mangorage.org/releases/"
 
             credentials {
                 username = System.getenv("MAVEN_USER")

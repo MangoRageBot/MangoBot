@@ -27,7 +27,6 @@ public final class MangoBotCore {
             }
         }
 
-
         PluginManagerImpl.INSTANCE.load();
         loaded = true;
     }
