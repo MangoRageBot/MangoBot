@@ -9,7 +9,6 @@ module org.mangorage.mangobotcore {
     requires static org.spongepowered.mixin;
 
     requires com.google.gson;
-    requires java.sql;
 
     // Common Utils
     exports org.mangorage.commonutils.misc;
