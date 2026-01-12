@@ -1,9 +1,10 @@
-package org.mangorage.mangobotcore.internal;
+package org.mangorage.mangobotcore.api.plugin;
 
 import org.mangorage.mangobotcore.api.plugin.v1.MangoBotPlugin;
 import org.mangorage.mangobotcore.api.plugin.v1.Plugin;
+import org.mangorage.mangobotcore.internal.ExampleThing;
 
-import static org.mangorage.mangobotcore.internal.MangoBotCore.ID;
+import static org.mangorage.mangobotcore.api.plugin.MangoBotCore.ID;
 
 @MangoBotPlugin(id = ID)
 public final class MangoBotCore implements Plugin {
@@ -21,7 +22,6 @@ public final class MangoBotCore implements Plugin {
 
     @Override
     public void load() {
-        var a = 1;
         new ExampleThing().load();
     }
 }

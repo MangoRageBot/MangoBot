@@ -1,8 +1,6 @@
 import org.mangorage.bootstrap.api.transformer.IClassTransformer;
-import org.mangorage.mangobotcore.api.plugin.v1.Plugin;
-import org.mangorage.mangobotcore.api.plugin.v1.IPluginInfoGetter;
 
-import org.mangorage.mangobotcore.internal.MangoBotCore;
+import org.mangorage.mangobotcore.api.plugin.MangoBotCore;
 import org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
 
 module org.mangorage.mangobotcore {
@@ -25,6 +23,7 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore.api.jda.event.v1;
 
     // Plugin API
+    exports org.mangorage.mangobotcore.api.plugin;
     exports org.mangorage.mangobotcore.api.plugin.v1;
 
     // Common Utils
