@@ -1,4 +1,7 @@
 import org.mangorage.bootstrap.api.transformer.IClassTransformer;
+import org.mangorage.mangobotcore.api.plugin.v1.Plugin;
+import org.mangorage.mangobotcore.api.plugin.v1.IPluginInfoGetter;
+
 import org.mangorage.mangobotcore.internal.MangoBotCore;
 import org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
 
@@ -40,6 +43,9 @@ module org.mangorage.mangobotcore {
 
 
     opens org.mangorage.mangobotcore.entrypoint; // Opens it
+
+    opens org.mangorage.mangobotcore.internal.plugin to com.google.gson; // GSON
+    opens org.mangorage.mangobotcore.internal.plugin.dependency to com.google.gson; // GSON
 
     provides Plugin with MangoBotCore;
     provides IClassTransformer with ExampleTransformer;
