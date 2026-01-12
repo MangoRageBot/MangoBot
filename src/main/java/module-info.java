@@ -1,5 +1,6 @@
 import org.mangorage.bootstrap.api.transformer.IClassTransformer;
-
+import org.mangorage.mangobotcore.api.plugin.v1.Plugin;
+import org.mangorage.mangobotcore.api.plugin.v1.IPluginInfoGetter;
 import org.mangorage.mangobotcore.api.plugin.MangoBotCore;
 import org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
 
