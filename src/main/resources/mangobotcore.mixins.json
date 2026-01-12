@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.mangorage.mangobotcore.mixin",
+  "package": "org.mangorage.mangobotcore.internal.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ExampleMixin"

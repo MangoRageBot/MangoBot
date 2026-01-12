@@ -1,3 +1,7 @@
+import org.mangorage.bootstrap.api.transformer.IClassTransformer;
+import org.mangorage.mangobotcore.internal.MangoBotCore;
+import org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
+
 module org.mangorage.mangobotcore {
     requires org.jetbrains.annotations;
     requires org.slf4j;
@@ -10,38 +14,37 @@ module org.mangorage.mangobotcore {
 
     requires com.google.gson;
 
-    // Common Utils
-    exports org.mangorage.commonutils.misc;
-    exports org.mangorage.commonutils.data;
-    exports org.mangorage.commonutils.jda;
-    exports org.mangorage.commonutils.jda.slash.command;
-    exports org.mangorage.commonutils.jda.slash.command.watcher;
-    exports org.mangorage.commonutils.log;
-
-    // Plugin API
-    exports org.mangorage.mangobotcore.plugin.api;
-
-    // Command API
-    exports org.mangorage.mangobotcore.jda.command.api;
+    // Config API
+    exports org.mangorage.mangobotcore.api.config.v1;
 
     // JDA API
-    exports org.mangorage.mangobotcore.jda.event;
+    exports org.mangorage.mangobotcore.api.jda.command.v1;
+    exports org.mangorage.mangobotcore.api.jda.event.v1;
 
-    // Config API
-    exports org.mangorage.mangobotcore.config.api;
+    // Plugin API
+    exports org.mangorage.mangobotcore.api.plugin.v1;
 
-    // Core Plugin
-    exports org.mangorage.mangobotcore;
+    // Common Utils
+    exports org.mangorage.mangobotcore.api.util.data;
+    exports org.mangorage.mangobotcore.api.util.jda;
+    exports org.mangorage.mangobotcore.api.util.log;
+    exports org.mangorage.mangobotcore.api.util.misc;
 
-    exports org.mangorage.mangobotcore.mixin;
+    // More JDA Utils
+    exports org.mangorage.mangobotcore.api.util.jda.slash.command;
+    exports org.mangorage.mangobotcore.api.util.jda.slash.command.watcher;
+    exports org.mangorage.mangobotcore.api.util.jda.slash.component;
+    exports org.mangorage.mangobotcore.api.util.jda.slash.component.interact;
+    exports org.mangorage.mangobotcore.api.util.jda.slash.message;
 
-    opens org.mangorage.mangobotcore.plugin.internal;
-    opens org.mangorage.mangobotcore.plugin.internal.dependency;
-    opens org.mangorage.entrypoint;
-    exports org.mangorage.mangobotcore.plugin.internal;
 
 
-    provides org.mangorage.mangobotcore.plugin.api.Plugin with org.mangorage.mangobotcore.MangoBotCore;
-    uses org.mangorage.mangobotcore.plugin.api.Plugin;
-    uses org.mangorage.mangobotcore.plugin.api.IPluginInfoGetter;
+    opens org.mangorage.mangobotcore.entrypoint; // Opens it
+
+    provides Plugin with MangoBotCore;
+    provides IClassTransformer with ExampleTransformer;
+
+    uses Plugin;
+    uses IPluginInfoGetter;
+    uses IClassTransformer;
 }
