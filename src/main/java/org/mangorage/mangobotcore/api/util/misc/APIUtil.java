@@ -36,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class APIUtil {
+public final class APIUtil {
     public static boolean isValidBotToken(String token) {
         /**
         var bot = JDABuilder.createLight(token);

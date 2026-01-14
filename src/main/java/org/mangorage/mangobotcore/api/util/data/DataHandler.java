@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class DataHandler<T extends IFileNameResolver> {
+public final class DataHandler<T extends IFileNameResolver> {
     private static final Gson DEFAULT_GSON = new GsonBuilder()
             .setPrettyPrinting()
             .create();

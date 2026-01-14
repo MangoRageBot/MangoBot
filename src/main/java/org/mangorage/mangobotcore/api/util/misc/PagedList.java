@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Objects;
 
-public class PagedList<T> {
+public final class PagedList<T> {
     private Page<T>[] pages;
     private int page_id = 0;
     private int entries = 0;

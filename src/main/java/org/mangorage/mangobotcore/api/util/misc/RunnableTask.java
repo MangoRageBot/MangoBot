@@ -25,7 +25,7 @@ package org.mangorage.mangobotcore.api.util.misc;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class RunnableTask<T> implements Runnable, Supplier<T> {
+public final class RunnableTask<T> implements Runnable, Supplier<T> {
 
     private final T data;
     private final Consumer<RunnableTask<T>> runnableConsumer;

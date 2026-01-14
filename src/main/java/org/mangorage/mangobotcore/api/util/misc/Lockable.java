@@ -22,7 +22,7 @@
 
 package org.mangorage.mangobotcore.api.util.misc;
 
-public class Lockable {
+public final class Lockable {
     private boolean locked = false;
 
     public void lock() {

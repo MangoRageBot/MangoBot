@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 public final class CommandManagerImpl implements CommandManager {
     private final Map<String, ICommand> commands = new HashMap<>();
 
-
     @Override
     public void register(ICommand command) {
         commands.putIfAbsent(command.id(), command);
@@ -42,6 +41,7 @@ public final class CommandManagerImpl implements CommandManager {
             var cmd = rawMessage.replaceFirst(cmdPrefix, "").split(" ");
 
             var success = false;
+
             for (ICommand command : commands.values()) {
                 if (command.commands().contains(cmd[0])) {
                     command.execute(message, arguments).accept(message);
@@ -49,11 +49,13 @@ public final class CommandManagerImpl implements CommandManager {
                     break;
                 }
             }
+
             if (!success) {
                 var event = CommandEvent.BUS.fire(new CommandEvent(message, cmd[0], arguments));
                 if (event.isHandled())
                     event.getResult().accept(message);
             }
+
             if (silent) {
                 TaskScheduler.getExecutor().schedule(() -> {
                     message.delete().queue();

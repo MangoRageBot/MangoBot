@@ -25,7 +25,7 @@ package org.mangorage.mangobotcore.api.util.misc;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class TaskScheduler {
+public final class TaskScheduler {
     private final static ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public static ScheduledExecutorService getExecutor() {

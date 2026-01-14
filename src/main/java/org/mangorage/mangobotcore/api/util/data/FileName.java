@@ -22,5 +22,4 @@
 
 package org.mangorage.mangobotcore.api.util.data;
 
-public record FileName(String path, String name) {
-}
+public record FileName(String path, String name) {}

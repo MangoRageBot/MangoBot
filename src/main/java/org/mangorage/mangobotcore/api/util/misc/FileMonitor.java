@@ -33,7 +33,7 @@ import java.nio.file.WatchService;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class FileMonitor extends Thread {
+public final class FileMonitor extends Thread {
 
     private static final FileMonitor MONITOR;
 
