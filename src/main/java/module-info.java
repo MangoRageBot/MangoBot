@@ -7,7 +7,7 @@ import org.mangorage.mangobotcore.internal.entrypoint.MangoBotEntrypoint;
 import org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
 
 module org.mangorage.mangobotcore {
-    requires org.jetbrains.annotations;
+    requires static org.jetbrains.annotations;
     requires org.slf4j;
     requires net.minecraftforge.eventbus;
 

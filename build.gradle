@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:6.0.19'
+        classpath 'org.mangorage:MangoBotGradle:6.0.20'
     }
 }
 
@@ -67,8 +67,9 @@ repositories {
 dependencies {
 
     installer('org.mangorage:installer:4.0.27-beta.1')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.83")
-//    launchtarget("org.mangorage:mangobotlaunchtarget:0.1.1-beta.1")
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.84")
+
+    launchtarget("org.mangorage:mangobotlaunchtarget:0.1.5")
 
 
     // SpongeMixin...
