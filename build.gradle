@@ -10,7 +10,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'org.mangorage:MangoBotGradle:6.0.17'
+        classpath 'org.mangorage:MangoBotGradle:6.0.19'
     }
 }
 
@@ -43,8 +43,9 @@ extraJavaModuleInfo {
 }
 
 repositories {
-    mavenCentral()
     mavenLocal()
+
+    mavenCentral()
     maven {
         url = "https://maven.mangorage.org/releases/"
     }
@@ -65,8 +66,9 @@ repositories {
 
 dependencies {
 
-    installer('org.mangorage:installer:4.0.26')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.73")
+    installer('org.mangorage:installer:4.0.27-beta.1')
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.83")
+//    launchtarget("org.mangorage:mangobotlaunchtarget:0.1.1-beta.1")
 
 
     // SpongeMixin...
