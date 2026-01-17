@@ -23,12 +23,13 @@
 package org.mangorage.mangobotcore.api.jda.command.v1;
 
 import net.dv8tion.jda.api.entities.Message;
+import org.mangorage.mangobotcore.api.command.v1.ICommandResult;
 import org.mangorage.mangobotcore.api.util.jda.MessageSettings;
 
 import java.util.HashMap;
 
 
-public record CommandResult(String string) {
+public record CommandResult(String string) implements ICommandResult {
     private static final MessageSettings DEFAULT_SETTINGS = MessageSettings.create().build();
     private static final HashMap<String, CommandResult> CACHE = new HashMap<>();
 
@@ -36,6 +37,7 @@ public record CommandResult(String string) {
         return CACHE.computeIfAbsent(content, CommandResult::new);
     }
 
+    public static final CommandResult INVALID_COMMAND = of("Invalid Command!");
     public static final CommandResult PASS = of(null);
     public static final CommandResult FAIL = of("An error occurred while executing this command");
     public static final CommandResult NO_PERMISSION = of("You don't have permission to use this command!");
@@ -47,5 +49,10 @@ public record CommandResult(String string) {
     public void accept(Message message) {
         if (string() != null)
             DEFAULT_SETTINGS.apply(message.reply(string)).queue();
+    }
+
+    @Override
+    public String getResultReason() {
+        return string;
     }
 }
