@@ -1,6 +1,5 @@
 package org.mangorage.mangobotcore.internal.command;
 
-import com.google.common.collect.ImmutableMap;
 import org.mangorage.mangobotcore.api.command.v1.ICommandContext;
 import org.mangorage.mangobotcore.api.command.v1.ICommandExecutor;
 import org.mangorage.mangobotcore.api.command.v1.ICommandNode;
@@ -21,7 +20,7 @@ public final class CommandNode implements ICommandNode {
         this.name = name;
         this.usage = usage;
         this.requiresCheck = requiresCheck;
-        this.children = ImmutableMap.copyOf(children);
+        this.children = Map.copyOf(children);
         this.executor = executor;
     }
 
