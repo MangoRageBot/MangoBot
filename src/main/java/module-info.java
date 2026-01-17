@@ -17,7 +17,6 @@ module org.mangorage.mangobotcore {
     requires static org.spongepowered.mixin;
 
     requires com.google.gson;
-    requires guava;
 
     // Config API
     exports org.mangorage.mangobotcore.api.config.v1;
