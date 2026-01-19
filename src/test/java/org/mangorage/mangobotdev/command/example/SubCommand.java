@@ -6,12 +6,13 @@ import org.mangorage.mangobotcore.api.command.v1.argument.types.IntegerArgumentT
 public class SubCommand extends AbstractCommand<String, Integer> {
     public SubCommand(String name, boolean useArg) {
         super(name);
-        if (useArg)
+        if (useArg) {
             registerRequiredArgument(
                     "player",
                     "The Player",
                     IntegerArgumentType.INSTANCE
             );
+        }
     }
 
     @Override
