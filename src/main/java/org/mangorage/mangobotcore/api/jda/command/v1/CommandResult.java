@@ -23,13 +23,12 @@
 package org.mangorage.mangobotcore.api.jda.command.v1;
 
 import net.dv8tion.jda.api.entities.Message;
-import org.mangorage.mangobotcore.api.command.v1.ICommandResult;
 import org.mangorage.mangobotcore.api.util.jda.MessageSettings;
 
 import java.util.HashMap;
 
 
-public record CommandResult(String string) implements ICommandResult {
+public record CommandResult(String string) {
     private static final MessageSettings DEFAULT_SETTINGS = MessageSettings.create().build();
     private static final HashMap<String, CommandResult> CACHE = new HashMap<>();
 
@@ -49,10 +48,5 @@ public record CommandResult(String string) implements ICommandResult {
     public void accept(Message message) {
         if (string() != null)
             DEFAULT_SETTINGS.apply(message.reply(string)).queue();
-    }
-
-    @Override
-    public String getResultReason() {
-        return string;
     }
 }
