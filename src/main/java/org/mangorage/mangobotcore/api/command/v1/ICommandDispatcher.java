@@ -10,5 +10,5 @@ public interface ICommandDispatcher<C, R> {
     void register(AbstractCommand<C, R> command);
     AbstractCommand<C, R> getCommand(String name);
 
-    R execute(String input, C context);
+    R execute(String input, C context, CommandParseResult commandParseResult);
 }

@@ -28,6 +28,8 @@ module org.mangorage.mangobotcore {
 
     // Command API
     exports org.mangorage.mangobotcore.api.command.v1;
+    exports org.mangorage.mangobotcore.api.command.v1.argument;
+    exports org.mangorage.mangobotcore.api.command.v1.argument.types;
 
     // Plugin API
     exports org.mangorage.mangobotcore.api.plugin;

@@ -1,6 +1,7 @@
 package org.mangorage.mangobotcore.internal.command;
 
 import org.mangorage.mangobotcore.api.command.v1.AbstractCommand;
+import org.mangorage.mangobotcore.api.command.v1.CommandParseResult;
 import org.mangorage.mangobotcore.api.command.v1.ICommandDispatcher;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
     }
 
     @Override
-    public R execute(String input, C context) {
+    public R execute(String input, C context, CommandParseResult commandParseResult) {
         String[] split = input.trim().split("\\s+");
         if (split.length == 0)
             return defaultInvalid;
@@ -38,6 +39,6 @@ public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
         if (root == null)
             return defaultInvalid;
 
-        return root.execute(context, Arrays.copyOfRange(split, 1, split.length));
+        return root.execute(context, Arrays.copyOfRange(split, 1, split.length), commandParseResult);
     }
 }
