@@ -35,7 +35,7 @@ public abstract class AbstractCommand<C, R> {
     protected <T> RequiredArg<T> registerRequiredArgument(String name, String description, ArgumentType<T> type) {
         arguments.put(
                 name,
-                new RequiredArg<>(name, description, type)
+                new RequiredArg<>(name, description, requiredArgs, type)
         );
         requiredArgs++;
         return (RequiredArg<T>) arguments.get(name);
@@ -44,7 +44,7 @@ public abstract class AbstractCommand<C, R> {
     protected <T> OptionalArg<T> registerOptionalArgument(String name, String description, ArgumentType<T> type) {
         arguments.put(
                 name,
-                new OptionalArg(name, description, type)
+                new OptionalArg(name, description, requiredArgs + optionalArgs, type)
         );
         optionalArgs++;
         return (OptionalArg<T>) arguments.get(name);
@@ -94,7 +94,7 @@ public abstract class AbstractCommand<C, R> {
                     commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
                     return getFailedResult();
                 }
-                return run(context, arguments);
+                return run(context, arguments, commandParseResult);
             }
 
             AbstractCommand<C, R> sub = subCommand.get(arguments[0]);
@@ -107,7 +107,7 @@ public abstract class AbstractCommand<C, R> {
                     commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
                     return getFailedResult();
                 }
-                return run(context, arguments);
+                return run(context, arguments, commandParseResult);
             }
         } catch (Throwable throwable) {
             commandParseResult.addMessage(throwable.toString());
@@ -115,5 +115,5 @@ public abstract class AbstractCommand<C, R> {
         }
     }
 
-    public abstract R run(C context, String[] arguments) throws Throwable;
+    public abstract R run(C context, String[] arguments, CommandParseResult commandParseResult) throws Throwable;
 }
