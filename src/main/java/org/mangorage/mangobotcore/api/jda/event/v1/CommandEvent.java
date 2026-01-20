@@ -3,8 +3,8 @@ package org.mangorage.mangobotcore.api.jda.event.v1;
 import net.dv8tion.jda.api.entities.Message;
 import net.minecraftforge.eventbus.api.bus.EventBus;
 import net.minecraftforge.eventbus.api.event.MutableEvent;
+import org.mangorage.mangobotcore.api.jda.command.v2.JDACommandResult;
 import org.mangorage.mangobotcore.api.util.misc.Arguments;
-import org.mangorage.mangobotcore.api.jda.command.v1.CommandResult;
 
 public final class CommandEvent extends MutableEvent {
     public static final EventBus<CommandEvent> BUS = EventBus.create(CommandEvent.class);
@@ -13,7 +13,7 @@ public final class CommandEvent extends MutableEvent {
     private final String cmd;
     private final Arguments arguments;
 
-    private CommandResult result = null;
+    private JDACommandResult result = null;
 
     public CommandEvent(Message message, String cmd, Arguments arguments) {
         this.message = message;
@@ -33,7 +33,7 @@ public final class CommandEvent extends MutableEvent {
         return cmd;
     }
 
-    public void setHandled(CommandResult result) {
+    public void setHandled(JDACommandResult result) {
         this.result = result;
     }
 
@@ -41,7 +41,7 @@ public final class CommandEvent extends MutableEvent {
         return result != null;
     }
 
-    public CommandResult getResult() {
+    public JDACommandResult getResult() {
         return result;
     }
 }
