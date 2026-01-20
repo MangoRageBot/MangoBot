@@ -14,20 +14,23 @@ public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACom
         return true;
     }
 
-    public boolean isGuildOnly() {
-        return false;
+    public JDACommandType getCommandType() {
+        return JDACommandType.GLOBAL;
     }
 
     @Override
     public final JDACommandResult getFailedResult() {
-        return JDACommandResult.FAIL;
+        return JDACommandResult.ERROR;
     }
 
     @Override
     public JDACommandResult execute(Message context, String[] arguments, CommandParseResult commandParseResult) {
-        if (isGuildOnly() && !context.isFromGuild()) {
+
+        if (getCommandType() == JDACommandType.GUILD && !context.isFromGuild())
             return JDACommandResult.GUILD_ONLY;
-        }
+
+        if (getCommandType() == JDACommandType.DM && context.isFromGuild())
+            return JDACommandResult.DM_ONLY;
 
         if (!hasPermission(context)) {
             return JDACommandResult.NO_PERMISSION;
