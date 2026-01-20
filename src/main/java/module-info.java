@@ -22,7 +22,6 @@ module org.mangorage.mangobotcore {
     exports org.mangorage.mangobotcore.api.config.v1;
 
     // JDA API
-    exports org.mangorage.mangobotcore.api.jda.command.v1;
     exports org.mangorage.mangobotcore.api.jda.command.v2;
     exports org.mangorage.mangobotcore.api.jda.event.v1;
 
