@@ -84,7 +84,7 @@ public abstract class AbstractCommand<C, R> {
             String renderedName = arg.getName();
 
             if (advanced) {
-                renderedName += ":" + arg.getType();
+                renderedName += ":" + arg.getType().getString();
             }
 
             if (arg instanceof RequiredArg<?>) {

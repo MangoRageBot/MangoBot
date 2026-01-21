@@ -13,7 +13,7 @@ public final class Example {
         dispatcher.execute("quote Hello! \"This is a quoted message.\"", "AdminUser", commandParseResult);
         commandParseResult.getMessages().forEach(System.out::println);
 
-        dispatcher.getCommand("quote").buildUsage().forEach(System.out::println);
+        dispatcher.getCommand("quote").buildUsage(true).forEach(System.out::println);
     }
 
 }
