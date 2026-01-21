@@ -29,6 +29,10 @@ public abstract class Argument<T> {
         return type;
     }
 
+    protected int getArgumentIndex() {
+        return argumentIndex;
+    }
+
     public T get(String[] input, CommandParseResult parseResult) {
         try {
             return type.parse(input, argumentIndex);

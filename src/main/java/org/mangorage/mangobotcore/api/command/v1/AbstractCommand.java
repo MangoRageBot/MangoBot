@@ -2,6 +2,7 @@ package org.mangorage.mangobotcore.api.command.v1;
 
 import org.mangorage.mangobotcore.api.command.v1.argument.Argument;
 import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentType;
+import org.mangorage.mangobotcore.api.command.v1.argument.FlagArg;
 import org.mangorage.mangobotcore.api.command.v1.argument.OptionalArg;
 import org.mangorage.mangobotcore.api.command.v1.argument.RequiredArg;
 
@@ -39,6 +40,15 @@ public abstract class AbstractCommand<C, R> {
         );
         requiredArgs++;
         return (RequiredArg<T>) arguments.get(name);
+    }
+
+    protected <T>FlagArg registerFlagArgument(String name, String description) {
+        arguments.put(
+                name,
+                new FlagArg(name, description, requiredArgs + optionalArgs)
+        );
+        optionalArgs++;
+        return (FlagArg) arguments.get(name);
     }
 
     protected <T> OptionalArg<T> registerOptionalArgument(String name, String description, ArgumentType<T> type) {
