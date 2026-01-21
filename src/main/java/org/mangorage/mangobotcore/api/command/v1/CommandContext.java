@@ -4,17 +4,25 @@ import org.mangorage.mangobotcore.api.command.v1.argument.Argument;
 
 public final class CommandContext<C> {
 
-    public static <C> CommandContext<C> of(String[] arguments, CommandParseResult commandParseResult) {
-        return new CommandContext<>(arguments, commandParseResult);
+    public static <C> CommandContext<C> of(C contextObject, String[] arguments, CommandParseResult commandParseResult) {
+        return new CommandContext<>(contextObject, arguments, commandParseResult);
     }
 
-    private final CommandParseResult commandParseResult;
+
+    private final C contextObject;
     private final String[] arguments;
+    private final CommandParseResult commandParseResult;
+
     private int argumentIndex = 0;
 
-    private CommandContext(String[] arguments, CommandParseResult commandParseResult) {
+    private CommandContext(C contextObject, String[] arguments, CommandParseResult commandParseResult) {
+        this.contextObject = contextObject;
         this.arguments = arguments;
         this.commandParseResult = commandParseResult;
+    }
+
+    public C getContextObject() {
+        return contextObject;
     }
 
     public String[] getArguments() {
