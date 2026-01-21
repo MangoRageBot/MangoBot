@@ -10,8 +10,10 @@ public final class Example {
         CommandParseResult commandParseResult = new CommandParseResult();
 
         dispatcher.register(new QuoteCommand());
-        dispatcher.execute("quote Hello World! \"This is a quoted message.\"", "AdminUser", commandParseResult);
+        dispatcher.execute("quote Hello! \"This is a quoted message.\"", "AdminUser", commandParseResult);
         commandParseResult.getMessages().forEach(System.out::println);
+
+        dispatcher.getCommand("quote").buildUsage().forEach(System.out::println);
     }
 
 }

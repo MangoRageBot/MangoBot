@@ -2,7 +2,7 @@ package org.mangorage.mangobotcore.api.command.v1;
 
 import org.mangorage.mangobotcore.api.command.v1.argument.Argument;
 import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentType;
-import org.mangorage.mangobotcore.api.command.v1.argument.FlagArg;
+import org.mangorage.mangobotcore.api.command.v1.argument.OptionalFlagArg;
 import org.mangorage.mangobotcore.api.command.v1.argument.OptionalArg;
 import org.mangorage.mangobotcore.api.command.v1.argument.RequiredArg;
 
@@ -17,7 +17,6 @@ public abstract class AbstractCommand<C, R> {
     private final String name;
 
     private int requiredArgs = 0;
-    private int optionalArgs = 0;
 
     public AbstractCommand(String name) {
         this.name = name;
@@ -36,61 +35,62 @@ public abstract class AbstractCommand<C, R> {
     protected <T> RequiredArg<T> registerRequiredArgument(String name, String description, ArgumentType<T> type) {
         arguments.put(
                 name,
-                new RequiredArg<>(name, description, requiredArgs, type)
+                new RequiredArg<>(name, description, type)
         );
         requiredArgs++;
         return (RequiredArg<T>) arguments.get(name);
     }
 
-    protected <T>FlagArg registerFlagArgument(String name, String description) {
+    protected <T> OptionalFlagArg registerFlagArgument(String name, String description) {
         arguments.put(
                 name,
-                new FlagArg(name, description, requiredArgs + optionalArgs)
+                new OptionalFlagArg(name, description)
         );
-        optionalArgs++;
-        return (FlagArg) arguments.get(name);
+        return (OptionalFlagArg) arguments.get(name);
     }
 
     protected <T> OptionalArg<T> registerOptionalArgument(String name, String description, ArgumentType<T> type) {
         arguments.put(
                 name,
-                new OptionalArg(name, description, requiredArgs + optionalArgs, type)
+                new OptionalArg<>(name, description, type)
         );
-        optionalArgs++;
         return (OptionalArg<T>) arguments.get(name);
     }
 
     public List<String> buildUsage() {
+        return buildUsage(false);
+    }
+
+    public List<String> buildUsage(boolean advanced) {
         List<String> usages = new ArrayList<>();
-        buildUsageInternal("", usages);
+        buildUsageInternal("", usages, advanced);
         return usages;
     }
 
-    private void buildUsageInternal(String prefix, List<String> usages) {
+    private void buildUsageInternal(String prefix, List<String> usages, boolean advanced) {
         String current = prefix.isEmpty() ? "/" + name : prefix + " " + name;
 
-        // If we have subcommands, recurse
+        // Recurse into subcommands
         if (!subCommand.isEmpty()) {
             for (AbstractCommand<C, R> sub : subCommand.values()) {
-                sub.buildUsageInternal(current, usages);
+                sub.buildUsageInternal(current, usages, advanced);
             }
             return;
         }
 
-        // Leaf command: append arguments
         StringBuilder sb = new StringBuilder(current);
 
-        // Required args first
         for (Argument<?> arg : arguments.values()) {
-            if (arg instanceof RequiredArg<?>) {
-                sb.append(" <").append(arg.getName()).append(">");
-            }
-        }
+            String renderedName = arg.getName();
 
-        // Optional args second
-        for (Argument<?> arg : arguments.values()) {
-            if (!(arg instanceof RequiredArg<?>)) {
-                sb.append(" [").append(arg.getName()).append("]");
+            if (advanced) {
+                renderedName += ":" + arg.getType();
+            }
+
+            if (arg instanceof RequiredArg<?>) {
+                sb.append(" <").append(renderedName).append(">");
+            } else {
+                sb.append(" [").append(renderedName).append("]");
             }
         }
 
@@ -104,7 +104,7 @@ public abstract class AbstractCommand<C, R> {
                     commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
                     return getFailedResult();
                 }
-                return run(context, arguments, commandParseResult);
+                return run(context, CommandContext.empty(), commandParseResult);
             }
 
             AbstractCommand<C, R> sub = subCommand.get(arguments[0]);
@@ -117,7 +117,7 @@ public abstract class AbstractCommand<C, R> {
                     commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
                     return getFailedResult();
                 }
-                return run(context, arguments, commandParseResult);
+                return run(context, CommandContext.of(arguments), commandParseResult);
             }
         } catch (Throwable throwable) {
             commandParseResult.addMessage(throwable.toString());
@@ -125,5 +125,5 @@ public abstract class AbstractCommand<C, R> {
         }
     }
 
-    public abstract R run(C context, String[] arguments, CommandParseResult commandParseResult) throws Throwable;
+    public abstract R run(C context, CommandContext commandContext, CommandParseResult commandParseResult) throws Throwable;
 }
