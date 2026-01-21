@@ -10,18 +10,18 @@ public final class StringArgumentType extends ArgumentType<String> {
         SINGLE
     }
 
-    private final Type type;
-
-    private StringArgumentType(Type type) {
-        this.type = type;
-    }
-
     public static StringArgumentType single() {
         return new StringArgumentType(Type.SINGLE);
     }
 
     public static StringArgumentType quote() {
         return new StringArgumentType(Type.QUOTE);
+    }
+
+    private final Type type;
+
+    private StringArgumentType(Type type) {
+        this.type = type;
     }
 
     @Override

@@ -4,6 +4,8 @@ import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentParseException
 import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentType;
 
 public final class IntegerArgumentType extends ArgumentType<Integer> {
+    public static final IntegerArgumentType INSTANCE = new IntegerArgumentType();
+
     IntegerArgumentType() {}
 
     @Override
