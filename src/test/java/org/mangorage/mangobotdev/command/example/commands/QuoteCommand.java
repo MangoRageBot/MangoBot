@@ -40,15 +40,15 @@ public final class QuoteCommand extends BaseCommand {
     }
 
     @Override
-    public Integer run(String context, CommandContext commandContext, CommandParseResult commandParseResult) {
+    public Integer run(CommandContext<String> commandContext) {
         System.out.println(
-                commandContext.getArgument(msgArg, commandParseResult)
+                commandContext.getArgument(msgArg)
         );
         System.out.println(
-                commandContext.getArgument(shoutArg, commandParseResult)
+                commandContext.getArgument(shoutArg)
         );
         System.out.println(
-                commandContext.getArgument(quoteArg, commandParseResult)
+                commandContext.getArgument(quoteArg)
         );
         System.out.println("Whelp!");
         return 1;

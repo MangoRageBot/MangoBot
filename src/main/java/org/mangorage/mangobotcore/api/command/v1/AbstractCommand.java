@@ -116,7 +116,7 @@ public abstract class AbstractCommand<C, R> {
                     commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
                     return getFailedResult();
                 }
-                return run(context, CommandContext.empty(), commandParseResult);
+                return run(CommandContext.of(arguments, commandParseResult));
             }
 
             AbstractCommand<C, R> sub = subCommand.get(arguments[0]);
@@ -129,7 +129,7 @@ public abstract class AbstractCommand<C, R> {
                     commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
                     return getFailedResult();
                 }
-                return run(context, CommandContext.of(arguments), commandParseResult);
+                return run(CommandContext.of(arguments, commandParseResult));
             }
         } catch (Throwable throwable) {
             commandParseResult.addMessage(throwable.toString());
@@ -137,5 +137,5 @@ public abstract class AbstractCommand<C, R> {
         }
     }
 
-    public abstract R run(C context, CommandContext commandContext, CommandParseResult commandParseResult) throws Throwable;
+    public abstract R run(CommandContext<C> commandContext) throws Throwable;
 }
