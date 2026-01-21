@@ -57,23 +57,34 @@ public abstract class AbstractCommand<C, R> {
         return (OptionalArg<T>) arguments.get(name);
     }
 
-    public List<String> buildUsage() {
+    public CommandInfo buildUsage() {
         return buildUsage(false);
     }
 
-    public List<String> buildUsage(boolean advanced) {
+    public CommandInfo buildUsage(boolean advanced) {
         List<String> usages = new ArrayList<>();
-        buildUsageInternal("", usages, advanced);
-        return usages;
+        Map<String, List<String>> extraInfo = new LinkedHashMap<>();
+        buildUsageInternal("", usages, extraInfo, advanced);
+        return new CommandInfo(usages, extraInfo);
     }
 
-    private void buildUsageInternal(String prefix, List<String> usages, boolean advanced) {
+    private void buildExtraInfo(Map<String, List<String>> extraInfo) {
+        for (Argument<?> arg : arguments.values()) {
+            List<String> info = new ArrayList<>();
+            info.add("Description: " + arg.getDescription());
+            info.add("Type: " + arg.getType().getString());
+            info.add("Suggestions: " + String.join(", ", arg.getType().getSuggestions()));
+            extraInfo.put(arg.getName(), info);
+        }
+    }
+
+    private void buildUsageInternal(String prefix, List<String> usages, Map<String, List<String>> extraInfo, boolean advanced) {
         String current = prefix.isEmpty() ? "/" + name : prefix + " " + name;
 
         // Recurse into subcommands
         if (!subCommand.isEmpty()) {
             for (AbstractCommand<C, R> sub : subCommand.values()) {
-                sub.buildUsageInternal(current, usages, advanced);
+                sub.buildUsageInternal(current, usages, extraInfo, advanced);
             }
             return;
         }
@@ -95,6 +106,7 @@ public abstract class AbstractCommand<C, R> {
         }
 
         usages.add(sb.toString());
+        buildExtraInfo(extraInfo);
     }
 
     public R execute(C context, String[] arguments, CommandParseResult commandParseResult) {

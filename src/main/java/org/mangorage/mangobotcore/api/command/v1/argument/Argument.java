@@ -2,9 +2,7 @@ package org.mangorage.mangobotcore.api.command.v1.argument;
 
 import org.mangorage.mangobotcore.api.command.v1.ArgumentResult;
 import org.mangorage.mangobotcore.api.command.v1.CommandParseResult;
-
 import java.util.Arrays;
-import java.util.Optional;
 
 public abstract class Argument<T> {
     private final String name;

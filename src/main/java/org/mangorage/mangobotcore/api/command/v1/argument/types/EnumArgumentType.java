@@ -3,6 +3,8 @@ package org.mangorage.mangobotcore.api.command.v1.argument.types;
 import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentParseException;
 import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentType;
 
+import java.util.List;
+
 public final class EnumArgumentType<E extends Enum<E>> extends ArgumentType<E> {
     public static <E extends Enum<E>> EnumArgumentType<E> of(Class<E> enumClass) {
         return new EnumArgumentType<>(enumClass);
@@ -22,5 +24,10 @@ public final class EnumArgumentType<E extends Enum<E>> extends ArgumentType<E> {
     @Override
     public String getString() {
         return enumClass.getSimpleName();
+    }
+
+    @Override
+    public List<String> getSuggestions() {
+        return List.of(enumClass.getEnumConstants()).stream().map(Enum::name).toList();
     }
 }
