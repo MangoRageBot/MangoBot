@@ -24,7 +24,7 @@ public final class EnumArgumentType<E extends Enum<E>> extends ArgumentType<E> {
 
     @Override
     public String getArgumentTypeString() {
-        return enumClass.toString();
+        return enumClass.getSimpleName();
     }
 
     @Override
