@@ -1,5 +1,6 @@
 package org.mangorage.mangobotdev.command.example.commands;
 
+import org.mangorage.mangobotcore.api.command.v1.AbstractCommand;
 import org.mangorage.mangobotcore.api.command.v1.CommandContext;
 import org.mangorage.mangobotcore.api.command.v1.CommandParseResult;
 import org.mangorage.mangobotcore.api.command.v1.argument.OptionalArg;
@@ -18,6 +19,19 @@ public final class QuoteCommand extends BaseCommand {
 
     public QuoteCommand() {
         super("quote");
+
+        addSubCommand(new AbstractCommand<String, Integer>("sub") {
+            @Override
+            public Integer getFailedResult() {
+                return 0;
+            }
+
+            @Override
+            public Integer run(CommandContext<String> commandContext) throws Throwable {
+                return 0;
+            }
+        });
+
         this.msgArg = registerRequiredArgument(
                 "message",
                 "message",

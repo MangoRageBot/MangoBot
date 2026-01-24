@@ -5,6 +5,9 @@ import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentType;
 import org.mangorage.mangobotcore.api.command.v1.argument.OptionalFlagArg;
 import org.mangorage.mangobotcore.api.command.v1.argument.OptionalArg;
 import org.mangorage.mangobotcore.api.command.v1.argument.RequiredArg;
+import org.mangorage.mangobotcore.api.command.v1.info.CommandData;
+import org.mangorage.mangobotcore.api.command.v1.info.CommandPart;
+import org.mangorage.mangobotcore.api.command.v1.info.ParameterPart;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -57,56 +60,48 @@ public abstract class AbstractCommand<C, R> {
         return (OptionalArg<T>) arguments.get(name);
     }
 
+
+    /**
+     * Get a fully detailed breakdown of the command and its subcommands
+     * @return CommandData containing all command parts
+     */
+    public CommandData buildCommandParts() {
+        List<CommandPart> parts = new ArrayList<>();
+        buildCommandPartsInternal("", parts);
+        return new CommandData(parts);
+    }
+
+    private void buildCommandPartsInternal(String prefix, List<CommandPart> parts) {
+        String current = prefix.isEmpty() ? "/" + name : prefix + " " + name;
+
+        if (!subCommand.isEmpty()) {
+            for (AbstractCommand<C, R> sub : subCommand.values()) {
+                sub.buildCommandPartsInternal(current, parts);
+            }
+        }
+
+        List<ParameterPart> params = new ArrayList<>();
+
+        for (Argument<?> arg : arguments.values()) {
+            boolean required = arg instanceof RequiredArg<?>;
+            params.add(
+                    new ParameterPart(
+                            arg.getName(),
+                            arg.getType().getString(),
+                            String.join(", ", arg.getType().getSuggestions()),
+                            required
+            ));
+        }
+
+        parts.add(new CommandPart(current, params));
+    }
+
     public CommandInfo buildUsage() {
         return buildUsage(false);
     }
 
     public CommandInfo buildUsage(boolean advanced) {
-        List<String> usages = new ArrayList<>();
-        Map<String, List<String>> extraInfo = new LinkedHashMap<>();
-        buildUsageInternal("", usages, extraInfo, advanced);
-        return new CommandInfo(usages, extraInfo);
-    }
-
-    private void buildExtraInfo(Map<String, List<String>> extraInfo) {
-        for (Argument<?> arg : arguments.values()) {
-            List<String> info = new ArrayList<>();
-            info.add("Description: " + arg.getDescription());
-            info.add("Type: " + arg.getType().getString());
-            info.add("Suggestions: " + String.join(", ", arg.getType().getSuggestions()));
-            extraInfo.put(arg.getName(), info);
-        }
-    }
-
-    private void buildUsageInternal(String prefix, List<String> usages, Map<String, List<String>> extraInfo, boolean advanced) {
-        String current = prefix.isEmpty() ? "/" + name : prefix + " " + name;
-
-        // Recurse into subcommands
-        if (!subCommand.isEmpty()) {
-            for (AbstractCommand<C, R> sub : subCommand.values()) {
-                sub.buildUsageInternal(current, usages, extraInfo, advanced);
-            }
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder(current);
-
-        for (Argument<?> arg : arguments.values()) {
-            String renderedName = arg.getName();
-
-            if (advanced) {
-                renderedName += ":" + arg.getType().getString();
-            }
-
-            if (arg instanceof RequiredArg<?>) {
-                sb.append(" <").append(renderedName).append(">");
-            } else {
-                sb.append(" [").append(renderedName).append("]");
-            }
-        }
-
-        usages.add(sb.toString());
-        buildExtraInfo(extraInfo);
+        return buildCommandParts().buildCommandInfo(advanced);
     }
 
     public R execute(C context, String[] arguments, CommandParseResult commandParseResult) {

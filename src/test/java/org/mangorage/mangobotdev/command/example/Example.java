@@ -13,11 +13,16 @@ public final class Example {
         dispatcher.execute("quote Hello! \"This is a quoted message.\"", "AdminUser", commandParseResult);
         commandParseResult.getMessages().forEach(System.out::println);
 
-        final var info = dispatcher.getCommand("quote").buildUsage(true);
+        final var cmd = dispatcher.getCommand("quote");
+        final var info = cmd.buildUsage(true);
         System.out.println("----------- USAGE -----------");
         info.usages().forEach(System.out::println);
         System.out.println("------- EXTRA INFO -------");
         info.extraInfo().forEach((k, value) -> System.out.println(k + ": " + value));
+
+
+        final var parts = cmd.buildCommandParts();
+        System.out.println("------- COMMAND PARTS -------");
     }
 
 }
