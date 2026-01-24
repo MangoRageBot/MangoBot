@@ -42,6 +42,6 @@ public abstract class Argument<T> {
     }
 
     public String getString() {
-        return getClass().toString() + "(" + type.getString() + ")";
+        return getClass().getSimpleName() + "(" + type.getString() + ")";
     }
 }
