@@ -6,6 +6,7 @@ import org.mangorage.mangobotcore.api.command.v1.ICommandDispatcher;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
@@ -27,6 +28,11 @@ public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
     @Override
     public AbstractCommand<C, R> getCommand(String name) {
         return roots.get(name);
+    }
+
+    @Override
+    public List<AbstractCommand<C, R>> getAllRegisteredCommands() {
+        return roots.values().stream().toList();
     }
 
     @Override
