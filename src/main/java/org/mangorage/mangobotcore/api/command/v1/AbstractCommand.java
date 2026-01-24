@@ -68,7 +68,7 @@ public abstract class AbstractCommand<C, R> {
     public CommandData buildCommandParts() {
         List<CommandPart> parts = new ArrayList<>();
         buildCommandPartsInternal("", parts);
-        return new CommandData(parts);
+        return new CommandData(name, parts);
     }
 
     private void buildCommandPartsInternal(String prefix, List<CommandPart> parts) {
@@ -88,6 +88,8 @@ public abstract class AbstractCommand<C, R> {
                     new ParameterPart(
                             arg.getName(),
                             arg.getType().getString(),
+                            arg.getString(),
+                            arg.getDescription(),
                             String.join(", ", arg.getType().getSuggestions()),
                             required
             ));

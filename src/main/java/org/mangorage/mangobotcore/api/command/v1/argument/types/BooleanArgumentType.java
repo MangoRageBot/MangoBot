@@ -16,11 +16,6 @@ public final class BooleanArgumentType extends ArgumentType<Boolean> {
     }
 
     @Override
-    public String getString() {
-        return Boolean.class.getSimpleName();
-    }
-
-    @Override
     public List<String> getSuggestions() {
         return List.of("true", "false");
     }

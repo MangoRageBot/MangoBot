@@ -27,7 +27,6 @@ public abstract class Argument<T> {
         return type;
     }
 
-
     public ArgumentResult<T> get(String[] input, int argumentIndex, CommandParseResult parseResult) {
         try {
             return new ArgumentResult<>(type.parse(input, argumentIndex), true);
@@ -40,5 +39,9 @@ public abstract class Argument<T> {
             );
             return ArgumentResult.empty();
         }
+    }
+
+    public String getString() {
+        return getClass().toString() + "(" + type.getString() + ")";
     }
 }

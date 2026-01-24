@@ -4,6 +4,7 @@ import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentParseException
 import org.mangorage.mangobotcore.api.command.v1.argument.ArgumentType;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public final class EnumArgumentType<E extends Enum<E>> extends ArgumentType<E> {
     public static <E extends Enum<E>> EnumArgumentType<E> of(Class<E> enumClass) {
@@ -22,12 +23,12 @@ public final class EnumArgumentType<E extends Enum<E>> extends ArgumentType<E> {
     }
 
     @Override
-    public String getString() {
-        return enumClass.getSimpleName();
+    public String getArgumentTypeString() {
+        return enumClass.toString();
     }
 
     @Override
     public List<String> getSuggestions() {
-        return List.of(enumClass.getEnumConstants()).stream().map(Enum::name).toList();
+        return Stream.of(enumClass.getEnumConstants()).map(Enum::name).toList();
     }
 }

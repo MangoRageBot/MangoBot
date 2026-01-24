@@ -67,7 +67,7 @@ public final class StringArgumentType extends ArgumentType<String> {
     }
 
     @Override
-    public String getString() {
-        return getClass().getSimpleName() + "(" + type.name() + ")";
+    public String getArgumentTypeString() {
+        return type.name();
     }
 }

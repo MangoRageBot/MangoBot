@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public record CommandData(List<CommandPart> commandParts) {
+public record CommandData(String cmd, List<CommandPart> commandParts) {
     public CommandInfo buildCommandInfo(boolean advanced) {
         List<String> usages = new ArrayList<>();
         Map<String, List<String>> extraInfo = new LinkedHashMap<>();

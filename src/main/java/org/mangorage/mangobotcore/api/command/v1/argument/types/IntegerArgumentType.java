@@ -12,9 +12,4 @@ public final class IntegerArgumentType extends ArgumentType<Integer> {
     public Integer parse(String[] input, int argumentIndex) throws ArgumentParseException {
         return Integer.parseInt(input[argumentIndex]);
     }
-
-    @Override
-    public String getString() {
-        return getClass().getSimpleName();
-    }
 }
