@@ -60,6 +60,9 @@ public abstract class AbstractCommand<C, R> {
         return (OptionalArg<T>) arguments.get(name);
     }
 
+    public List<String> getCommandNotes() {
+        return List.of("No additional notes for this command.");
+    }
 
     /**
      * Get a fully detailed breakdown of the command and its subcommands
@@ -95,7 +98,7 @@ public abstract class AbstractCommand<C, R> {
             ));
         }
 
-        parts.add(new CommandPart(current, params));
+        parts.add(new CommandPart(current, getCommandNotes(), params));
     }
 
     public CommandInfo buildUsage() {
