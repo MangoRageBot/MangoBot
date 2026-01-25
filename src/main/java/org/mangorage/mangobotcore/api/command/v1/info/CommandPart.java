@@ -2,7 +2,7 @@ package org.mangorage.mangobotcore.api.command.v1.info;
 
 import java.util.List;
 
-public class CommandPart {
+public final class CommandPart {
     private final String name;
     private final List<String> commandNotes;
     private final List<ParameterPart> parameters;
