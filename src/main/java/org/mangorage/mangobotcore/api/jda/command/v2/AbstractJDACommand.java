@@ -2,6 +2,7 @@ package org.mangorage.mangobotcore.api.jda.command.v2;
 
 import net.dv8tion.jda.api.entities.Message;
 import org.mangorage.mangobotcore.api.command.v1.AbstractCommand;
+import org.mangorage.mangobotcore.api.command.v1.CommandContext;
 import org.mangorage.mangobotcore.api.command.v1.CommandParseResult;
 
 public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACommandResult> {
@@ -24,7 +25,8 @@ public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACom
     }
 
     @Override
-    public JDACommandResult execute(Message context, String[] arguments, CommandParseResult commandParseResult) {
+    public JDACommandResult execute(CommandContext<Message> commandContext) {
+        final var context = commandContext.getContextObject();
 
         if (getCommandType() == JDACommandType.GUILD && !context.isFromGuild())
             return JDACommandResult.GUILD_ONLY;
@@ -37,6 +39,6 @@ public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACom
         }
 
         // Continue with normal execution
-        return super.execute(context, arguments, commandParseResult);
+        return super.execute(commandContext);
     }
 }
