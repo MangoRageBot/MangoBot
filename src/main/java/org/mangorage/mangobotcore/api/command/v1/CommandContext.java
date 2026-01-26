@@ -45,7 +45,6 @@ public final class CommandContext<C> {
     }
 
     public String next() {
-        index++;
         return index < arguments.length ? arguments[index++] : null;
     }
 
