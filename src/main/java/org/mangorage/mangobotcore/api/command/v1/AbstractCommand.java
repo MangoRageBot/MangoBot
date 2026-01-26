@@ -109,30 +109,36 @@ public abstract class AbstractCommand<C, R> {
         return buildCommandParts().buildCommandInfo(advanced);
     }
 
-    public R execute(C context, String[] arguments, CommandParseResult commandParseResult) {
+    public R execute(CommandContext<C> ctx) {
+        final var result = ctx.getParseResult();
+
         try {
-            if (arguments.length == 0) {
+            if (ctx.remaining() == 0) {
                 if (requiredArgs != 0) {
-                    commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
+                    result.addMessage("Not enough arguments! Required: " + requiredArgs +
+                            ", Provided: 0");
                     return getFailedResult();
                 }
-                return run(CommandContext.of(context, arguments, commandParseResult));
+                return run(ctx);
             }
 
-            AbstractCommand<C, R> sub = subCommand.get(arguments[0]);
+            String name = ctx.peek();
+            AbstractCommand<C, R> sub = subCommand.get(name);
+
             if (sub != null) {
-                String[] subArgs = new String[arguments.length - 1];
-                System.arraycopy(arguments, 1, subArgs, 0, subArgs.length);
-                return sub.execute(context, subArgs, commandParseResult);
-            } else {
-                if (arguments.length < requiredArgs) {
-                    commandParseResult.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + arguments.length);
-                    return getFailedResult();
-                }
-                return run(CommandContext.of(context, arguments, commandParseResult));
+                ctx.next(); // consume subcommand token
+                return sub.execute(ctx);
             }
-        } catch (Throwable throwable) {
-            commandParseResult.addMessage(throwable.toString());
+
+            if (ctx.remaining() < requiredArgs) {
+                result.addMessage("Not enough arguments! Required: " + requiredArgs +
+                        ", Provided: " + ctx.remaining());
+                return getFailedResult();
+            }
+
+            return run(ctx);
+        } catch (Throwable t) {
+            result.addMessage(t.toString());
             return getFailedResult();
         }
     }

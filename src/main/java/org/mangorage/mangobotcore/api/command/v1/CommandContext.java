@@ -13,7 +13,7 @@ public final class CommandContext<C> {
     private final String[] arguments;
     private final CommandParseResult commandParseResult;
 
-    private int argumentIndex = 0;
+    private int index = 0;
 
     private CommandContext(C contextObject, String[] arguments, CommandParseResult commandParseResult) {
         this.contextObject = contextObject;
@@ -34,9 +34,22 @@ public final class CommandContext<C> {
     }
 
     public <T> T getArgument(Argument<T> argument) {
-        final var rawValue = argument.get(arguments, argumentIndex, commandParseResult);
+        final var rawValue = argument.get(arguments, index, commandParseResult);
         if (rawValue.argumentConsumed())
-            argumentIndex++;
+            index++;
         return rawValue.value();
+    }
+
+    public String peek() {
+        return index < arguments.length ? arguments[index] : null;
+    }
+
+    public String next() {
+        index++;
+        return index < arguments.length ? arguments[index++] : null;
+    }
+
+    public int remaining() {
+        return arguments.length - index;
     }
 }

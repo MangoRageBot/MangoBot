@@ -1,6 +1,7 @@
 package org.mangorage.mangobotcore.internal.command;
 
 import org.mangorage.mangobotcore.api.command.v1.AbstractCommand;
+import org.mangorage.mangobotcore.api.command.v1.CommandContext;
 import org.mangorage.mangobotcore.api.command.v1.CommandParseResult;
 import org.mangorage.mangobotcore.api.command.v1.ICommandDispatcher;
 
@@ -45,6 +46,6 @@ public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
         if (root == null)
             return defaultInvalid;
 
-        return root.execute(context, Arrays.copyOfRange(split, 1, split.length), commandParseResult);
+        return root.execute(CommandContext.of(context, Arrays.copyOfRange(split, 1, split.length), commandParseResult));
     }
 }
