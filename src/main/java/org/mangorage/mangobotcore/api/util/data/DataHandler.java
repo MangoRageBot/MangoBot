@@ -125,11 +125,13 @@ public final class DataHandler<T extends IFileNameResolver> {
                         .map(Path::toFile)
                         .filter(file -> file.isFile() && !file.isDirectory())
                         .forEach(f -> {
-                            try {
-                                T obj = gson.fromJson(new FileReader(f), tClass);
-                                list.add(obj);
-                            } catch (FileNotFoundException e) {
-                                throw new RuntimeException(e);
+                            if (f.isFile() && !f.isDirectory()) {
+                                try (FileReader reader = new FileReader(f)) {  // <-- try-with-resources
+                                    T obj = gson.fromJson(reader, tClass);
+                                    list.add(obj);
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
                             }
                         });
             }
@@ -141,10 +143,10 @@ public final class DataHandler<T extends IFileNameResolver> {
         if (isFile) {
             Path resolved = rootDirectory.resolve(path).toAbsolutePath();
             if (Files.exists(resolved)) {
-                try {
-                    T obj = gson.fromJson(new FileReader(resolved.toFile()), tClass);
+                try (FileReader reader = new FileReader(resolved.toFile())) {  // <-- try-with-resources
+                    T obj = gson.fromJson(reader, tClass);
                     return Optional.of(obj);
-                } catch (FileNotFoundException e) {
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
