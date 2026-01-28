@@ -1,6 +1,7 @@
 package org.mangorage.mangobotcore.api.command.v1;
 
 import org.mangorage.mangobotcore.api.command.v1.argument.Argument;
+import org.mangorage.mangobotcore.api.command.v1.argument.OptionalArg;
 
 public final class CommandContext<C> {
 
@@ -38,6 +39,11 @@ public final class CommandContext<C> {
         if (rawValue.argumentConsumed())
             index++;
         return rawValue.value();
+    }
+
+    public <T> T getArgumentOrElse(OptionalArg<T> optionalArgument) {
+        final var result = getArgument(optionalArgument);
+        return result == null ? optionalArgument.getDefaultValue() : result;
     }
 
     public String peek() {
