@@ -12,6 +12,7 @@ import java.util.Map;
 
 public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
     private final Map<String, AbstractCommand<C, R>> roots = new HashMap<>();
+    private final Map<String, AbstractCommand<C, R>> aliasRoots = new HashMap<>();
     private final R defaultInvalid;
 
     public CommandDispatcher(R defaultInvalid) {
@@ -24,11 +25,14 @@ public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
                 commandNode.getName(),
                 commandNode
         );
+        commandNode.aliases().forEach(alias -> {
+            aliasRoots.put(alias, commandNode);
+        });
     }
 
     @Override
     public AbstractCommand<C, R> getCommand(String name) {
-        return roots.get(name);
+        return roots.getOrDefault(name, aliasRoots.get(name));
     }
 
     @Override
@@ -42,7 +46,7 @@ public final class CommandDispatcher<C, R> implements ICommandDispatcher<C, R> {
         if (split.length == 0)
             return defaultInvalid;
 
-        AbstractCommand<C, R> root = roots.get(split[0]);
+        AbstractCommand<C, R> root = getCommand(split[0]);
         if (root == null)
             return defaultInvalid;
 
