@@ -15,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractCommand<C, R> {
-    private final Map<String, AbstractCommand<C, R>> subCommand = new LinkedHashMap<>();
+    private final Map<String, AbstractCommand<C, R>> subCommands = new LinkedHashMap<>();
+    private final Map<String, AbstractCommand<C, R>> aliasCommands = new LinkedHashMap<>();
+
     private final Map<String, Argument<?>> arguments = new LinkedHashMap<>();
     private final String name;
 
@@ -30,9 +32,13 @@ public abstract class AbstractCommand<C, R> {
     }
 
     public abstract R getFailedResult();
+    public abstract List<String> aliases();
 
     protected void addSubCommand(AbstractCommand<C, R> command) {
-        subCommand.put(command.getName(), command);
+        subCommands.put(command.getName(), command);
+        command.aliases().forEach(alias -> {
+            aliasCommands.put(alias, command);
+        });
     }
 
     protected <T> RequiredArg<T> registerRequiredArgument(String name, String description, ArgumentType<T> type) {
@@ -77,8 +83,8 @@ public abstract class AbstractCommand<C, R> {
     private void buildCommandPartsInternal(String prefix, List<CommandPart> parts) {
         String current = prefix.isEmpty() ? "/" + name : prefix + " " + name;
 
-        if (!subCommand.isEmpty()) {
-            for (AbstractCommand<C, R> sub : subCommand.values()) {
+        if (!subCommands.isEmpty()) {
+            for (AbstractCommand<C, R> sub : subCommands.values()) {
                 sub.buildCommandPartsInternal(current, parts);
             }
         }
@@ -98,7 +104,7 @@ public abstract class AbstractCommand<C, R> {
             ));
         }
 
-        parts.add(new CommandPart(current, getCommandNotes(), params));
+        parts.add(new CommandPart(current, aliases(), getCommandNotes(), params));
     }
 
     public CommandInfo buildUsage() {
@@ -115,15 +121,16 @@ public abstract class AbstractCommand<C, R> {
         try {
             if (ctx.remaining() == 0) {
                 if (requiredArgs != 0) {
-                    result.addMessage("Not enough arguments! Required: " + requiredArgs +
-                            ", Provided: 0");
+                    result.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: 0");
                     return getFailedResult();
                 }
                 return run(ctx);
             }
 
             String name = ctx.peek();
-            AbstractCommand<C, R> sub = subCommand.get(name);
+            AbstractCommand<C, R> sub = subCommands.get(name);
+            if (sub == null) // Attempt to get the alias if it exists...
+                sub = aliasCommands.get(name);
 
             if (sub != null) {
                 ctx.next(); // consume subcommand token
@@ -131,8 +138,7 @@ public abstract class AbstractCommand<C, R> {
             }
 
             if (ctx.remaining() < requiredArgs) {
-                result.addMessage("Not enough arguments! Required: " + requiredArgs +
-                        ", Provided: " + ctx.remaining());
+                result.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: " + ctx.remaining());
                 return getFailedResult();
             }
 
