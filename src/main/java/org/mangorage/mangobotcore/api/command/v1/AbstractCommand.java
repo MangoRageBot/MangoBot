@@ -61,10 +61,10 @@ public abstract class AbstractCommand<C, R> {
         return (OptionalFlagArg) arguments.get(name);
     }
 
-    protected <T> OptionalArg<T> registerOptionalArgument(String name, String description, ArgumentType<T> type) {
+    protected <T> OptionalArg<T> registerOptionalArgument(String name, String description, ArgumentType<T> type, T defaultValue) {
         arguments.put(
                 name,
-                new OptionalArg<>(name, description, type)
+                new OptionalArg<>(name, description, type, defaultValue)
         );
         return (OptionalArg<T>) arguments.get(name);
     }

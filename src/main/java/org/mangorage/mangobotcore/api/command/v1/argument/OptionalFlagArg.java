@@ -7,7 +7,7 @@ import org.mangorage.mangobotcore.api.command.v1.argument.types.BooleanArgumentT
 
 public final class OptionalFlagArg extends OptionalArg<Boolean> {
     public OptionalFlagArg(String name, String description) {
-        super(name, description, BooleanArgumentType.INSTANCE);
+        super(name, description, BooleanArgumentType.INSTANCE, false);
     }
 
     @Override
