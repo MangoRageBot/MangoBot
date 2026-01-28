@@ -32,7 +32,10 @@ public abstract class AbstractCommand<C, R> {
     }
 
     public abstract R getFailedResult();
-    public abstract List<String> aliases();
+
+    public List<String> aliases() {
+        return List.of();
+    }
 
     protected void addSubCommand(AbstractCommand<C, R> command) {
         subCommands.put(command.getName(), command);
