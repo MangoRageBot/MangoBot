@@ -42,7 +42,12 @@ public final class CommandContext<C> {
     }
 
     public <T> T getArgumentOrElse(OptionalArg<T> optionalArgument) {
-        final var result = getArgument(optionalArgument);
+        T result = null;
+
+        try {
+            result = getArgument(optionalArgument);
+        } catch (Exception ignored) {};
+
         return result == null ? optionalArgument.getDefaultValue() : result;
     }
 
