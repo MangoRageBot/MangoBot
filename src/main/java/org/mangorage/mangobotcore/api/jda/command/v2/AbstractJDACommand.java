@@ -7,8 +7,8 @@ import org.mangorage.mangobotcore.api.command.v1.CommandParseResult;
 
 public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACommandResult> {
 
-    public AbstractJDACommand(String name) {
-        super(name);
+    public AbstractJDACommand(String name, String description) {
+        super(name, description);
     }
 
     public boolean hasPermission(Message context) {
