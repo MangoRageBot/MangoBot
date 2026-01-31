@@ -20,15 +20,21 @@ public abstract class AbstractCommand<C, R> {
 
     private final Map<String, Argument<?>> arguments = new LinkedHashMap<>();
     private final String name;
+    private final String description;
 
     private int requiredArgs = 0;
 
-    public AbstractCommand(String name) {
+    public AbstractCommand(String name, String description) {
         this.name = name;
+        this.description = description;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public abstract R getFailedResult();
@@ -70,7 +76,17 @@ public abstract class AbstractCommand<C, R> {
     }
 
     public List<String> getCommandNotes() {
-        return List.of("No additional notes for this command.");
+        final List<String> notes = new ArrayList<>(
+                List.of(
+                        "Description:",
+                        getDescription()
+                )
+        );
+
+        notes.add("Aliases: ");
+        notes.add(String.join(",", aliases()));
+
+        return notes;
     }
 
     /**
