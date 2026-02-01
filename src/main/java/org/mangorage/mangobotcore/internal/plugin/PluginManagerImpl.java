@@ -34,7 +34,7 @@ public final class PluginManagerImpl implements PluginManager {
 
 
 
-        ServiceLoader.load(PluginManagerImpl.class.getModule().getLayer(), Plugin.class)
+        ServiceLoader.load(Plugin.class)
                 .stream()
                 .toList()
                 .forEach(plugin -> {
