@@ -34,7 +34,7 @@ public final class PluginManagerImpl implements PluginManager {
 
 
 
-        ServiceLoader.load(Plugin.class)
+        ServiceLoader.load(PluginManagerImpl.class.getModule().getLayer(), Plugin.class)
                 .stream()
                 .toList()
                 .forEach(plugin -> {
@@ -83,7 +83,7 @@ public final class PluginManagerImpl implements PluginManager {
 
         LogHelper.info("Giving Metadata info out...");
 
-        ServiceLoader.load(IPluginInfoGetter.class)
+        ServiceLoader.load(PluginManagerImpl.class.getModule().getLayer(), IPluginInfoGetter.class)
                 .stream()
                 .forEach(provider -> {
                     final var list = manager.getLibraries()
