@@ -12,6 +12,7 @@ import org.mangorage.mangobotcore.api.plugin.v1.PluginManager;
 import org.mangorage.mangobotcore.internal.plugin.dependency.Library;
 import org.mangorage.mangobotcore.internal.plugin.dependency.LibraryManager;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -22,14 +23,6 @@ import java.util.ServiceLoader;
 public final class PluginManagerImpl implements PluginManager {
     private static final Gson GSON = new GsonBuilder().create();
     public static final PluginManagerImpl INSTANCE = new PluginManagerImpl();
-
-    private static InputStream getFileFromClassLoader(String filePath) {
-        InputStream inputStream = PluginManager.class.getClassLoader().getResourceAsStream(filePath);
-        if (inputStream == null) {
-            System.out.println("File not found: " + filePath);
-        }
-        return inputStream;
-    }
 
     private final Map<String, PluginContainer> plugins = new HashMap<>();
 
@@ -49,7 +42,15 @@ public final class PluginManagerImpl implements PluginManager {
                     var annotation = clz.getAnnotation(MangoBotPlugin.class);
                     if (Plugin.class.isAssignableFrom(clz)) {
                         LogHelper.info("Found Plugin with ID '%s', now attempting to find metadata".formatted(annotation.id()));
-                        var metadataIS = getFileFromClassLoader(annotation.id() + ".plugin.json");
+
+                        InputStream metadataIS = null;
+
+                        try {
+                            metadataIS = clz.getModule().getResourceAsStream(annotation.id() + ".plugin.json");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         if (metadataIS == null) {
                             throw new IllegalStateException("Unable to find plugin.json for '%s'".formatted(annotation.id()));
                         } else {
@@ -124,11 +125,6 @@ public final class PluginManagerImpl implements PluginManager {
 
     public void loadPlugin(PluginContainerImpl container) {
         var pluginId = container.getMetadata().getId();
-
-//        if (PluginManager.isLoaded(pluginId)) {
-//            LogHelper.error("Failed to load plugin '%s', already loaded".formatted(pluginId));
-//            return;
-//        }
 
         LogHelper.info("Loading plugin: %s".formatted(pluginId));
 
