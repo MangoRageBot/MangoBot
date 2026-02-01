@@ -32,13 +32,13 @@ public final class DatabaseHandler<ID, T extends IUniqueIdHolder<ID>> {
                 .buildSessionFactory();
     }
 
-    public void migrateToDatabase(List<T> fileEntities) {
-        if (fileEntities.isEmpty()) return;
+    public void migrateToDatabase(List<T> entities) {
+        if (entities.isEmpty()) return;
 
         try (Session session = sessionFactory.openSession()) {
             Transaction tx = session.beginTransaction();
 
-            for (T entity : fileEntities) {
+            for (T entity : entities) {
                 session.merge(entity);
             }
 

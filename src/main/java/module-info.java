@@ -18,6 +18,8 @@ module org.mangorage.mangobotcore {
 
     requires com.google.gson;
     requires org.hibernate.orm.core;
+    requires jakarta.persistence;
+    requires java.naming;
 
     // Config API
     exports org.mangorage.mangobotcore.api.config.v1;
