@@ -23,4 +23,9 @@ public final class JDAPermissionManager {
     public JDAPermissionNode getPermissionNode(String id) {
         return permissionNodes.computeIfAbsent(id, JDAPermissionNode::create);
     }
+
+    public void savePermissionNode(JDAPermissionNode node) {
+        databaseHandler.saveEntity(node);
+    }
+
 }
