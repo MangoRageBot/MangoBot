@@ -38,6 +38,9 @@ public abstract class AbstractCommand<C, R> {
     }
 
     public abstract R getFailedResult();
+    public abstract R getNoPermission();
+
+    public abstract PermissionNode<C> getPermissionNode();
 
     public List<String> aliases() {
         return List.of();
@@ -143,7 +146,11 @@ public abstract class AbstractCommand<C, R> {
                     result.addMessage("Not enough arguments! Required: " + requiredArgs + ", Provided: 0");
                     return getFailedResult();
                 }
-                return run(ctx);
+                if (getPermissionNode().hasPermission(ctx)) {
+                    return run(ctx);
+                } else {
+                    return getNoPermission();
+                }
             }
 
             String name = ctx.peek();
@@ -161,7 +168,11 @@ public abstract class AbstractCommand<C, R> {
                 return getFailedResult();
             }
 
-            return run(ctx);
+            if (getPermissionNode().hasPermission(ctx)) {
+                return run(ctx);
+            } else {
+                return getNoPermission();
+            }
         } catch (Throwable t) {
             result.addMessage(t.toString());
             return getFailedResult();

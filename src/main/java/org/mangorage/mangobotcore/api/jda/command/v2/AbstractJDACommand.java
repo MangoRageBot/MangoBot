@@ -25,6 +25,11 @@ public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACom
     }
 
     @Override
+    public JDACommandResult getNoPermission() {
+        return JDACommandResult.NO_PERMISSION;
+    }
+
+    @Override
     public JDACommandResult execute(CommandContext<Message> commandContext) {
         final var context = commandContext.getContextObject();
 
@@ -33,10 +38,6 @@ public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACom
 
         if (getCommandType() == JDACommandType.DM && context.isFromGuild())
             return JDACommandResult.DM_ONLY;
-
-        if (!hasPermission(context)) {
-            return JDACommandResult.NO_PERMISSION;
-        }
 
         // Continue with normal execution
         return super.execute(commandContext);
