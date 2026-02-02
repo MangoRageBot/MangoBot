@@ -11,10 +11,6 @@ public abstract class AbstractJDACommand extends AbstractCommand<Message, JDACom
         super(name, description);
     }
 
-    public boolean hasPermission(Message context) {
-        return true;
-    }
-
     public JDACommandType getCommandType() {
         return JDACommandType.GLOBAL;
     }
