@@ -150,6 +150,7 @@ public abstract class AbstractCommand<C, R> {
                 if (getPermissionNode().hasPermission(ctx)) {
                     return run(ctx);
                 } else {
+                    result.addMessage("Missing access to %s permission node".formatted(getPermissionNode().getId()));
                     return getNoPermission();
                 }
             }
@@ -172,6 +173,7 @@ public abstract class AbstractCommand<C, R> {
             if (getPermissionNode().hasPermission(ctx)) {
                 return run(ctx);
             } else {
+                result.addMessage("Missing access to %s permission node".formatted(getPermissionNode().getId()));
                 return getNoPermission();
             }
         } catch (Throwable t) {
