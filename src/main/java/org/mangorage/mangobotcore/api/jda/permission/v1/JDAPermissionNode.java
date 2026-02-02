@@ -1,5 +1,6 @@
 package org.mangorage.mangobotcore.api.jda.permission.v1;
 
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -18,7 +19,10 @@ import java.util.List;
 @Table(name = "jda_permission_nodes")
 public final class JDAPermissionNode implements PermissionNode<Message>, IUniqueIdHolder<String> {
 
+    @Embeddable
     record GuildUser(Long guildId, Long userId) {}
+
+    @Embeddable
     record GuildRole(Long guildId, Long roleId) {}
 
     public static JDAPermissionNode create(String id) {
