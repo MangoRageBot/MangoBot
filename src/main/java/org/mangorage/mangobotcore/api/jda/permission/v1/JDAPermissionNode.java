@@ -1,8 +1,12 @@
 package org.mangorage.mangobotcore.api.jda.permission.v1;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -13,7 +17,9 @@ import org.mangorage.mangobotcore.api.command.v1.PermissionNode;
 import org.mangorage.mangobotcore.api.util.data.IUniqueIdHolder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "jda_permission_nodes")
@@ -30,10 +36,21 @@ public final class JDAPermissionNode implements PermissionNode<Message>, IUnique
     }
 
     @Id
-    private final String id;
-    private final List<GuildRole> roleIds = new ArrayList<>();
-    private final List<GuildUser> userIds = new ArrayList<>();
-    private final List<Permission> requiredDiscordPermissions = new ArrayList<>();
+    private String id;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "guild_roles", joinColumns = @JoinColumn(name = "permission_node_id"))
+    private final Set<GuildRole> roleIds = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "guild_users", joinColumns = @JoinColumn(name = "permission_node_id"))
+    private final Set<GuildUser> userIds = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "required_permissions", joinColumns = @JoinColumn(name = "permission_node_id"))
+    private final Set<Permission> requiredDiscordPermissions = new HashSet<>();
+
+    public JDAPermissionNode() {}
 
     private JDAPermissionNode(String id) {
         this.id = id;

@@ -22,6 +22,7 @@ module org.mangorage.mangobotcore {
 
     // JDA Permission API
     exports org.mangorage.mangobotcore.api.jda.permission.v1;
+    opens org.mangorage.mangobotcore.api.jda.permission.v1 to org.hibernate.orm.core; // Hibernate
 
     // Command API
     exports org.mangorage.mangobotcore.api.command.v1;
