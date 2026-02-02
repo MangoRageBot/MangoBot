@@ -1,8 +1,3 @@
-import org.mangorage.bootstrap.api.launch.ILaunchTargetEntrypoint;
-import org.mangorage.bootstrap.api.transformer.IClassTransformer;
-import org.mangorage.mangobotcore.internal.entrypoint.MangoBotEntrypoint;
-import org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
-
 module org.mangorage.mangobotcore {
     requires static org.jetbrains.annotations;
     requires org.slf4j;
@@ -60,12 +55,12 @@ module org.mangorage.mangobotcore {
     opens org.mangorage.mangobotcore.internal.plugin.dependency to com.google.gson;
 
 
-    provides Plugin with MangoBotCore;
-    provides IClassTransformer with ExampleTransformer;
-    provides ILaunchTargetEntrypoint with MangoBotEntrypoint;
+    provides org.mangorage.mangobotcore.api.plugin.v1.Plugin with org.mangorage.mangobotcore.api.plugin.MangoBotCore;
+    provides org.mangorage.bootstrap.api.transformer.IClassTransformer with org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
+    provides org.mangorage.bootstrap.api.launch.ILaunchTargetEntrypoint with org.mangorage.mangobotcore.internal.entrypoint.MangoBotEntrypoint;
 
-    uses Plugin;
-    uses IPluginInfoGetter;
-    uses IClassTransformer;
-    uses ILaunchTargetEntrypoint;
+    uses org.mangorage.mangobotcore.api.plugin.v1.Plugin;
+    uses org.mangorage.mangobotcore.api.plugin.v1.IPluginInfoGetter;
+    uses org.mangorage.bootstrap.api.transformer.IClassTransformer;
+    uses org.mangorage.bootstrap.api.launch.ILaunchTargetEntrypoint;
 }
