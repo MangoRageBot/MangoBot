@@ -29,11 +29,19 @@ public final class JDAPermissionNode implements PermissionNode<Message> {
     }
 
     public void authorizeGuildUser(Member member) {
-        userIds.add(new GuildUser(member.getGuild().getIdLong(), member.getUser().getIdLong()));
+        authorizeUser(member.getGuild().getIdLong(), member.getUser().getIdLong());
     }
 
     public void revokeGuildUser(Member member) {
-        userIds.remove(new GuildUser(member.getGuild().getIdLong(), member.getIdLong()));
+        revokeUser(member.getGuild().getIdLong(), member.getUser().getIdLong());
+    }
+
+    public void authorizeUser(Long guildId, long userId) {
+        userIds.add(new GuildUser(guildId, userId));
+    }
+
+    public void revokeUser(Long guildId, long userId) {
+        userIds.remove(new GuildUser(guildId, userId));
     }
 
     public void addRequiredPermission(Permission permission) {
