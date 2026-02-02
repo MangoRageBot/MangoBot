@@ -8,7 +8,6 @@ import org.mangorage.mangobotcore.api.command.v1.argument.RequiredArg;
 import org.mangorage.mangobotcore.api.command.v1.info.CommandData;
 import org.mangorage.mangobotcore.api.command.v1.info.CommandPart;
 import org.mangorage.mangobotcore.api.command.v1.info.ParameterPart;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,7 +39,9 @@ public abstract class AbstractCommand<C, R> {
     public abstract R getFailedResult();
     public abstract R getNoPermission();
 
-    public abstract PermissionNode<C> getPermissionNode();
+    public PermissionNode<C> getPermissionNode() {
+        return PermissionNode.empty();
+    }
 
     public List<String> aliases() {
         return List.of();
