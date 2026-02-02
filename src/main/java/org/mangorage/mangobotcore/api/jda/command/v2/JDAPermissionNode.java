@@ -85,7 +85,7 @@ public final class JDAPermissionNode implements PermissionNode<Message> {
                 return userIds.contains(new GuildUser(guildId, member.getIdLong()));
             }
         } else {
-            return userIds.isEmpty() || userIds.contains(new GuildUser(null, commandContext.getContextObject().getAuthor().getIdLong()));
+            return userIds.contains(new GuildUser(null, commandContext.getContextObject().getAuthor().getIdLong()));
         }
     }
 }
