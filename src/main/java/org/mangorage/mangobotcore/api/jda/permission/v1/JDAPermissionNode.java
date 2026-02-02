@@ -1,16 +1,22 @@
-package org.mangorage.mangobotcore.api.jda.command.v2;
+package org.mangorage.mangobotcore.api.jda.permission.v1;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import org.mangorage.mangobotcore.api.command.v1.CommandContext;
 import org.mangorage.mangobotcore.api.command.v1.PermissionNode;
+import org.mangorage.mangobotcore.api.util.data.IUniqueIdHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class JDAPermissionNode implements PermissionNode<Message> {
+@Entity
+@Table(name = "jda_permission_nodes")
+public final class JDAPermissionNode implements PermissionNode<Message>, IUniqueIdHolder<String> {
 
     record GuildUser(Long guildId, Long userId) {}
     record GuildRole(Long guildId, Long roleId) {}
@@ -19,6 +25,7 @@ public final class JDAPermissionNode implements PermissionNode<Message> {
         return new JDAPermissionNode(id);
     }
 
+    @Id
     private final String id;
     private final List<GuildRole> roleIds = new ArrayList<>();
     private final List<GuildUser> userIds = new ArrayList<>();

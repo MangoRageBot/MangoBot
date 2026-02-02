@@ -1,8 +1,5 @@
 import org.mangorage.bootstrap.api.launch.ILaunchTargetEntrypoint;
 import org.mangorage.bootstrap.api.transformer.IClassTransformer;
-import org.mangorage.mangobotcore.api.plugin.v1.Plugin;
-import org.mangorage.mangobotcore.api.plugin.v1.IPluginInfoGetter;
-import org.mangorage.mangobotcore.api.plugin.MangoBotCore;
 import org.mangorage.mangobotcore.internal.entrypoint.MangoBotEntrypoint;
 import org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
 
@@ -27,6 +24,9 @@ module org.mangorage.mangobotcore {
     // JDA API
     exports org.mangorage.mangobotcore.api.jda.command.v2;
     exports org.mangorage.mangobotcore.api.jda.event.v1;
+
+    // JDA Permission API
+    exports org.mangorage.mangobotcore.api.jda.permission.v1;
 
     // Command API
     exports org.mangorage.mangobotcore.api.command.v1;
@@ -57,7 +57,7 @@ module org.mangorage.mangobotcore {
     opens org.mangorage.mangobotcore.internal.entrypoint to org.mangorage.bootstrap; // Opens it to bootstrap
 
     opens org.mangorage.mangobotcore.internal.plugin to com.google.gson; // GSON
-    opens org.mangorage.mangobotcore.internal.plugin.dependency to com.google.gson; // GSON
+    opens org.mangorage.mangobotcore.internal.plugin.dependency to com.google.gson;
 
 
     provides Plugin with MangoBotCore;
