@@ -67,9 +67,9 @@ repositories {
 dependencies {
 
     installer('org.mangorage:installer:4.0.30')
-    bootstrap("org.mangorage:mangobotbootstrap:1.0.84")
+    bootstrap("org.mangorage:mangobotbootstrap:1.0.101")
 
-    launchtarget("org.mangorage:mangobotlaunchtarget:0.1.11")
+    launchtarget("org.mangorage:mangobotlaunchtarget:0.1.22")
 
 
     // SpongeMixin...

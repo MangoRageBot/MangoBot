@@ -37,7 +37,6 @@ module org.mangorage.mangobotcore {
     // Common Utils
     exports org.mangorage.mangobotcore.api.util.data;
     exports org.mangorage.mangobotcore.api.util.jda;
-    exports org.mangorage.mangobotcore.api.util.log;
     exports org.mangorage.mangobotcore.api.util.misc;
 
     // More JDA Utils
@@ -59,9 +58,11 @@ module org.mangorage.mangobotcore {
     provides org.mangorage.mangobotcore.api.plugin.v1.Plugin with org.mangorage.mangobotcore.api.plugin.MangoBotCore;
     provides org.mangorage.bootstrap.api.transformer.IClassTransformer with org.mangorage.mangobotcore.internal.transformer.ExampleTransformer;
     provides org.mangorage.bootstrap.api.launch.ILaunchTargetEntrypoint with org.mangorage.mangobotcore.internal.entrypoint.MangoBotEntrypoint;
+    provides org.mangorage.bootstrap.api.logging.ILoggerProvider with org.mangorage.mangobotcore.internal.logger.SLF4JLoggerProvider;
 
     uses org.mangorage.mangobotcore.api.plugin.v1.Plugin;
     uses org.mangorage.mangobotcore.api.plugin.v1.IPluginInfoGetter;
     uses org.mangorage.bootstrap.api.transformer.IClassTransformer;
     uses org.mangorage.bootstrap.api.launch.ILaunchTargetEntrypoint;
+    uses org.mangorage.bootstrap.api.logging.ILoggerProvider;
 }

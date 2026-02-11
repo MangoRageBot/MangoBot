@@ -2,7 +2,8 @@ package org.mangorage.mangobotcore.internal.plugin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.mangorage.mangobotcore.api.util.log.LogHelper;
+import org.mangorage.bootstrap.api.logging.IDeferredMangoLogger;
+import org.mangorage.bootstrap.api.logging.ILoggerFactory;
 import org.mangorage.mangobotcore.api.plugin.v1.IPluginInfoGetter;
 import org.mangorage.mangobotcore.api.plugin.v1.MangoBotPlugin;
 import org.mangorage.mangobotcore.api.plugin.v1.Metadata;
@@ -21,6 +22,8 @@ import java.util.Map;
 import java.util.ServiceLoader;
 
 public final class PluginManagerImpl implements PluginManager {
+    private static final IDeferredMangoLogger LOGGER = ILoggerFactory.getDefault().getWrappedProvider("slf4j", PluginManagerImpl.class);
+
     private static final Gson GSON = new GsonBuilder().create();
     public static final PluginManagerImpl INSTANCE = new PluginManagerImpl();
 
@@ -29,7 +32,9 @@ public final class PluginManagerImpl implements PluginManager {
     PluginManagerImpl() {}
 
     public void load() {
-        LogHelper.info("Gathering Plugin Info...");
+        final var logger = LOGGER.get();
+
+        logger.info("Gathering Plugin Info...");
         LibraryManager<PluginContainerImpl> manager = new LibraryManager<>();
 
 
@@ -41,7 +46,7 @@ public final class PluginManagerImpl implements PluginManager {
                     var clz = plugin.type();
                     var annotation = clz.getAnnotation(MangoBotPlugin.class);
                     if (Plugin.class.isAssignableFrom(clz)) {
-                        LogHelper.info("Found Plugin with ID '%s', now attempting to find metadata".formatted(annotation.id()));
+                        logger.info("Found Plugin with ID '%s', now attempting to find metadata".formatted(annotation.id()));
 
                         InputStream metadataIS = null;
 
@@ -56,7 +61,7 @@ public final class PluginManagerImpl implements PluginManager {
                         } else {
                             var metadata = GSON.fromJson(new InputStreamReader(metadataIS), MetadataImpl.class);
 
-                            LogHelper.info("Found Metadata for plugin '%s'".formatted(annotation.id()));
+                            logger.info("Found Metadata for plugin '%s'".formatted(annotation.id()));
 
                             manager.addLibrary(
                                     annotation.id(),
@@ -69,19 +74,19 @@ public final class PluginManagerImpl implements PluginManager {
                     }
                 });
 
-        LogHelper.info("Organizing Plugin Load Order...");
+        logger.info("Organizing Plugin Load Order...");
 
         for (Library<PluginContainerImpl> library : List.copyOf(manager.getLibraries())) {
             var dependencies = library.getObject().getMetadata().getDependencies();
             if (dependencies != null && !dependencies.isEmpty()) {
-                LogHelper.info("Found %s dependencies for '%s'".formatted(dependencies.size(), library.getObject().getMetadata().getId()));
+                logger.info("Found %s dependencies for '%s'".formatted(dependencies.size(), library.getObject().getMetadata().getId()));
                 manager.addDependenciesForLibrary(library.getObject().getMetadata().getId(), dependencies);
             } else {
-                LogHelper.info("Found no dependencies for '%s'".formatted(library.getObject().getMetadata().getId()));
+                logger.info("Found no dependencies for '%s'".formatted(library.getObject().getMetadata().getId()));
             }
         }
 
-        LogHelper.info("Giving Metadata info out...");
+        logger.info("Giving Metadata info out...");
 
         ServiceLoader.load(PluginManagerImpl.class.getModule().getLayer(), IPluginInfoGetter.class)
                 .stream()
@@ -94,13 +99,13 @@ public final class PluginManagerImpl implements PluginManager {
                 });
 
 
-        LogHelper.info("Loading Plugins...");
+        logger.info("Loading Plugins...");
 
         for (Library<PluginContainerImpl> library : manager.getLibrariesInOrder()) {
             loadPlugin(library.getObject());
         }
 
-        LogHelper.info("Calling init Method on all Plugins...");
+        logger.info("Calling init Method on all Plugins...");
 
         plugins.forEach((k, v) -> {
             if (v.getInstance() instanceof Plugin plugin) {
@@ -108,7 +113,7 @@ public final class PluginManagerImpl implements PluginManager {
             }
         });
 
-        LogHelper.info("Finished loading plugins...");
+        logger.info("Finished loading plugins...");
     }
 
     @Override
@@ -126,7 +131,7 @@ public final class PluginManagerImpl implements PluginManager {
     public void loadPlugin(PluginContainerImpl container) {
         var pluginId = container.getMetadata().getId();
 
-        LogHelper.info("Loading plugin: %s".formatted(pluginId));
+        LOGGER.get().info("Loading plugin: %s".formatted(pluginId));
 
         // Register it, so the plugin has access to any info it wishes to have, other then its own reference (At ctor it cant have access to itself, because it doesnt exist yet...)
         this.plugins.put(container.getMetadata().getId(), container);
@@ -134,8 +139,8 @@ public final class PluginManagerImpl implements PluginManager {
         try {
             container.init();
         } catch (Throwable e) {
-            LogHelper.error("Failed to load plugin: " + pluginId);
-            LogHelper.error(e.getMessage());
+            LOGGER.get().error("Failed to load plugin: " + pluginId);
+            LOGGER.get().error(e.getMessage());
             e.printStackTrace();
         }
     }
