@@ -42,6 +42,9 @@ public final class CommandContext<C> {
     }
 
     public <T> T getArgumentOrElse(OptionalArg<T> optionalArgument) {
+        if (index > arguments.length) // End of arguments...
+            return optionalArgument.getDefaultValue();
+
         T result = null;
 
         try {
