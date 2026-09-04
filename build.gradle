@@ -78,7 +78,7 @@ dependencies {
     library('net.minecraftforge:modlauncher:10.2.4')
     library('net.minecraftforge:securemodules:2.2.21')
 
-    library('net.dv8tion:JDA:5.3.2')
+    library('net.dv8tion:JDA:6.5.0')
     library('com.google.code.gson:gson:2.10.1')
     library('net.minecraftforge:eventbus:7.0-beta.1')
 
