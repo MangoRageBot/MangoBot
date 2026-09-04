@@ -25,9 +25,9 @@ package org.mangorage.mangobotcore.api.util.jda.slash.component.interact;
 
 import net.dv8tion.jda.api.events.interaction.component.EntitySelectInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.EntitySelectMenu;
-import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
+import net.dv8tion.jda.api.components.selections.EntitySelectMenu;
+import net.dv8tion.jda.api.components.selections.SelectMenu;
+import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.mangorage.mangobotcore.api.util.jda.slash.command.watcher.EventWatcher;
@@ -85,7 +85,7 @@ public abstract class SmartDropdown<T extends SelectMenu> extends Component impl
         }
 
         protected void onCreate() {
-            parent = builder.setId(getUuid().toString()).build();
+            parent = builder.setCustomId(getUuid().toString()).build();
         }
 
         protected void onRemove() {
@@ -123,7 +123,7 @@ public abstract class SmartDropdown<T extends SelectMenu> extends Component impl
         }
 
         protected void onCreate() {
-            parent = builder.setId(getUuid().toString()).build();
+            parent = builder.setCustomId(getUuid().toString()).build();
         }
 
         protected void onRemove() {

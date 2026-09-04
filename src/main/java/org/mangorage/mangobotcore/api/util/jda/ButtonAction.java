@@ -23,9 +23,8 @@
 package org.mangorage.mangobotcore.api.util.jda;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
-import net.dv8tion.jda.internal.interactions.component.ButtonImpl;
+import net.dv8tion.jda.api.components.buttons.Button;
+import net.dv8tion.jda.api.components.buttons.ButtonStyle;
 
 public abstract class ButtonAction {
     private final String id;
@@ -45,11 +44,15 @@ public abstract class ButtonAction {
     }
 
     public Button create(ButtonStyle style, String additionalData) {
-        return new ButtonImpl(id + ":" + additionalData, label, style, false, null);
+        return Button.of(
+                style,
+                id + ":" + additionalData,
+                label
+        );
     }
 
     public boolean onClick(ButtonInteractionEvent event) {
-        if (event.getComponent().getId().equals(id)) {
+        if (event.getComponent().getUrl().equals(id)) {
             event.reply("Clicked %s button!".formatted(id)).queue();
             return true;
         }

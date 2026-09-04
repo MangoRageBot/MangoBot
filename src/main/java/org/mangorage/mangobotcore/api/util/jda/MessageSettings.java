@@ -22,8 +22,9 @@
 
 package org.mangorage.mangobotcore.api.util.jda;
 
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.requests.restaction.MessageCreateAction;
 import org.mangorage.mangobotcore.api.util.misc.Lockable;
 
@@ -41,7 +42,7 @@ public class MessageSettings {
     }
 
     public MessageCreateAction withButton(MessageCreateAction action, Button button) {
-        return action.addActionRow(button);
+        return action.addComponents(ActionRow.of(button));
     }
 
     public MessageCreateAction apply(MessageCreateAction action) {
